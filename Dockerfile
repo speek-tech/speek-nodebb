@@ -1,76 +1,22 @@
-FROM node:lts as build
+FROM node:20-alpine
 
-ENV NODE_ENV=production \
-    DAEMON=false \
-    SILENT=false \
-    USER=nodebb \
-    UID=1001 \
-    GID=1001
+# Install git, build dependencies, and netcat for health checks
+RUN apk add --no-cache git python3 make g++ netcat-openbsd
 
-WORKDIR /usr/src/app/
+# Set working directory
+WORKDIR /app
 
-COPY . /usr/src/app/
+# Copy NodeBB source code
+COPY . .
 
-# Install corepack to allow usage of other package managers
-RUN corepack enable
+# Install dependencies
+RUN npm install
 
-# Removing unnecessary files for us
-RUN find . -mindepth 1 -maxdepth 1 -name '.*' ! -name '.' ! -name '..' -exec bash -c 'echo "Deleting {}"; rm -rf {}' \;
+# Create necessary directories
+RUN mkdir -p public/uploads logs
 
-# Prepage package.json
-RUN cp /usr/src/app/install/package.json /usr/src/app/
-
-RUN apt-get update \
-    && DEBIAN_FRONTEND=noninteractive \
-    apt-get -y --no-install-recommends install \
-        tini
-
-RUN groupadd --gid ${GID} ${USER} \
-    && useradd --uid ${UID} --gid ${GID} --home-dir /usr/src/app/ --shell /bin/bash ${USER} \
-    && chown -R ${USER}:${USER} /usr/src/app/
-
-USER ${USER}
-
-RUN npm install --omit=dev \
-    && rm -rf .npm
-    # TODO: generate lockfiles for each package manager
-    ## pnpm import \
-
-FROM node:lts-slim AS final
-
-ENV NODE_ENV=production \
-    DAEMON=false \
-    SILENT=false \
-    USER=nodebb \
-    UID=1001 \
-    GID=1001
-
-WORKDIR /usr/src/app/
-
-RUN corepack enable \
-    && groupadd --gid ${GID} ${USER} \
-    && useradd --uid ${UID} --gid ${GID} --home-dir /usr/src/app/ --shell /bin/bash ${USER} \
-    && mkdir -p /usr/src/app/logs/ /opt/config/ \
-    && chown -R ${USER}:${USER} /usr/src/app/ /opt/config/
-
-COPY --from=build --chown=${USER}:${USER} /usr/src/app/ /usr/src/app/install/docker/setup.json /usr/src/app/
-COPY --from=build --chown=${USER}:${USER} /usr/bin/tini /usr/src/app/install/docker/entrypoint.sh /usr/local/bin/
-
-RUN chmod +x /usr/local/bin/entrypoint.sh \
-    && chmod +x /usr/local/bin/tini
-
-# TODO: Have docker-compose use environment variables to create files like setup.json and config.json.
-# COPY --from=hairyhenderson/gomplate:stable /gomplate /usr/local/bin/gomplate
-
-USER ${USER}
-
+# Expose port
 EXPOSE 4567
 
-VOLUME ["/usr/src/app/node_modules", "/usr/src/app/build", "/usr/src/app/public/uploads", "/opt/config/"]
-
-# Utilising tini as our init system within the Docker container for graceful start-up and termination.
-# Tini serves as an uncomplicated init system, adept at managing the reaping of zombie processes and forwarding signals.
-# This approach is crucial to circumvent issues with unmanaged subprocesses and signal handling in containerised environments.
-# By integrating tini, we enhance the reliability and stability of our Docker containers.
-# Ensures smooth start-up and shutdown processes, and reliable, safe handling of signal processing.
-ENTRYPOINT ["tini", "--", "entrypoint.sh"]
+# Simple startup script
+CMD ["sh", "-c", "echo 'Waiting for services...' && while ! nc -z postgres 5432; do sleep 1; done && while ! nc -z redis 6379; do sleep 1; done && echo 'Services ready!' && if [ ! -f config.json ] || [ ! -s config.json ]; then echo 'Setting up NodeBB...' && export NODEBB_URL=${NODEBB_URL:-http://localhost:4567} && export NODEBB_DB=${NODEBB_DB:-postgres} && export NODEBB_DB_HOST=${NODEBB_DB_HOST:-postgres} && export NODEBB_DB_PORT=${NODEBB_DB_PORT:-5432} && export NODEBB_DB_USER=${NODEBB_DB_USER:-nodebb} && export NODEBB_DB_PASSWORD=${NODEBB_DB_PASSWORD:-nodebb123} && export NODEBB_DB_NAME=${NODEBB_DB_NAME:-nodebb} && export NODEBB_REDIS_HOST=${NODEBB_REDIS_HOST:-redis} && export NODEBB_REDIS_PORT=${NODEBB_REDIS_PORT:-6379} && export NODEBB_REDIS_PASSWORD=${NODEBB_REDIS_PASSWORD:-redis123} && export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin} && export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123} && export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local} && node ./nodebb setup; fi && echo 'Starting NodeBB...' && exec node app.js"]
