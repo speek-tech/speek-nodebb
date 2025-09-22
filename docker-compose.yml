@@ -38,6 +38,11 @@ services:
       # NodeBB Configuration
       NODEBB_URL: http://localhost:4567
       NODEBB_DB: postgres
+      # Navigation / theme locks
+      NODEBB_NAV: top
+      NODEBB_SIDEBAR: "false"
+      NODEBB_ALLOW_USER_SKINS: "false"
+      NODEBB_ALLOW_THEME_SWITCH: "false"
       
       # PostgreSQL Configuration
       NODEBB_DB_HOST: postgres
