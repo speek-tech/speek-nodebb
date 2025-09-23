@@ -12,6 +12,9 @@ COPY . .
 # Install dependencies
 RUN npm install
 
+# Preinstall session-sharing plugin so it's present on first boot
+RUN npm install nodebb-plugin-session-sharing
+
 # Create necessary directories
 RUN mkdir -p public/uploads logs
 

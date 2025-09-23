@@ -71,6 +71,36 @@ if [ "${NODEBB_ALLOW_THEME_SWITCH}" = "false" ]; then
   ./nodebb config set harmony:showSkins false || true
 fi
 
+# Install & enable session-sharing plugin at boot (idempotent)
+if [ ! -d "node_modules/nodebb-plugin-session-sharing" ]; then
+  echo "Installing nodebb-plugin-session-sharing..."
+  npm install nodebb-plugin-session-sharing || true
+fi
+echo "Enabling nodebb-plugin-session-sharing..."
+./nodebb plugins enable nodebb-plugin-session-sharing || true
+
+# Configure session-sharing plugin (JWT via query string)
+if [ -n "${NODEBB_SSO_SECRET}" ]; then
+  echo "Configuring session-sharing plugin..."
+  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={secret:process.env.NODEBB_SSO_SECRET,algorithm:'HS256',matchField:'id',lookupByEmail:false,autocreate:true,payloadIdPath:'id',payloadUsernamePath:'username',payloadEmailPath:'email',payloadPicturePath:'picture',payloadIsAdminPath:'isAdmin',jwtQueryParam:'jwt'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error(e);process.exit(0)}})();" || true
+fi
+
+# Iframe embedding headers: disable X-Frame-Options and set CSP frame-ancestors
+if [ -n "${NODEBB_FRAME_ANCESTORS}" ]; then
+  ./nodebb config set "csp-frame-ancestors" "${NODEBB_FRAME_ANCESTORS}" || true
+else
+  # Default to local app origins for development
+  ./nodebb config set "csp-frame-ancestors" "http://localhost:3000 http://127.0.0.1:3000" || true
+fi
+./nodebb config set xframe disabled || true
+
+# Apply custom CSS from /app/nodebb.css
+if [ -f "/app/nodebb.css" ]; then
+  echo "Applying custom CSS from nodebb.css..."
+  node -e "const fs=require('fs');const nconf=require('nconf');const db=require('./src/database');(async()=>{try{nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','customCSS',fs.readFileSync('nodebb.css','utf8'));await db.setObjectField('config','useCustomCSS',true);await db.close();console.log('customCSS set');}catch(e){console.error(e);process.exit(0)}})();" || true
+  ./nodebb config set useCustomCSS true || true
+fi
+
 # Rebuild assets after any config change
 echo "Building NodeBB assets..."
 ./nodebb build || true
