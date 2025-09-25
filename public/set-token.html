@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Setting Session Token...</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h2>Setting up SSO...</h2>
+        <p>Please wait while we log you in.</p>
+    </div>
+    
+    <script>
+        (async function() {
+            try {
+                // Get JWT from URL parameters
+                const urlParams = new URLSearchParams(window.location.search);
+                const jwt = urlParams.get('jwt');
+                
+                if (!jwt) {
+                    console.error('No JWT provided');
+                    window.location.replace('/');
+                    return;
+                }
+                
+                // Set cookie on forum origin (this will work since it's a real page)
+                document.cookie = 'token=' + jwt + '; Path=/';
+                
+                // POST to API to validate user
+                try {
+                    const formData = new FormData();
+                    formData.append('token', jwt);
+                    const response = await fetch('/api/session-sharing/user', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    if (response.ok) {
+                        const result = await response.json();
+                        console.log('User validated:', result);
+                    }
+                } catch (e) {
+                    console.warn('API validation failed:', e);
+                }
+                
+                // Redirect to forum home
+                setTimeout(() => {
+                    window.location.replace('/');
+                }, 100);
+                
+            } catch (e) {
+                console.error('SSO setup failed:', e);
+                window.location.replace('/');
+            }
+        })();
+    </script>
+</body>
+</html>

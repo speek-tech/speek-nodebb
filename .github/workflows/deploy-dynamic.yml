@@ -1,0 +1,125 @@
+name: Dynamic Deploy NodeBB to ECS Fargate
+
+on:
+  push:
+    branches:
+      - development
+      - test
+      - stage
+      - main
+
+env:
+  AWS_REGION: eu-west-2
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci || npm install
+      - name: Lint (non-blocking)
+        run: npm run lint || true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci || npm install
+      - name: Build (skip if not required)
+        run: |
+          if [ -f package.json ] && jq -e '.scripts.build' package.json >/dev/null 2>&1; then
+            npm run build
+          else
+            echo "No build script found, proceeding"
+          fi
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate deployment configuration
+        run: |
+          echo "🔍 Validating deployment configuration..."
+          if [ ! -f "deployment-config.json" ]; then
+            echo "❌ Error: deployment-config.json not found"
+            exit 1
+          fi
+          if ! jq empty deployment-config.json 2>/dev/null; then
+            echo "❌ Error: Invalid JSON syntax in deployment-config.json"
+            exit 1
+          fi
+          BRANCH="${{ github.ref_name }}"
+          CONFIG=$(jq -r ".$BRANCH" deployment-config.json)
+          if [ "$CONFIG" = "null" ]; then
+            echo "❌ Error: No configuration found for branch '$BRANCH'"
+            echo "Available environments: $(jq -r 'keys | join(", ")' deployment-config.json)"
+            exit 1
+          fi
+          echo "✅ Configuration for branch '$BRANCH' is valid"
+
+      - name: Load environment configuration
+        id: config
+        run: |
+          BRANCH="${{ github.ref_name }}"
+          CONFIG=$(jq -r ".$BRANCH" deployment-config.json)
+          echo "$CONFIG" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
+          echo "Deploying to environment: $(echo "$CONFIG" | jq -r '.environment')"
+          echo "ECR Repository: $(echo "$CONFIG" | jq -r '.ecr_repository')"
+          echo "ECS Cluster: $(echo "$CONFIG" | jq -r '.ecs_cluster')"
+          echo "ECS Service: $(echo "$CONFIG" | jq -r '.ecs_service')"
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets[format('{0}_AWS_ACCESS_KEY_ID', steps.config.outputs.aws_credentials)] }}
+          aws-secret-access-key: ${{ secrets[format('{0}_AWS_SECRET_ACCESS_KEY', steps.config.outputs.aws_credentials)] }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build and push Docker image (sha + latest)
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: ${{ steps.config.outputs.ecr_repository }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          echo "Building Docker image for ${{ steps.config.outputs.environment }} environment"
+          echo "ECR Repository: $ECR_REGISTRY/$ECR_REPOSITORY"
+          echo "Image Tag: $IMAGE_TAG"
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+
+      - name: Update ECS service
+        env:
+          ECS_CLUSTER: ${{ steps.config.outputs.ecs_cluster }}
+          ECS_SERVICE: ${{ steps.config.outputs.ecs_service }}
+        run: |
+          echo "Updating ECS service for ${{ steps.config.outputs.environment }} environment"
+          echo "Cluster: $ECS_CLUSTER"
+          echo "Service: $ECS_SERVICE"
+          aws ecs update-service \
+            --cluster $ECS_CLUSTER \
+            --service $ECS_SERVICE \
+            --force-new-deployment \
+            --region ${{ env.AWS_REGION }}
+

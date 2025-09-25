@@ -1,0 +1,31 @@
+{
+  "development": {
+    "environment": "dev",
+    "ecr_repository": "speek-dev-nodebb",
+    "ecs_cluster": "speek-dev-nodebb-cluster",
+    "ecs_service": "speek-dev-nodebb-service",
+    "aws_credentials": "DEPLOYER"
+  },
+  "test": {
+    "environment": "stage",
+    "ecr_repository": "speek-stage-nodebb",
+    "ecs_cluster": "speek-stage-nodebb-cluster",
+    "ecs_service": "speek-stage-nodebb-service",
+    "aws_credentials": "DEPLOYER"
+  },
+  "stage": {
+    "environment": "stage",
+    "ecr_repository": "speek-nodebb-stage",
+    "ecs_cluster": "speek-nodebb-stage-cluster",
+    "ecs_service": "speek-nodebb-stage-service",
+    "aws_credentials": "DEPLOYER"
+  },
+  "main": {
+    "environment": "production",
+    "ecr_repository": "speek-prod-nodebb",
+    "ecs_cluster": "speek-prod-nodebb-cluster",
+    "ecs_service": "speek-prod-nodebb-service",
+    "aws_credentials": "DEPLOYER"
+  }
+}
+

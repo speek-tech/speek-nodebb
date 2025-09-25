@@ -82,7 +82,7 @@ echo "Enabling nodebb-plugin-session-sharing..."
 # Configure session-sharing plugin (JWT via query string)
 if [ -n "${NODEBB_SSO_SECRET}" ]; then
   echo "Configuring session-sharing plugin..."
-  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={secret:process.env.NODEBB_SSO_SECRET,algorithm:'HS256',matchField:'id',lookupByEmail:false,autocreate:true,payloadIdPath:'id',payloadUsernamePath:'username',payloadEmailPath:'email',payloadPicturePath:'picture',payloadIsAdminPath:'isAdmin',jwtQueryParam:'jwt'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error(e);process.exit(0)}})();" || true
+  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:undefined,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error(e);process.exit(0)}})();" || true
 fi
 
 # Iframe embedding headers: disable X-Frame-Options and set CSP frame-ancestors
