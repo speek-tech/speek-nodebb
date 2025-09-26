@@ -69,6 +69,11 @@ jobs:
           echo "Building Docker image for ${{ steps.config.outputs.environment }} environment"
           echo "ECR Repository: $ECR_REGISTRY/$ECR_REPOSITORY"
           echo "Image Tag: $IMAGE_TAG"
+          echo "Current directory: $(pwd)"
+          echo "Checking for package.json:"
+          ls -la package.json || echo "package.json not found"
+          echo "Directory contents:"
+          ls -la
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
           docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
