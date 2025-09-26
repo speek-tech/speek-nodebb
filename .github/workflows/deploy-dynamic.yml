@@ -22,13 +22,9 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
-        run: |
-          cd speek-nodebb
-          npm ci || npm install
+        run: npm ci || npm install
       - name: Lint (non-blocking)
-        run: |
-          cd speek-nodebb
-          npm run lint || true
+        run: npm run lint || true
 
   build:
     runs-on: ubuntu-latest
@@ -41,12 +37,9 @@ jobs:
         with:
           node-version: 18
       - name: Install dependencies
-        run: |
-          cd speek-nodebb
-          npm ci || npm install
+        run: npm ci || npm install
       - name: Build (skip if not required)
         run: |
-          cd speek-nodebb
           if [ -f package.json ] && jq -e '.scripts.build' package.json >/dev/null 2>&1; then
             npm run build
           else
@@ -62,7 +55,6 @@ jobs:
 
       - name: Validate deployment configuration
         run: |
-          cd speek-nodebb
           echo "🔍 Validating deployment configuration..."
           if [ ! -f "deployment-config.json" ]; then
             echo "❌ Error: deployment-config.json not found"
@@ -84,7 +76,6 @@ jobs:
       - name: Load environment configuration
         id: config
         run: |
-          cd speek-nodebb
           BRANCH="${{ github.ref_name }}"
           CONFIG=$(jq -r ".$BRANCH" deployment-config.json)
           echo "$CONFIG" | jq -r 'to_entries | .[] | "\(.key)=\(.value)"' >> $GITHUB_OUTPUT
@@ -110,7 +101,6 @@ jobs:
           ECR_REPOSITORY: ${{ steps.config.outputs.ecr_repository }}
           IMAGE_TAG: ${{ github.sha }}
         run: |
-          cd speek-nodebb
           echo "Building Docker image for ${{ steps.config.outputs.environment }} environment"
           echo "ECR Repository: $ECR_REGISTRY/$ECR_REPOSITORY"
           echo "Image Tag: $IMAGE_TAG"
