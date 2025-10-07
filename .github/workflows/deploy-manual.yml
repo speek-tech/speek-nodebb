@@ -9,7 +9,6 @@ on:
         type: choice
         options:
           - development
-          - test
           - stage
           - main
         default: 'development'
