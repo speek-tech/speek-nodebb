@@ -1,4 +1,5 @@
 name: Manual Deploy NodeBB
+run-name: "Deploying ${{ github.event.repository.name }} changes to ${{ inputs.environment }}"
 
 on:
   workflow_dispatch:
@@ -26,10 +27,60 @@ jobs:
       ecs_service: ${{ steps.config.outputs.ecs_service }}
       aws_credentials: ${{ steps.config.outputs.aws_credentials }}
     steps:
-      - name: Checkout selected ref
+      - name: Checkout selected ref (with tags)
         uses: actions/checkout@v4
         with:
           ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Validate ref type for production
+        run: |
+          ENVIRONMENT="${{ inputs.environment }}"
+          REF_NAME="${{ github.ref_name }}"
+          REF_TYPE="${{ github.ref_type }}"
+          
+          echo "📍 Environment: $ENVIRONMENT"
+          echo "📍 Selected Ref: $REF_NAME ($REF_TYPE)"
+
+          # Ensure tags are present for checks
+          git fetch --tags
+
+          # Check if ref is a tag
+          if [ "$REF_TYPE" = "tag" ]; then
+            IS_TAG=true
+            echo "✅ Ref Type: TAG"
+          else
+            IS_TAG=false
+            echo "✅ Ref Type: BRANCH/COMMIT"
+          fi
+          
+          # Validation for production environment
+          if [ "$ENVIRONMENT" = "main" ]; then
+            if [ "$IS_TAG" = "false" ]; then
+              echo ""
+              echo "❌ ERROR: Cannot deploy to PRODUCTION from a branch!"
+              echo ""
+              echo "⚠️  Production environment requires TAG-based deployments only."
+              echo ""
+              echo "📋 Available tags (recent 10):"
+              git tag -l | sort -V | tail -10
+              echo ""
+              echo "💡 Please trigger the workflow from a TAG in the 'Use workflow from' selector."
+              exit 1
+            fi
+            # Ensure the tag commit is on main
+            git fetch origin main --depth=0
+            TAG_SHA=$(git rev-parse "refs/tags/$REF_NAME^{commit}")
+            if git merge-base --is-ancestor "$TAG_SHA" origin/main; then
+              echo "✅ Tag commit is on main"
+            else
+              echo "❌ ERROR: Tag '$REF_NAME' is not based on 'main'. Create release tags from main only."
+              exit 1
+            fi
+            echo "✅ Validation PASSED: Deploying TAG to Production"
+          else
+            echo "✅ Validation PASSED: $ENVIRONMENT allows branches and tags"
+          fi
 
       - name: Validate deployment configuration
         run: |
