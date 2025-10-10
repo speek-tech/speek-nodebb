@@ -1,12 +1,14 @@
 name: Dynamic Deploy NodeBB to ECS Fargate
 
 on:
-  push:
-    branches:
-      - development
-      - test
-      - stage
-      - main
+  workflow_dispatch:
+
+  #push:
+   # branches:
+    #  - development
+     # - test
+      #- stage
+      #- main
 
 env:
   AWS_REGION: eu-west-2
