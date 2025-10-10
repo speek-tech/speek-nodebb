@@ -13,7 +13,7 @@
     "ecs_service": "speek-stage-nodebb-service",
     "aws_credentials": "DEPLOYER"
   },
-  "main": {
+  "prod": {
     "environment": "production",
     "ecr_repository": "speek-prod-nodebb",
     "ecs_cluster": "speek-prod-nodebb-cluster",
