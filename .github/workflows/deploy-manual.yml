@@ -10,7 +10,7 @@ on:
         options:
           - development
           - stage
-          - main
+          - prod
         default: 'development'
 
 env:
