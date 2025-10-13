@@ -29,50 +29,36 @@ echo "Database services are ready!"
 # Non-interactive setup on first run (auto-create admin)
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   echo "NodeBB not configured, running non-interactive setup..."
-  NODEBB_URL=${NODEBB_URL:-http://localhost:4567}
-  NODEBB_DB=${DATABASE:-postgres}
-  NODEBB_DB_HOST=${DB_HOST:-postgres}
-  NODEBB_DB_PORT=${DB_PORT:-5432}
-  NODEBB_DB_USER=${DB_USERNAME:-nodebb}
-  NODEBB_DB_PASSWORD=${DB_PASSWORD:-nodebb123}
-  NODEBB_DB_NAME=${DB_NAME:-nodebb}
-  NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
-  NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
-  NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
-
-  cat > /tmp/setup.json <<EOF
+  
+  # Create config.json manually with proper SSL settings for AWS RDS
+  # This bypasses NodeBB's setup SSL limitations
+  echo "Creating initial config.json with AWS RDS SSL settings..."
+  cat > /app/config.json <<EOF
 {
-  "url": "${NODEBB_URL}",
+  "url": "${NODEBB_URL:-http://localhost:4567}",
   "secret": "${NODEBB_SSO_SECRET:-$(openssl rand -hex 32)}",
-  "admin:username": "${NODEBB_ADMIN_USERNAME}",
-  "admin:email": "${NODEBB_ADMIN_EMAIL}",
-  "admin:password": "${NODEBB_ADMIN_PASSWORD}",
-  "admin:password:confirm": "${NODEBB_ADMIN_PASSWORD}",
-  "database": "${NODEBB_DB}",
-  "postgres:host": "${NODEBB_DB_HOST}",
-  "postgres:port": ${NODEBB_DB_PORT},
-  "postgres:username": "${NODEBB_DB_USER}",
-  "postgres:password": "${NODEBB_DB_PASSWORD}",
-  "postgres:database": "${NODEBB_DB_NAME}",
-  "postgres:ssl": "true"
+  "database": "postgres",
+  "postgres": {
+    "host": "${DB_HOST:-postgres}",
+    "port": ${DB_PORT:-5432},
+    "username": "${DB_USERNAME:-nodebb}",
+    "password": "${DB_PASSWORD:-nodebb123}",
+    "database": "${DB_NAME:-nodebb}",
+    "ssl": { "rejectUnauthorized": false }
+  }
 }
 EOF
-  node app --setup="$(cat /tmp/setup.json)"
+
+  echo "config.json created with SSL configured for AWS RDS"
   
-  # Immediately after setup, modify SSL to accept AWS RDS certificates
-  # NodeBB setup only accepts ssl as boolean, but pg library needs object for AWS
-  echo "Updating PostgreSQL SSL configuration for AWS RDS..."
-  node -e "
-    const nconf = require('nconf');
-    const fs = require('fs');
-    nconf.file({ file: 'config.json' });
-    
-    if (nconf.get('postgres')) {
-      nconf.set('postgres:ssl', { rejectUnauthorized: false });
-      fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
-      console.log('PostgreSQL SSL updated to accept AWS RDS certificates');
-    }
-  " || echo "Warning: Failed to update SSL configuration"
+  # Now run NodeBB setup - it will use the existing config.json
+  # This includes creating admin user and initializing database schema
+  export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
+  export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
+  export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
+  
+  echo "Running NodeBB database initialization..."
+  node app --setup
 fi
 
 # Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
