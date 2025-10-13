@@ -11,9 +11,18 @@ done
 
 # Wait for Redis to be ready
 echo "Waiting for Redis to be ready at ${REDIS_HOST:-redis}:${REDIS_PORT:-6379}..."
-while ! nc -z ${REDIS_HOST:-redis} ${REDIS_PORT:-6379}; do
-  sleep 1
-done
+# Note: ElastiCache with transit encryption (TLS) can't be tested with plain nc
+# We give it a brief wait, then let NodeBB validate the connection with proper TLS support
+if [ -n "${REDIS_PASSWORD}" ]; then
+  echo "Redis with authentication detected - waiting 5 seconds for Redis to be ready..."
+  sleep 5
+  echo "Proceeding with NodeBB startup (will use TLS for Redis connection)"
+else
+  while ! nc -z ${REDIS_HOST:-redis} ${REDIS_PORT:-6379}; do
+    sleep 1
+  done
+  echo "Redis connection verified!"
+fi
 
 echo "Database services are ready!"
 
@@ -62,7 +71,8 @@ EOF
         host: process.env.REDIS_HOST || 'localhost',
         port: parseInt(process.env.REDIS_PORT) || 6379,
         password: process.env.REDIS_PASSWORD || '',
-        database: 0
+        database: 0,
+        tls: process.env.REDIS_PASSWORD ? {} : undefined  // Enable TLS for ElastiCache with encryption
       });
       
       // Save config
