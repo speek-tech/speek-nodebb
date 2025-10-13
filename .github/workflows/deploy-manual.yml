@@ -55,7 +55,7 @@ jobs:
           fi
           
           # Validation for production environment
-          if [ "$ENVIRONMENT" = "main" ]; then
+          if [ "$ENVIRONMENT" = "prod" ]; then
             if [ "$IS_TAG" = "false" ]; then
               echo ""
               echo "❌ ERROR: Cannot deploy to PRODUCTION from a branch!"
