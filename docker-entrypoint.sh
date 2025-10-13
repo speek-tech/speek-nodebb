@@ -4,14 +4,14 @@ set -e
 echo "Starting NodeBB Docker container..."
 
 # Wait for database to be ready
-echo "Waiting for PostgreSQL to be ready..."
-while ! nc -z postgres 5432; do
+echo "Waiting for PostgreSQL to be ready at ${DB_HOST:-postgres}:${DB_PORT:-5432}..."
+while ! nc -z ${DB_HOST:-postgres} ${DB_PORT:-5432}; do
   sleep 1
 done
 
 # Wait for Redis to be ready
-echo "Waiting for Redis to be ready..."
-while ! nc -z redis 6379; do
+echo "Waiting for Redis to be ready at ${REDIS_HOST:-redis}:${REDIS_PORT:-6379}..."
+while ! nc -z ${REDIS_HOST:-redis} ${REDIS_PORT:-6379}; do
   sleep 1
 done
 
@@ -21,12 +21,12 @@ echo "Database services are ready!"
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   echo "NodeBB not configured, running non-interactive setup..."
   NODEBB_URL=${NODEBB_URL:-http://localhost:4567}
-  NODEBB_DB=${NODEBB_DB:-postgres}
-  NODEBB_DB_HOST=${NODEBB_DB_HOST:-postgres}
-  NODEBB_DB_PORT=${NODEBB_DB_PORT:-5432}
-  NODEBB_DB_USER=${NODEBB_DB_USER:-nodebb}
-  NODEBB_DB_PASSWORD=${NODEBB_DB_PASSWORD:-nodebb123}
-  NODEBB_DB_NAME=${NODEBB_DB_NAME:-nodebb}
+  NODEBB_DB=${DATABASE:-postgres}
+  NODEBB_DB_HOST=${DB_HOST:-postgres}
+  NODEBB_DB_PORT=${DB_PORT:-5432}
+  NODEBB_DB_USER=${DB_USERNAME:-nodebb}
+  NODEBB_DB_PASSWORD=${DB_PASSWORD:-nodebb123}
+  NODEBB_DB_NAME=${DB_NAME:-nodebb}
   NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
   NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
   NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
@@ -34,7 +34,7 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   cat > /tmp/setup.json <<EOF
 {
   "url": "${NODEBB_URL}",
-  "secret": "abcdef",
+  "secret": "${NODEBB_SSO_SECRET:-$(openssl rand -hex 32)}",
   "admin:username": "${NODEBB_ADMIN_USERNAME}",
   "admin:email": "${NODEBB_ADMIN_EMAIL}",
   "admin:password": "${NODEBB_ADMIN_PASSWORD}",
@@ -48,6 +48,28 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
 }
 EOF
   node app --setup="$(cat /tmp/setup.json)"
+  
+  # Configure Redis after initial setup (NodeBB stores this in config.json)
+  if [ -n "${REDIS_HOST}" ] && [ -n "${REDIS_PASSWORD}" ]; then
+    echo "Configuring Redis for session storage and cache..."
+    node -e "
+      const nconf = require('nconf');
+      const fs = require('fs');
+      nconf.file({ file: 'config.json' });
+      
+      // Add Redis configuration
+      nconf.set('redis', {
+        host: process.env.REDIS_HOST || 'localhost',
+        port: parseInt(process.env.REDIS_PORT) || 6379,
+        password: process.env.REDIS_PASSWORD || '',
+        database: 0
+      });
+      
+      // Save config
+      fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
+      console.log('Redis configuration added to config.json');
+    " || echo "Warning: Failed to configure Redis, will use database for sessions"
+  fi
 fi
 
 # Apply non-interactive configuration driven by environment variables
