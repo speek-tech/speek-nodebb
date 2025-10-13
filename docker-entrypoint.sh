@@ -15,15 +15,17 @@ echo "Note: Redis disabled - using PostgreSQL for all storage"
 
 echo "Database services are ready!"
 
-# Non-interactive setup on first run (auto-create admin)
+# Check if NodeBB needs first-time setup
+NEEDS_SETUP=false
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
-  echo "NodeBB not configured, running non-interactive setup..."
+  NEEDS_SETUP=true
+  echo "NodeBB not configured, will run setup after creating config..."
   echo "Note: Database should be created by Terraform DB init task before this runs"
-  
-  # Create config.json manually with proper SSL settings for AWS RDS
-  # This bypasses NodeBB's setup SSL limitations
-  echo "Creating initial config.json with AWS RDS SSL settings..."
-  cat > /app/config.json <<EOF
+fi
+
+# ALWAYS create/update config.json with proper settings (PostgreSQL-only, no Redis)
+echo "Creating/updating config.json with PostgreSQL-only configuration..."
+cat > /app/config.json <<EOF
 {
   "url": "${NODEBB_URL:-http://localhost:4567}",
   "secret": "${NODEBB_SSO_SECRET:-$(openssl rand -hex 32)}",
@@ -39,16 +41,18 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
 }
 EOF
 
-  echo "config.json created with SSL configured for AWS RDS"
-  
-  # Now run NodeBB setup - it will use the existing config.json
-  # This includes creating admin user and initializing database schema
+echo "config.json created (PostgreSQL-only, Redis disabled)"
+
+# Run setup only if this is first time
+if [ "$NEEDS_SETUP" = true ]; then
   export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
   export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
   export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
   
   echo "Running NodeBB database initialization..."
   node app --setup
+else
+  echo "NodeBB already configured, skipping setup"
 fi
 
 # Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
