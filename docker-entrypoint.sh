@@ -46,18 +46,6 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
     "password": "${DB_PASSWORD:-nodebb123}",
     "database": "${DB_NAME:-nodebb}",
     "ssl": { "rejectUnauthorized": false }
-  },
-  "redis": {
-    "host": "${REDIS_HOST:-redis}",
-    "port": ${REDIS_PORT:-6379},
-    "password": "${REDIS_PASSWORD:-}",
-    "database": 0,
-    "options": {
-      "socket": {
-        "tls": true,
-        "rejectUnauthorized": false
-      }
-    }
   }
 }
 EOF
