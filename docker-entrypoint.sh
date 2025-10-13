@@ -53,34 +53,43 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   "postgres:port": ${NODEBB_DB_PORT},
   "postgres:username": "${NODEBB_DB_USER}",
   "postgres:password": "${NODEBB_DB_PASSWORD}",
-  "postgres:database": "${NODEBB_DB_NAME}"
+  "postgres:database": "${NODEBB_DB_NAME}",
+  "postgres:ssl": true
 }
 EOF
   node app --setup="$(cat /tmp/setup.json)"
-  
-  # Configure Redis after initial setup (NodeBB stores this in config.json)
-  if [ -n "${REDIS_HOST}" ] && [ -n "${REDIS_PASSWORD}" ]; then
-    echo "Configuring Redis for session storage and cache..."
-    node -e "
-      const nconf = require('nconf');
-      const fs = require('fs');
-      nconf.file({ file: 'config.json' });
-      
-      // Add Redis configuration
-      nconf.set('redis', {
-        host: process.env.REDIS_HOST || 'localhost',
-        port: parseInt(process.env.REDIS_PORT) || 6379,
-        password: process.env.REDIS_PASSWORD || '',
-        database: 0,
-        tls: process.env.REDIS_PASSWORD ? {} : undefined  // Enable TLS for ElastiCache with encryption
-      });
-      
-      // Save config
-      fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
-      console.log('Redis configuration added to config.json');
-    " || echo "Warning: Failed to configure Redis, will use database for sessions"
-  fi
 fi
+
+# Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
+# This ensures configuration is present even if config.json existed from previous deployment
+echo "Ensuring database connections are configured..."
+node -e "
+  const nconf = require('nconf');
+  const fs = require('fs');
+  nconf.file({ file: 'config.json' });
+  
+  // Ensure PostgreSQL SSL is enabled for RDS
+  if (nconf.get('postgres')) {
+    nconf.set('postgres:ssl', true);
+    console.log('PostgreSQL SSL enabled for RDS connection');
+  }
+  
+  // Add Redis configuration if available
+  if (process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
+    nconf.set('redis', {
+      host: process.env.REDIS_HOST || 'localhost',
+      port: parseInt(process.env.REDIS_PORT) || 6379,
+      password: process.env.REDIS_PASSWORD || '',
+      database: 0,
+      tls: process.env.REDIS_PASSWORD ? {} : undefined
+    });
+    console.log('Redis configuration with TLS added to config.json');
+  }
+  
+  // Save config
+  fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
+  console.log('Database configuration complete');
+" || echo "Warning: Failed to configure database connections"
 
 # Apply non-interactive configuration driven by environment variables
 echo "Applying runtime configuration..."
@@ -114,7 +123,7 @@ echo "Enabling nodebb-plugin-session-sharing..."
 # Configure session-sharing plugin (JWT via query string)
 if [ -n "${NODEBB_SSO_SECRET}" ]; then
   echo "Configuring session-sharing plugin..."
-  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:undefined,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error(e);process.exit(0)}})();" || true
+  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:undefined,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error('Warning: Failed to configure session-sharing:',e.message);}})()" || echo "Warning: session-sharing configuration failed, will retry on next start"
 fi
 
 # Iframe embedding headers: disable X-Frame-Options and set CSP frame-ancestors
@@ -129,7 +138,7 @@ fi
 # Apply custom CSS from /app/nodebb.css
 if [ -f "/app/nodebb.css" ]; then
   echo "Applying custom CSS from nodebb.css..."
-  node -e "const fs=require('fs');const nconf=require('nconf');const db=require('./src/database');(async()=>{try{nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','customCSS',fs.readFileSync('nodebb.css','utf8'));await db.setObjectField('config','useCustomCSS',true);await db.close();console.log('customCSS set');}catch(e){console.error(e);process.exit(0)}})();" || true
+  node -e "const fs=require('fs');const nconf=require('nconf');const db=require('./src/database');(async()=>{try{nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','customCSS',fs.readFileSync('nodebb.css','utf8'));await db.setObjectField('config','useCustomCSS',true);await db.close();console.log('customCSS set');}catch(e){console.error('Warning: Failed to set custom CSS:',e.message);}})()" || echo "Warning: custom CSS configuration failed"
   ./nodebb config set useCustomCSS true || true
 fi
 
