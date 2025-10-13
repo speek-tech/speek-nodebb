@@ -9,20 +9,9 @@ while ! nc -z ${DB_HOST:-postgres} ${DB_PORT:-5432}; do
   sleep 1
 done
 
-# Wait for Redis to be ready
-echo "Waiting for Redis to be ready at ${REDIS_HOST:-redis}:${REDIS_PORT:-6379}..."
-# Note: ElastiCache with transit encryption (TLS) can't be tested with plain nc
-# We give it a brief wait, then let NodeBB validate the connection with proper TLS support
-if [ -n "${REDIS_PASSWORD}" ]; then
-  echo "Redis with authentication detected - waiting 5 seconds for Redis to be ready..."
-  sleep 5
-  echo "Proceeding with NodeBB startup (will use TLS for Redis connection)"
-else
-  while ! nc -z ${REDIS_HOST:-redis} ${REDIS_PORT:-6379}; do
-    sleep 1
-  done
-  echo "Redis connection verified!"
-fi
+# Note: Redis disabled for now - NodeBB will use PostgreSQL for sessions/cache
+# ElastiCache TLS has connection issues that need further investigation
+echo "Note: Redis disabled - using PostgreSQL for all storage"
 
 echo "Database services are ready!"
 
@@ -76,22 +65,9 @@ node -e "
     console.log('PostgreSQL SSL enabled for RDS connection (accepting AWS certificate)');
   }
   
-  // Add Redis configuration if available
-  if (process.env.REDIS_HOST && process.env.REDIS_PASSWORD) {
-    nconf.set('redis', {
-      host: process.env.REDIS_HOST || 'localhost',
-      port: parseInt(process.env.REDIS_PORT) || 6379,
-      password: process.env.REDIS_PASSWORD || '',
-      database: 0,
-      options: {
-        socket: {
-          tls: true,  // Modern redis client (v5.x) needs TLS in socket options
-          rejectUnauthorized: false  // Accept AWS ElastiCache certificates
-        }
-      }
-    });
-    console.log('Redis configuration with TLS added to config.json');
-  }
+  // Skip Redis configuration - NodeBB can use PostgreSQL for sessions/cache
+  // Redis with TLS has connection issues, PostgreSQL is proven working
+  console.log('Using PostgreSQL for sessions and cache (Redis disabled)');
   
   // Save config
   fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
