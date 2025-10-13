@@ -46,6 +46,8 @@ connection.connect = async function (options) {
 					host: redis_socket_or_host,
 					port: options.port,
 					reconnectStrategy: 3000,
+					// Merge TLS settings from options if present (for AWS ElastiCache)
+					...(options.options && options.options.socket ? options.options.socket : {}),
 				},
 			});
 		}
