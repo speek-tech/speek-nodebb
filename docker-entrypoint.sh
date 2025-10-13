@@ -54,7 +54,7 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   "postgres:username": "${NODEBB_DB_USER}",
   "postgres:password": "${NODEBB_DB_PASSWORD}",
   "postgres:database": "${NODEBB_DB_NAME}",
-  "postgres:ssl": true
+  "postgres:ssl": { "rejectUnauthorized": false }
 }
 EOF
   node app --setup="$(cat /tmp/setup.json)"
@@ -68,10 +68,10 @@ node -e "
   const fs = require('fs');
   nconf.file({ file: 'config.json' });
   
-  // Ensure PostgreSQL SSL is enabled for RDS
+  // Ensure PostgreSQL SSL is enabled for RDS (with AWS certificate acceptance)
   if (nconf.get('postgres')) {
-    nconf.set('postgres:ssl', true);
-    console.log('PostgreSQL SSL enabled for RDS connection');
+    nconf.set('postgres:ssl', { rejectUnauthorized: false });
+    console.log('PostgreSQL SSL enabled for RDS connection (accepting AWS certificate)');
   }
   
   // Add Redis configuration if available
