@@ -29,6 +29,7 @@ echo "Database services are ready!"
 # Non-interactive setup on first run (auto-create admin)
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   echo "NodeBB not configured, running non-interactive setup..."
+  echo "Note: Database should be created by Terraform DB init task before this runs"
   
   # Create config.json manually with proper SSL settings for AWS RDS
   # This bypasses NodeBB's setup SSL limitations
@@ -45,6 +46,18 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
     "password": "${DB_PASSWORD:-nodebb123}",
     "database": "${DB_NAME:-nodebb}",
     "ssl": { "rejectUnauthorized": false }
+  },
+  "redis": {
+    "host": "${REDIS_HOST:-redis}",
+    "port": ${REDIS_PORT:-6379},
+    "password": "${REDIS_PASSWORD:-}",
+    "database": 0,
+    "options": {
+      "socket": {
+        "tls": true,
+        "rejectUnauthorized": false
+      }
+    }
   }
 }
 EOF
@@ -82,7 +95,12 @@ node -e "
       port: parseInt(process.env.REDIS_PORT) || 6379,
       password: process.env.REDIS_PASSWORD || '',
       database: 0,
-      tls: process.env.REDIS_PASSWORD ? {} : undefined
+      options: {
+        socket: {
+          tls: true,  // Modern redis client (v5.x) needs TLS in socket options
+          rejectUnauthorized: false  // Accept AWS ElastiCache certificates
+        }
+      }
     });
     console.log('Redis configuration with TLS added to config.json');
   }
