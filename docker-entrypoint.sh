@@ -54,10 +54,25 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   "postgres:username": "${NODEBB_DB_USER}",
   "postgres:password": "${NODEBB_DB_PASSWORD}",
   "postgres:database": "${NODEBB_DB_NAME}",
-  "postgres:ssl": { "rejectUnauthorized": false }
+  "postgres:ssl": "true"
 }
 EOF
   node app --setup="$(cat /tmp/setup.json)"
+  
+  # Immediately after setup, modify SSL to accept AWS RDS certificates
+  # NodeBB setup only accepts ssl as boolean, but pg library needs object for AWS
+  echo "Updating PostgreSQL SSL configuration for AWS RDS..."
+  node -e "
+    const nconf = require('nconf');
+    const fs = require('fs');
+    nconf.file({ file: 'config.json' });
+    
+    if (nconf.get('postgres')) {
+      nconf.set('postgres:ssl', { rejectUnauthorized: false });
+      fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
+      console.log('PostgreSQL SSL updated to accept AWS RDS certificates');
+    }
+  " || echo "Warning: Failed to update SSL configuration"
 fi
 
 # Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
