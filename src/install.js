@@ -621,10 +621,10 @@ install.setup = async function () {
 		const adminInfo = await createAdministrator();
 		await createGlobalModeratorsGroup();
 		await giveGlobalPrivileges();
-		await giveWorldPrivileges();
-		await createMenuItems();
-		await createWelcomePost();
-		await enableDefaultPlugins();
+	await giveWorldPrivileges();
+	await createMenuItems();
+	// await createWelcomePost(); // Disabled - no default welcome post
+	await enableDefaultPlugins();
 		await setCopyrightWidget();
 		await copyFavicon();
 		if (nconf.get('plugins:autoinstall')) await installPlugins();

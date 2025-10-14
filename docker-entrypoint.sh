@@ -4,111 +4,51 @@ set -e
 echo "Starting NodeBB Docker container..."
 
 # Wait for database to be ready
-echo "Waiting for PostgreSQL to be ready at ${DB_HOST:-postgres}:${DB_PORT:-5432}..."
+echo "Waiting for PostgreSQL to be ready..."
 while ! nc -z ${DB_HOST:-postgres} ${DB_PORT:-5432}; do
   sleep 1
 done
 
-# Note: Redis disabled for now - NodeBB will use PostgreSQL for sessions/cache
-# ElastiCache TLS has connection issues that need further investigation
-echo "Note: Redis disabled - using PostgreSQL for all storage"
+# Wait for Redis to be ready (for sessions)
+echo "Waiting for Redis to be ready..."
+while ! nc -z ${REDIS_HOST:-redis} ${REDIS_PORT:-6379}; do
+  sleep 1
+done
 
 echo "Database services are ready!"
 
-# Check if NodeBB needs first-time setup (before creating config.json)
-NEEDS_SETUP=false
+# Non-interactive setup on first run (auto-create admin)
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
-  NEEDS_SETUP=true
-  echo "NodeBB not configured, will run setup after creating config..."
-  echo "Note: Database should be created by Terraform DB init task before this runs"
-fi
+  echo "NodeBB not configured, running non-interactive setup..."
+  NODEBB_URL=${NODEBB_URL:-http://localhost:4567}
+  NODEBB_DB=${NODEBB_DB:-postgres}
+  NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
+  NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
+  NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
 
-# ALWAYS create/update config.json with proper settings (PostgreSQL-only, no Redis)
-echo "Creating/updating config.json with PostgreSQL-only configuration..."
-cat > /app/config.json <<EOF
+  cat > /tmp/setup.json <<EOF
 {
-  "url": "${NODEBB_URL:-http://localhost:4567}",
+  "url": "${NODEBB_URL}",
   "secret": "${NODEBB_SSO_SECRET:-$(openssl rand -hex 32)}",
-  "database": "postgres",
-  "postgres": {
-    "host": "${DB_HOST:-postgres}",
-    "port": ${DB_PORT:-5432},
-    "username": "${DB_USERNAME:-nodebb}",
-    "password": "${DB_PASSWORD:-nodebb123}",
-    "database": "${DB_NAME:-nodebb}",
-    "ssl": { "rejectUnauthorized": false }
-  }
+  "admin:username": "${NODEBB_ADMIN_USERNAME}",
+  "admin:email": "${NODEBB_ADMIN_EMAIL}",
+  "admin:password": "${NODEBB_ADMIN_PASSWORD}",
+  "admin:password:confirm": "${NODEBB_ADMIN_PASSWORD}",
+  "database": "${NODEBB_DB}",
+  "postgres:host": "${DB_HOST:-postgres}",
+  "postgres:port": ${DB_PORT:-5432},
+  "postgres:username": "${DB_USERNAME:-nodebb}",
+  "postgres:password": "${DB_PASSWORD:-nodebb123}",
+  "postgres:database": "${DB_NAME:-nodebb}",
+  "redis:host": "${REDIS_HOST:-redis}",
+  "redis:port": ${REDIS_PORT:-6379},
+  "redis:password": "${REDIS_PASSWORD:-}",
+  "redis:database": 0
 }
 EOF
-
-echo "config.json created (PostgreSQL-only, Redis disabled)"
-
-# Run setup only if this is first time OR if no admin user exists
-if [ "$NEEDS_SETUP" = true ]; then
-  export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
-  export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
-  export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
-  
-  echo "Running NodeBB database initialization..."
-  echo "Admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
-  node app --setup
-else
-  echo "NodeBB config exists, checking if admin user needs to be created..."
-  
-  # Check if admin user exists by trying to connect and query
-  HAS_ADMIN=$(node -e "
-    const nconf = require('nconf');
-    const db = require('./src/database');
-    (async () => {
-      try {
-        nconf.file({ file: 'config.json' });
-        await db.init(nconf.get('database'));
-        const adminCount = await db.sortedSetCard('users:admins');
-        console.log(adminCount > 0 ? 'true' : 'false');
-        await db.close();
-        process.exit(0);
-      } catch (e) {
-        console.log('false');
-        process.exit(0);
-      }
-    })();
-  " 2>/dev/null || echo "false")
-  
-  if [ "$HAS_ADMIN" = "false" ]; then
-    echo "No admin user found, creating admin user..."
-    export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
-    export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
-    export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
-    
-    echo "Admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
-    node app --setup
-  else
-    echo "Admin user exists, skipping setup"
-  fi
+  echo "Running NodeBB setup with admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
+  node app --setup="$(cat /tmp/setup.json)"
 fi
-
-# Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
-# This ensures configuration is present even if config.json existed from previous deployment
-echo "Ensuring database connections are configured..."
-node -e "
-  const nconf = require('nconf');
-  const fs = require('fs');
-  nconf.file({ file: 'config.json' });
-  
-  // Ensure PostgreSQL SSL is enabled for RDS (with AWS certificate acceptance)
-  if (nconf.get('postgres')) {
-    nconf.set('postgres:ssl', { rejectUnauthorized: false });
-    console.log('PostgreSQL SSL enabled for RDS connection (accepting AWS certificate)');
-  }
-  
-  // Skip Redis configuration - NodeBB can use PostgreSQL for sessions/cache
-  // Redis with TLS has connection issues, PostgreSQL is proven working
-  console.log('Using PostgreSQL for sessions and cache (Redis disabled)');
-  
-  // Save config
-  fs.writeFileSync('config.json', JSON.stringify(nconf.stores.file.store, null, 2));
-  console.log('Database configuration complete');
-" || echo "Warning: Failed to configure database connections"
 
 # Apply non-interactive configuration driven by environment variables
 echo "Applying runtime configuration..."
