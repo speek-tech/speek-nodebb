@@ -40,6 +40,9 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   "postgres:username": "${DB_USERNAME:-nodebb}",
   "postgres:password": "${DB_PASSWORD:-nodebb123}",
   "postgres:database": "${DB_NAME:-nodebb}",
+  "postgres:ssl": {
+    "rejectUnauthorized": false
+  },
   "redis:host": "${REDIS_HOST:-redis}",
   "redis:port": ${REDIS_PORT:-6379},
   "redis:password": "${REDIS_PASSWORD:-}",
