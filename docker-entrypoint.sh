@@ -43,7 +43,8 @@ if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   "redis:host": "${REDIS_HOST:-redis}",
   "redis:port": ${REDIS_PORT:-6379},
   "redis:password": "${REDIS_PASSWORD:-}",
-  "redis:database": 0
+  "redis:database": 0,
+  "redis:tls": true
 }
 EOF
   echo "Running NodeBB setup with admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
