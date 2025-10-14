@@ -15,7 +15,7 @@ echo "Note: Redis disabled - using PostgreSQL for all storage"
 
 echo "Database services are ready!"
 
-# Check if NodeBB needs first-time setup
+# Check if NodeBB needs first-time setup (before creating config.json)
 NEEDS_SETUP=false
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   NEEDS_SETUP=true
@@ -43,16 +43,48 @@ EOF
 
 echo "config.json created (PostgreSQL-only, Redis disabled)"
 
-# Run setup only if this is first time
+# Run setup only if this is first time OR if no admin user exists
 if [ "$NEEDS_SETUP" = true ]; then
   export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
   export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
   export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
   
   echo "Running NodeBB database initialization..."
+  echo "Admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
   node app --setup
 else
-  echo "NodeBB already configured, skipping setup"
+  echo "NodeBB config exists, checking if admin user needs to be created..."
+  
+  # Check if admin user exists by trying to connect and query
+  HAS_ADMIN=$(node -e "
+    const nconf = require('nconf');
+    const db = require('./src/database');
+    (async () => {
+      try {
+        nconf.file({ file: 'config.json' });
+        await db.init(nconf.get('database'));
+        const adminCount = await db.sortedSetCard('users:admins');
+        console.log(adminCount > 0 ? 'true' : 'false');
+        await db.close();
+        process.exit(0);
+      } catch (e) {
+        console.log('false');
+        process.exit(0);
+      }
+    })();
+  " 2>/dev/null || echo "false")
+  
+  if [ "$HAS_ADMIN" = "false" ]; then
+    echo "No admin user found, creating admin user..."
+    export NODEBB_ADMIN_USERNAME=${NODEBB_ADMIN_USERNAME:-admin}
+    export NODEBB_ADMIN_PASSWORD=${NODEBB_ADMIN_PASSWORD:-admin123}
+    export NODEBB_ADMIN_EMAIL=${NODEBB_ADMIN_EMAIL:-admin@speek.local}
+    
+    echo "Admin credentials: ${NODEBB_ADMIN_USERNAME} / ${NODEBB_ADMIN_EMAIL}"
+    node app --setup
+  else
+    echo "Admin user exists, skipping setup"
+  fi
 fi
 
 # Configure Redis and PostgreSQL SSL (runs ALWAYS, not just first time)
