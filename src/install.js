@@ -501,26 +501,7 @@ async function createMenuItems() {
 	await navigation.save(data);
 }
 
-// Disabled - no default welcome post
-// async function createWelcomePost() {
-// 	const db = require('./database');
-// 	const Topics = require('./topics');
-
-// 	const [content, numTopics] = await Promise.all([
-// 		fs.promises.readFile(path.join(__dirname, '../', 'install/data/welcome.md'), 'utf8'),
-// 		db.getObjectField('global', 'topicCount'),
-// 	]);
-
-// 	if (!parseInt(numTopics, 10)) {
-// 		console.log('Creating welcome post!');
-// 		await Topics.post({
-// 			uid: 1,
-// 			cid: 2,
-// 			title: 'Welcome to your NodeBB!',
-// 			content: content,
-// 		});
-// 	}
-// }
+// createWelcomePost function removed - no default welcome post needed
 
 async function enableDefaultPlugins() {
 	console.log('Enabling default plugins');
