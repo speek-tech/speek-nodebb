@@ -501,25 +501,26 @@ async function createMenuItems() {
 	await navigation.save(data);
 }
 
-async function createWelcomePost() {
-	const db = require('./database');
-	const Topics = require('./topics');
+// Disabled - no default welcome post
+// async function createWelcomePost() {
+// 	const db = require('./database');
+// 	const Topics = require('./topics');
 
-	const [content, numTopics] = await Promise.all([
-		fs.promises.readFile(path.join(__dirname, '../', 'install/data/welcome.md'), 'utf8'),
-		db.getObjectField('global', 'topicCount'),
-	]);
+// 	const [content, numTopics] = await Promise.all([
+// 		fs.promises.readFile(path.join(__dirname, '../', 'install/data/welcome.md'), 'utf8'),
+// 		db.getObjectField('global', 'topicCount'),
+// 	]);
 
-	if (!parseInt(numTopics, 10)) {
-		console.log('Creating welcome post!');
-		await Topics.post({
-			uid: 1,
-			cid: 2,
-			title: 'Welcome to your NodeBB!',
-			content: content,
-		});
-	}
-}
+// 	if (!parseInt(numTopics, 10)) {
+// 		console.log('Creating welcome post!');
+// 		await Topics.post({
+// 			uid: 1,
+// 			cid: 2,
+// 			title: 'Welcome to your NodeBB!',
+// 			content: content,
+// 		});
+// 	}
+// }
 
 async function enableDefaultPlugins() {
 	console.log('Enabling default plugins');
@@ -621,10 +622,10 @@ install.setup = async function () {
 		const adminInfo = await createAdministrator();
 		await createGlobalModeratorsGroup();
 		await giveGlobalPrivileges();
-	await giveWorldPrivileges();
-	await createMenuItems();
-	// await createWelcomePost(); // Disabled - no default welcome post
-	await enableDefaultPlugins();
+		await giveWorldPrivileges();
+		await createMenuItems();
+		// await createWelcomePost(); // Disabled - no default welcome post
+		await enableDefaultPlugins();
 		await setCopyrightWidget();
 		await copyFavicon();
 		if (nconf.get('plugins:autoinstall')) await installPlugins();
