@@ -17,6 +17,16 @@ done
 
 echo "Database services are ready!"
 
+# Check if database has proper NodeBB PostgreSQL tables (not just Legacy/Redis tables)
+# The 'users' table is a core PostgreSQL table that NodeBB creates during setup
+DB_HAS_PROPER_TABLES=$(PGPASSWORD="${DB_PASSWORD}" psql -h "${DB_HOST}" -p "${DB_PORT}" -U "${DB_USERNAME}" -d "${DB_NAME}" -tAc "SELECT COUNT(*) FROM information_schema.tables WHERE table_schema = 'public' AND table_name = 'users' AND table_type = 'BASE TABLE';" 2>/dev/null || echo "0")
+
+# If database doesn't have proper PostgreSQL tables (only has Legacy/Redis tables), force fresh setup
+if [ "${DB_HAS_PROPER_TABLES}" = "0" ]; then
+  echo "Database doesn't have proper NodeBB PostgreSQL tables, forcing fresh setup..."
+  rm -f /app/config.json
+fi
+
 # Non-interactive setup on first run (auto-create admin)
 if [ ! -f "/app/config.json" ] || [ ! -s "/app/config.json" ]; then
   echo "NodeBB not configured, running non-interactive setup..."
