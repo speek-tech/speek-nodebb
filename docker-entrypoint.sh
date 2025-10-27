@@ -146,10 +146,49 @@ fi
 echo "   🔧 Enabling nodebb-plugin-session-sharing..."
 ./nodebb plugins enable nodebb-plugin-session-sharing || echo "   ⚠️  Failed to enable session-sharing plugin"
 
-# Configure session-sharing plugin (JWT via query string)
+# Configure session-sharing plugin (JWT via cookie)
 if [ -n "${NODEBB_SSO_SECRET}" ]; then
   echo "   🔐 Configuring session-sharing plugin..."
-  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:undefined,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('session-sharing configured');}catch(e){console.error('Warning: Failed to configure session-sharing:',e.message);}})()" || echo "   ⚠️  Session-sharing configuration failed, will retry on next start"
+  # Set cookie domain for cross-subdomain SSO based on environment
+  # Local: no domain (localhost only - host-only cookies)
+  # Development: .lets-speek.com (dev.lets-speek.com + dev-community.lets-speek.com + localhost)
+  # Staging: .lets-speek.com (test.lets-speek.com + test-community.lets-speek.com)
+  # Production: .lets-speek.com (www.lets-speek.com + community.lets-speek.com)
+  
+  # Determine defaults based on NODE_ENV or explicit override
+  if [ -z "${NODEBB_SSO_COOKIE_DOMAIN}" ]; then
+    if [ "${NODE_ENV}" = "production" ]; then
+      SSO_COOKIE_DOMAIN=".lets-speek.com"
+      SSO_HOST_WHITELIST="lets-speek.com,www.lets-speek.com,community.lets-speek.com"
+    elif [ "${NODE_ENV}" = "staging" ]; then
+      SSO_COOKIE_DOMAIN=".lets-speek.com"
+      SSO_HOST_WHITELIST="test.lets-speek.com,test-community.lets-speek.com"
+    elif [ "${NODE_ENV}" = "development" ]; then
+      # Development - supports both cloud (dev.lets-speek.com) and local (localhost)
+      SSO_COOKIE_DOMAIN=".lets-speek.com"
+      SSO_HOST_WHITELIST="localhost,127.0.0.1,dev.lets-speek.com,dev-community.lets-speek.com"
+    else
+      # Local only - no cookie domain (host-only cookies for localhost)
+      SSO_COOKIE_DOMAIN=""
+      SSO_HOST_WHITELIST="localhost,127.0.0.1"
+    fi
+  else
+    SSO_COOKIE_DOMAIN="${NODEBB_SSO_COOKIE_DOMAIN}"
+    SSO_HOST_WHITELIST="${NODEBB_SSO_HOST_WHITELIST:-localhost,127.0.0.1}"
+  fi
+  
+  echo "   🌍 Environment: ${NODE_ENV:-development}"
+  echo "   🍪 Cookie domain: ${SSO_COOKIE_DOMAIN:-<host-only>}"
+  echo "   🔒 Host whitelist: ${SSO_HOST_WHITELIST}"
+  
+  # Build the session-sharing configuration
+  if [ -n "${SSO_COOKIE_DOMAIN}" ]; then
+    COOKIE_DOMAIN_CONFIG="cookieDomain:'${SSO_COOKIE_DOMAIN}',"
+  else
+    COOKIE_DOMAIN_CONFIG="cookieDomain:undefined,"
+  fi
+  
+  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const cookieDomain=process.env.SSO_COOKIE_DOMAIN||undefined;const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:cookieDomain,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:process.env.SSO_HOST_WHITELIST||'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('✅ session-sharing configured:',{domain:o.cookieDomain||'<host-only>',whitelist:o.hostWhitelist});}catch(e){console.error('Warning: Failed to configure session-sharing:',e.message);}})()" || echo "   ⚠️  Session-sharing configuration failed, will retry on next start"
 else
   echo "   ℹ️  No SSO secret provided, skipping session-sharing configuration"
 fi
@@ -160,8 +199,18 @@ if [ -n "${NODEBB_FRAME_ANCESTORS}" ]; then
   echo "   🔗 Setting frame ancestors: ${NODEBB_FRAME_ANCESTORS}"
   ./nodebb config set "csp-frame-ancestors" "${NODEBB_FRAME_ANCESTORS}" || echo "   ⚠️  Failed to set frame ancestors"
 else
-  echo "   🏠 Setting default frame ancestors for development"
-  ./nodebb config set "csp-frame-ancestors" "http://localhost:3000 http://127.0.0.1:3000" || echo "   ⚠️  Failed to set default frame ancestors"
+  # Set default frame ancestors based on environment
+  if [ "${NODE_ENV}" = "production" ]; then
+    FRAME_ANCESTORS="https://app.lets-speek.com"
+  elif [ "${NODE_ENV}" = "staging" ]; then
+    FRAME_ANCESTORS="https://test.lets-speek.com"
+  elif [ "${NODE_ENV}" = "development" ]; then
+    FRAME_ANCESTORS="http://localhost:3000 http://127.0.0.1:3000 https://dev.lets-speek.com"
+  else
+    FRAME_ANCESTORS="http://localhost:3000 http://127.0.0.1:3000"
+  fi
+  echo "   🏠 Setting frame ancestors for ${NODE_ENV:-development}: ${FRAME_ANCESTORS}"
+  ./nodebb config set "csp-frame-ancestors" "${FRAME_ANCESTORS}" || echo "   ⚠️  Failed to set frame ancestors"
 fi
 echo "   🚫 Disabling X-Frame-Options"
 ./nodebb config set xframe disabled || echo "   ⚠️  Failed to disable X-Frame-Options"
