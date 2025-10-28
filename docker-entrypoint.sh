@@ -217,10 +217,22 @@ else
     FRAME_ANCESTORS="http://localhost:3000 http://127.0.0.1:3000"
   fi
   echo "   🏠 Setting frame ancestors for ${NODE_ENV:-development}: ${FRAME_ANCESTORS}"
-  ./nodebb config set "csp-frame-ancestors" "${FRAME_ANCESTORS}" || echo "   ⚠️  Failed to set frame ancestors"
+  ./nodebb config set "csp-frame-ancestors" "${FRAME_ANCESTORS}" || echo "   ⚠️  Failed to set frame ancestors via CLI"
 fi
+
+# Set CSP frame-ancestors directly in database (more reliable)
+echo "   📝 Writing CSP frame-ancestors to database..."
+export FRAME_ANCESTORS
+node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','csp-frame-ancestors',process.env.FRAME_ANCESTORS);console.log('✅ CSP frame-ancestors set to:',process.env.FRAME_ANCESTORS);await db.close();}catch(e){console.error('❌ Failed to set CSP frame-ancestors:',e.message);process.exit(1);}})()"
+
 echo "   🚫 Disabling X-Frame-Options"
-./nodebb config set xframe disabled || echo "   ⚠️  Failed to disable X-Frame-Options"
+./nodebb config set xframe disabled || echo "   ⚠️  Failed to disable X-Frame-Options via CLI"
+# Remove X-Frame-Options from database
+node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.deleteObjectField('config','frame-options');await db.deleteObjectField('config','allow-from-uri');console.log('✅ X-Frame-Options removed from database');await db.close();}catch(e){console.error('⚠️  Failed to remove X-Frame-Options:',e.message);}})()"
+
+# Configure cross-origin policies for iframe embedding
+echo "   🌐 Configuring cross-origin policies..."
+node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','cross-origin-embedder-policy',1);await db.setObjectField('config','cross-origin-opener-policy','unsafe-none');await db.setObjectField('config','cross-origin-resource-policy','cross-origin');console.log('✅ Cross-origin policies configured (COEP: require-corp, COOP: unsafe-none, CORP: cross-origin)');await db.close();}catch(e){console.error('⚠️  Failed to set cross-origin policies:',e.message);}})()"
 
 # Set Permissions-Policy for iframe embedding
 echo "   🔐 Configuring Permissions-Policy for iframe features..."
