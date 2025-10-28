@@ -153,13 +153,13 @@ if [ -n "${NODEBB_SSO_SECRET}" ]; then
   # Local: no domain (localhost only - host-only cookies)
   # Development: .lets-speek.com (dev.lets-speek.com + dev-community.lets-speek.com + localhost)
   # Staging: .lets-speek.com (test.lets-speek.com + test-community.lets-speek.com)
-  # Production: .lets-speek.com (www.lets-speek.com + community.lets-speek.com)
+  # Production: .lets-speek.com (app.lets-speek.com + community.lets-speek.com)
   
   # Determine defaults based on NODE_ENV or explicit override
   if [ -z "${NODEBB_SSO_COOKIE_DOMAIN}" ]; then
     if [ "${NODE_ENV}" = "production" ]; then
       SSO_COOKIE_DOMAIN=".lets-speek.com"
-      SSO_HOST_WHITELIST="lets-speek.com,www.lets-speek.com,community.lets-speek.com"
+      SSO_HOST_WHITELIST="lets-speek.com,app.lets-speek.com,community.lets-speek.com"
     elif [ "${NODE_ENV}" = "staging" ]; then
       SSO_COOKIE_DOMAIN=".lets-speek.com"
       SSO_HOST_WHITELIST="test.lets-speek.com,test-community.lets-speek.com"
@@ -181,14 +181,21 @@ if [ -n "${NODEBB_SSO_SECRET}" ]; then
   echo "   🍪 Cookie domain: ${SSO_COOKIE_DOMAIN:-<host-only>}"
   echo "   🔒 Host whitelist: ${SSO_HOST_WHITELIST}"
   
-  # Build the session-sharing configuration
-  if [ -n "${SSO_COOKIE_DOMAIN}" ]; then
-    COOKIE_DOMAIN_CONFIG="cookieDomain:'${SSO_COOKIE_DOMAIN}',"
-  else
-    COOKIE_DOMAIN_CONFIG="cookieDomain:undefined,"
-  fi
+  # Export variables so Node.js process can access them
+  export SSO_COOKIE_DOMAIN
+  export SSO_HOST_WHITELIST
+  export NODEBB_SSO_SECRET
   
-  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const cookieDomain=process.env.SSO_COOKIE_DOMAIN||undefined;const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:cookieDomain,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:process.env.SSO_HOST_WHITELIST||'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname'};await db.setObject('settings:session-sharing',o);await db.close();console.log('✅ session-sharing configured:',{domain:o.cookieDomain||'<host-only>',whitelist:o.hostWhitelist});}catch(e){console.error('Warning: Failed to configure session-sharing:',e.message);}})()" || echo "   ⚠️  Session-sharing configuration failed, will retry on next start"
+  # Configure session-sharing in database
+  echo "   📝 Writing session-sharing configuration to database..."
+  node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));const cookieDomain=process.env.SSO_COOKIE_DOMAIN||undefined;const o={name:process.env.NODEBB_SSO_APPID||'speek',cookieName:'token',cookieDomain:cookieDomain,secret:process.env.NODEBB_SSO_SECRET,behaviour:'trust',adminRevalidate:'off',noRegistration:'off',payloadParent:undefined,allowBannedUsers:false,hostWhitelist:process.env.SSO_HOST_WHITELIST||'localhost,127.0.0.1','payload:id':'id','payload:username':'username','payload:email':'email','payload:picture':'picture','payload:fullname':'fullname','payload:isAdmin':'isAdmin'};await db.setObject('settings:session-sharing',o);await db.close();console.log('✅ session-sharing configured:',JSON.stringify({cookieName:o.cookieName,domain:o.cookieDomain||'<host-only>',whitelist:o.hostWhitelist,behaviour:o.behaviour},null,2));}catch(e){console.error('❌ Failed to configure session-sharing:',e.message);console.error(e.stack);process.exit(1);}})()"
+  
+  if [ $? -eq 0 ]; then
+    echo "   ✅ Session-sharing configuration completed successfully"
+  else
+    echo "   ❌ Session-sharing configuration failed!"
+    exit 1
+  fi
 else
   echo "   ℹ️  No SSO secret provided, skipping session-sharing configuration"
 fi
