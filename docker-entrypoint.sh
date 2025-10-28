@@ -222,6 +222,29 @@ fi
 echo "   🚫 Disabling X-Frame-Options"
 ./nodebb config set xframe disabled || echo "   ⚠️  Failed to disable X-Frame-Options"
 
+# Set Permissions-Policy for iframe embedding
+echo "   🔐 Configuring Permissions-Policy for iframe features..."
+if [ -n "${NODEBB_PERMISSIONS_POLICY}" ]; then
+  PERMISSIONS_POLICY="${NODEBB_PERMISSIONS_POLICY}"
+  echo "   📋 Using custom Permissions-Policy"
+else
+  # Set default permissions based on environment
+  if [ "${NODE_ENV}" = "production" ]; then
+    PERMISSIONS_POLICY="fullscreen=(self \"https://app.lets-speek.com\"), clipboard-write=(self \"https://app.lets-speek.com\"), clipboard-read=(self \"https://app.lets-speek.com\")"
+  elif [ "${NODE_ENV}" = "staging" ]; then
+    PERMISSIONS_POLICY="fullscreen=(self \"https://test.lets-speek.com\"), clipboard-write=(self \"https://test.lets-speek.com\"), clipboard-read=(self \"https://test.lets-speek.com\")"
+  elif [ "${NODE_ENV}" = "development" ]; then
+    PERMISSIONS_POLICY="fullscreen=(self \"http://localhost:3000\" \"https://dev.lets-speek.com\"), clipboard-write=(self \"http://localhost:3000\" \"https://dev.lets-speek.com\"), clipboard-read=(self \"http://localhost:3000\" \"https://dev.lets-speek.com\")"
+  else
+    PERMISSIONS_POLICY="fullscreen=(self \"http://localhost:3000\"), clipboard-write=(self \"http://localhost:3000\"), clipboard-read=(self \"http://localhost:3000\")"
+  fi
+  echo "   🎯 Setting Permissions-Policy for ${NODE_ENV:-development}"
+fi
+
+# Set Permissions-Policy in database
+export PERMISSIONS_POLICY
+node -e "(async()=>{try{const nconf=require('nconf');const db=require('./src/database');nconf.file({file:'config.json'});await db.init(nconf.get('database'));await db.setObjectField('config','permissions-policy',process.env.PERMISSIONS_POLICY);await db.close();console.log('✅ Permissions-Policy configured');}catch(e){console.error('⚠️  Failed to set Permissions-Policy:',e.message);}})()" || echo "   ⚠️  Permissions-Policy configuration failed"
+
 # Apply custom CSS from /app/nodebb.css
 if [ -f "/app/nodebb.css" ]; then
   echo "🎨 Applying custom CSS from nodebb.css..."
