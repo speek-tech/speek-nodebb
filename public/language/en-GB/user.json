@@ -8,7 +8,7 @@
 	"deleted": "Deleted",
 	"username": "User Name",
 	"joindate": "Join Date",
-	"postcount": "Post Count",
+	"postcount": "Comment Count",
 
 	"email": "Email",
 	"confirm-email": "Confirm Email",
@@ -23,10 +23,10 @@
 	"delete-account-as-admin": "Delete <strong>Account</strong>",
 	"delete-content": "Delete Account <strong>Content</strong>",
 	"delete-all": "Delete <strong>Account</strong> and <strong>Content</strong>",
-	"delete-account-confirm": "Are you sure you want to anonymize your posts and delete your account?<br /><strong>This action is irreversible and you will not be able to recover any of your data</strong><br /><br />Enter your password to confirm that you wish to destroy this account.",
-	"delete-this-account-confirm": "Are you sure you want to delete this account while leaving its contents behind?<br /><strong>This action is irreversible, posts will be anonymized, and you will not be able to restore post associations with the deleted account</strong><br /><br />",
-	"delete-account-content-confirm": "Are you sure you want to delete this account's content (posts/topics/uploads)? <br /><strong>This action is irreversible and you will not be able to recover any data</strong><br /><br />",
-	"delete-all-confirm": "Are you sure you want to delete this account and all of its content (posts/topics/uploads)? <br /><strong>This action is irreversible and you will not be able to recover any data</strong><br /><br />",
+	"delete-account-confirm": "Are you sure you want to anonymize your comments and delete your account?<br /><strong>This action is irreversible and you will not be able to recover any of your data</strong><br /><br />Enter your password to confirm that you wish to destroy this account.",
+	"delete-this-account-confirm": "Are you sure you want to delete this account while leaving its contents behind?<br /><strong>This action is irreversible, comments will be anonymized, and you will not be able to restore comment associations with the deleted account</strong><br /><br />",
+	"delete-account-content-confirm": "Are you sure you want to delete this account's content (comments/posts/uploads)? <br /><strong>This action is irreversible and you will not be able to recover any data</strong><br /><br />",
+	"delete-all-confirm": "Are you sure you want to delete this account and all of its content (comments/posts/uploads)? <br /><strong>This action is irreversible and you will not be able to recover any data</strong><br /><br />",
 	"account-deleted": "Account deleted",
 	"account-content-deleted": "Account content deleted",
 

@@ -1,16 +1,16 @@
 {
     "title": "Unread",
-    "no-unread-topics": "There are no unread topics.",
+    "no-unread-topics": "There are no unread posts.",
     "load-more": "Load More",
     "mark-as-read": "Mark as Read",
     "mark-as-unread": "Mark as Unread",
     "selected": "Selected",
     "all": "All",
     "all-categories": "All categories",
-    "topics-marked-as-read.success": "Topics marked as read!",
-    "all-topics": "All Topics",
-    "new-topics": "New Topics",
-    "watched-topics": "Watched Topics",
-    "unreplied-topics": "Unreplied Topics",
+    "topics-marked-as-read.success": "Posts marked as read!",
+    "all-topics": "All Posts",
+    "new-topics": "New Posts",
+    "watched-topics": "Watched Posts",
+    "unreplied-topics": "Unreplied Posts",
     "multiple-categories-selected": "Multiple Selected"
 }

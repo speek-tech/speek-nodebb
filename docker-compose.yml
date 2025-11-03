@@ -38,25 +38,26 @@ services:
       # NodeBB Configuration
       NODEBB_URL: http://localhost:4567
       NODEBB_DB: postgres
+      NODE_ENV: development
       # Navigation / theme locks
       NODEBB_NAV: top
       NODEBB_SIDEBAR: "false"
       NODEBB_ALLOW_USER_SKINS: "false"
       NODEBB_ALLOW_THEME_SWITCH: "false"
-      # SSO (session sharing) basic config
+      # SSO (session sharing) - MUST match speek-api NODEBB_SESSION_SHARING_SECRET
       NODEBB_SSO_SECRET: a604917d01b7742cf166d7040a67e7fb29bccdda303719d5606e15acb03854d0
       
-      # PostgreSQL Configuration
-      NODEBB_DB_HOST: postgres
-      NODEBB_DB_PORT: 5432
-      NODEBB_DB_USER: nodebb
-      NODEBB_DB_PASSWORD: nodebb123
-      NODEBB_DB_NAME: nodebb
+      # PostgreSQL Configuration (without NODEBB_ prefix for docker-entrypoint.sh)
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USERNAME: nodebb
+      DB_PASSWORD: nodebb123
+      DB_NAME: nodebb
       
-      # Redis Configuration
-      NODEBB_REDIS_HOST: redis
-      NODEBB_REDIS_PORT: 6379
-      NODEBB_REDIS_PASSWORD: redis123
+      # Redis Configuration (without NODEBB_ prefix for docker-entrypoint.sh)
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_PASSWORD: redis123
       
       # Admin Configuration
       NODEBB_ADMIN_USERNAME: admin

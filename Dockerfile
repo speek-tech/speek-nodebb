@@ -1,7 +1,7 @@
 FROM node:20-alpine
 
-# Install git, build dependencies, and netcat for health checks
-RUN apk add --no-cache git python3 make g++ netcat-openbsd
+# Install git, build dependencies, netcat for health checks, and openssl for secret generation
+RUN apk add --no-cache git python3 make g++ netcat-openbsd openssl
 
 # Set working directory
 WORKDIR /app

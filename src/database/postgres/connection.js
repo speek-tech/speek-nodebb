@@ -21,13 +21,25 @@ connection.getConnectionOptions = function (postgres) {
 		postgres.database = 'nodebb';
 	}
 
+	// Handle SSL configuration for AWS RDS
+	let sslConfig = false;
+	if (postgres.ssl) {
+		if (typeof postgres.ssl === 'object') {
+			// Use SSL object as-is (for AWS RDS certificate handling)
+			sslConfig = postgres.ssl;
+		} else {
+			// Convert string/boolean to boolean
+			sslConfig = String(postgres.ssl) === 'true';
+		}
+	}
+	
 	const connOptions = {
 		host: postgres.host,
 		port: postgres.port,
 		user: postgres.username,
 		password: postgres.password,
 		database: postgres.database,
-		ssl: String(postgres.ssl) === 'true',
+		ssl: sslConfig,
 		max: 20,
 		connectionTimeoutMillis: 90000,
 	};

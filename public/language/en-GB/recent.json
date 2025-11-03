@@ -5,10 +5,10 @@
 	"month": "Month",
 	"year": "Year",
 	"alltime": "All Time",
-	"no-recent-topics": "There are no recent topics.",
-	"no-popular-topics": "There are no popular topics.",
-	"load-new-posts": "Load new posts",
+	"no-recent-topics": "There are no recent posts.",
+	"no-popular-topics": "There are no popular posts.",
+	"load-new-posts": "Load new comments",
 
-	"uncategorized.title": "All known topics",
-	"uncategorized.intro": "This page shows a chronological listing of every topic that this forum has received.<br />The views and opinions expressed in the topics below are not moderated and may not represent the views and opinions of this website."
+	"uncategorized.title": "All known posts",
+	"uncategorized.intro": "This page shows a chronological listing of every post that this forum has received.<br />The views and opinions expressed in the posts below are not moderated and may not represent the views and opinions of this website."
 }
