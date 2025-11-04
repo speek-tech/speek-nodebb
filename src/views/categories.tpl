@@ -1,0 +1,54 @@
+<!-- IMPORT partials/category/selector-dropdown.tpl -->
+
+<div class="categories-page">
+	<div class="page-header">
+		<h1 class="page-title">Community</h1>
+		<p class="page-description">
+			Welcome to our supportive community. To keep the spaces relevant and conversations safe, please make sure you've read our <a href="#" class="community-guidelines-link">Community Guidelines</a>.
+		</p>
+	</div>
+
+	<div class="categories-grid">
+		{{{each categories}}}
+		{{{ if !categories.disabled }}}
+		<div class="category-card" data-cid="{categories.cid}">
+			<div class="category-icon-container">
+				{buildCategoryIcon(@value, "48px", "rounded-circle")}
+			</div>
+			
+			<div class="category-content">
+				<div class="category-title-section">
+					<h2 class="category-title">{categories.name}</h2>
+					{{{ if categories.descriptionParsed }}}
+					<p class="category-description">{categories.descriptionParsed}</p>
+					{{{ end }}}
+				</div>
+				
+				<div class="category-badges">
+					<span class="badge badge-posts">
+						{{{ if categories.topic_count }}}{categories.topic_count}{{{ else }}}0{{{ end }}} {{{ if categories.topic_count }}}posts{{{ else }}}post{{{ end }}}
+					</span>
+					{{{ if categories.unread }}}
+					<span class="badge badge-new">
+						{{{ if categories.numRecentReplies }}}{categories.numRecentReplies}{{{ else }}}1{{{ end }}} new
+					</span>
+					{{{ end }}}
+				</div>
+			</div>
+			
+			<a href="{config.relative_path}/category/{categories.slug}" class="btn-view-space">
+				View space
+				<i class="fa fa-arrow-right"></i>
+			</a>
+		</div>
+		{{{ end }}}
+		{{{ end }}}
+	</div>
+
+	{{{ if pagination.pages.length }}}
+	<div class="pagination-container">
+		<!-- IMPORT partials/paginator.tpl -->
+	</div>
+	{{{ end }}}
+</div>
+
