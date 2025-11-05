@@ -1,5 +1,18 @@
 // Categories page styling based on Figma design
+// Target the actual page container (theme template uses .row > div.col-lg-9 or .col-lg-12)
+.row.flex-fill.py-2 > div.col-lg-9,
+.row.flex-fill.py-2 > div.col-lg-12,
+#content .row.flex-fill.py-2 > div,
+#ajaxify .row.flex-fill.py-2 > div {
+  max-width: 90% !important;
+  margin: 0 auto !important;
+}
 
+// Also target .categories-page if it exists (from core template)
+.categories-page {
+  max-width: 90% !important;
+  margin: 0 auto !important;
+}
 // Style the page header
 .categories-page-header {
   display: flex !important;
@@ -13,7 +26,7 @@
     font-weight: 700 !important;
     font-size: 24px !important;
     line-height: 32px !important;
-    color: #355E66 !important;
+    color: #355e66 !important;
     margin: 0 !important;
   }
 
@@ -26,7 +39,7 @@
     margin: 0 !important;
 
     .community-guidelines-link {
-      color: #27454B !important;
+      color: #27454b !important;
       text-decoration: underline !important;
       font-weight: 700 !important;
       text-underline-offset: 3px !important;
