@@ -9,6 +9,58 @@
 // Import DM Sans font from Google Fonts with all weights
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&display=swap');
 
+// ===== Design System Breakpoints =====
+// Mobile-first breakpoint system
+$breakpoint-mobile: 767px;
+$breakpoint-tablet: 768px;
+$breakpoint-tablet-max: 1023px;
+$breakpoint-desktop: 1024px;
+$breakpoint-desktop-max: 1279px;
+$breakpoint-desktop-xl: 1280px;
+
+// Breakpoint Mixins
+// Usage: @include mobile { ... }
+@mixin mobile {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+// Usage: @include tablet { ... }
+@mixin tablet {
+  @media (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet-max) {
+    @content;
+  }
+}
+
+// Usage: @include tablet-up { ... }
+@mixin tablet-up {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+// Usage: @include desktop { ... }
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop) and (max-width: $breakpoint-desktop-max) {
+    @content;
+  }
+}
+
+// Usage: @include desktop-up { ... }
+@mixin desktop-up {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+// Usage: @include desktop-xl { ... }
+@mixin desktop-xl {
+  @media (min-width: $breakpoint-desktop-xl) {
+    @content;
+  }
+}
+
 // Global default font properties
 body {
   font-family: "DM Sans", sans-serif !important;

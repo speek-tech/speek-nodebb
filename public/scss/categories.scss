@@ -68,7 +68,8 @@ ul.categories-list.list-unstyled,
   margin: 24px 0 0 0 !important;
   position: relative !important;
 
-  @media (min-width: 1280px) {
+  // Desktop XL: 2 columns
+  @include desktop-xl {
     ul.categories-list.list-unstyled,
     .categories-list.list-unstyled,
     #content .categories-list,
@@ -80,7 +81,8 @@ ul.categories-list.list-unstyled,
     }
   }
 
-  @media (min-width: 1024px) and (max-width: 1279px) {
+  // Desktop: 2 columns
+  @include desktop {
     ul.categories-list.list-unstyled,
     .categories-list.list-unstyled,
     #content .categories-list,
@@ -92,7 +94,8 @@ ul.categories-list.list-unstyled,
     }
   }
 
-  @media (min-width: 768px) and (max-width: 1278px) {
+  // Tablet: 2 columns
+  @include tablet {
     ul.categories-list.list-unstyled,
     .categories-list.list-unstyled,
     #content .categories-list,
@@ -104,7 +107,8 @@ ul.categories-list.list-unstyled,
     }
   }
 
-  @media (max-width: 767px) {
+  // Mobile: 1 column
+  @include mobile {
     ul.categories-list.list-unstyled,
     .categories-list.list-unstyled,
     #content .categories-list,
@@ -391,11 +395,15 @@ ul.categories-list.list-unstyled,
     align-self: stretch;
     box-sizing: border-box;
 
-    @media (min-width: 1200px) {
+    @include desktop-xl {
       grid-template-columns: repeat(2, 1fr) !important;
     }
 
-    @media (min-width: 992px) and (max-width: 1199px) {
+    @include desktop {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+    
+    @include tablet {
       grid-template-columns: repeat(2, 1fr) !important;
     }
   }
@@ -406,7 +414,7 @@ ul.categories-list.list-unstyled,
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 24px !important;
 
-    @media (max-width: 991px) {
+    @include mobile {
       grid-template-columns: 1fr !important;
     }
   }
@@ -563,7 +571,7 @@ ul.categories-list.list-unstyled,
 }
 
 // Responsive adjustments
-@media (max-width: 991px) {
+@include mobile {
   .categories-page {
     padding: 16px;
 
@@ -583,7 +591,7 @@ ul.categories-list.list-unstyled,
   }
 }
 
-@media (min-width: 768px) and (max-width: 991px) {
+@include tablet {
   .categories-page {
     .categories-grid {
       grid-template-columns: repeat(2, 1fr) !important;
