@@ -139,6 +139,10 @@ ul.categories-list.list-unstyled,
 
     // Icon styling - position the icon absolutely
     > div.d-flex.col-lg-7 {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 1 !important;
+      
       .flex-shrink-0 {
         position: absolute !important;
         top: -24px !important;
@@ -166,6 +170,9 @@ ul.categories-list.list-unstyled,
       // Content wrapper
       .flex-grow-1 {
         margin-top: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
       }
     }
 
@@ -221,6 +228,7 @@ ul.categories-list.list-unstyled,
       line-height: 1.556 !important;
       color: #355e66 !important;
       margin-bottom: 4px !important;
+      width: 100% !important;
 
       a {
         color: #355e66 !important;
@@ -241,6 +249,8 @@ ul.categories-list.list-unstyled,
       color: #525252 !important;
       margin-bottom: 8px !important;
       margin-top: 4px !important;
+      width: 100% !important;
+      display: block !important;
     }
 
     // Badge styling
