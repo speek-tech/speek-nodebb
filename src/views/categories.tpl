@@ -38,7 +38,7 @@
 			
 			<a href="{config.relative_path}/category/{categories.slug}" class="btn-view-space">
 				View space
-				<i class="fa fa-arrow-right"></i>
+				{buildLucideIcon("arrow-right", 16, "ms-1")}
 			</a>
 		</div>
 		{{{ end }}}
