@@ -14,14 +14,14 @@
   margin: 0 auto !important;
 }
 // Style the page header
-.categories-page-header {
+.page-header {
   display: flex !important;
   flex-direction: column !important;
   gap: 8px !important;
   width: 100% !important;
   margin-bottom: 48px !important;
 
-  .categories-page-title {
+  .page-title {
     font-family: "DM Sans", sans-serif !important;
     font-weight: 700 !important;
     font-size: 24px !important;
@@ -30,7 +30,7 @@
     margin: 0 !important;
   }
 
-  .categories-page-description {
+  .page-description {
     font-family: "DM Sans", sans-serif !important;
     font-weight: 400 !important;
     font-size: 16px !important;
@@ -376,8 +376,10 @@ ul.categories-list.list-unstyled,
       margin: 0 !important;
 
       .community-guidelines-link {
-        color: #355e66 !important;
+        color: #27454b !important;
         text-decoration: underline !important;
+        font-weight: 700 !important;
+        text-underline-offset: 3px !important;
 
         &:hover {
           text-decoration: none !important;
@@ -389,7 +391,7 @@ ul.categories-list.list-unstyled,
   .categories-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 24px !important;
+    gap: 40px !important;
     width: 100% !important;
     padding: 24px 0 0 !important;
     align-self: stretch !important;
@@ -412,7 +414,7 @@ ul.categories-list.list-unstyled,
   .categories-list {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 24px !important;
+    gap: 40px !important;
 
     @include mobile {
       grid-template-columns: 1fr !important;
