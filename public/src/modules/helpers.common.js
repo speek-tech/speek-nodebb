@@ -15,6 +15,7 @@ module.exports = function (utils, Benchpress, relative_path) {
 		buildCategoryIcon,
 		buildCategoryLabel,
 		buildLucideIcon,
+		getCategoryIconName,
 		generateCategoryBackground,
 		generateChildrenCategories,
 		generateTopicClass,
@@ -569,6 +570,16 @@ module.exports = function (utils, Benchpress, relative_path) {
 		});
 
 		return html.join('');
+	}
+
+	function getCategoryIconName(categoryName) {
+		const iconMap = {
+			'1': 'messages-square',
+			'2': 'heart-handshake',
+			'3': 'building-2',
+			'4': 'user-check',
+		};
+		return iconMap[categoryName] || '';
 	}
 
 	function register() {
