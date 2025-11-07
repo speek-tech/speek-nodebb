@@ -541,10 +541,11 @@ ul.categories-list.list-unstyled,
       transition: all 0.2s ease;
       align-self: flex-start;
 
-      i {
-        font-size: 16px;
-        width: 16px;
-        height: 16px;
+      i,
+      svg {
+        font-size: 16px !important;
+        width: 16px !important;
+        height: 16px !important;
       }
 
       &:hover {
