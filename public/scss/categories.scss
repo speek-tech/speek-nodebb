@@ -4,14 +4,18 @@
 .row.flex-fill.py-2 > div.col-lg-12,
 #content .row.flex-fill.py-2 > div,
 #ajaxify .row.flex-fill.py-2 > div {
-  max-width: 90% !important;
+  max-width: 100% !important;
   margin: 0 auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 
 // Also target .categories-page if it exists (from core template)
 .categories-page {
-  max-width: 90% !important;
+  max-width: 100% !important;
   margin: 0 auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
 }
 // Style the page header
 .page-header {
@@ -300,7 +304,7 @@ ul.categories-list.list-unstyled,
 #ajaxify .categories-page,
 .container .categories-page,
 .categories-page {
-  padding: 24px 0 48px !important;
+  padding: 48px 5% 48px !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -542,7 +546,7 @@ ul.categories-list.list-unstyled,
 // Mobile: 1 column layout with adjusted spacing
 @include mobile {
   .categories-page {
-    padding: 16px !important;
+    padding: 24px 5% !important;
 
     .page-header {
       margin-bottom: 24px !important;
