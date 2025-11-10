@@ -68,57 +68,15 @@ ul.categories-list.list-unstyled,
   margin: 24px 0 0 0 !important;
   position: relative !important;
 
-  // Desktop XL: 2 columns
-  @include desktop-xl {
-    ul.categories-list.list-unstyled,
-    .categories-list.list-unstyled,
-    #content .categories-list,
-    #ajaxify .categories-list,
-    .container .categories-list,
-    .row .categories-list,
-    .categories-list {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-
-  // Desktop: 2 columns
-  @include desktop {
-    ul.categories-list.list-unstyled,
-    .categories-list.list-unstyled,
-    #content .categories-list,
-    #ajaxify .categories-list,
-    .container .categories-list,
-    .row .categories-list,
-    .categories-list {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-
-  // Tablet: 2 columns
-  @include tablet {
-    ul.categories-list.list-unstyled,
-    .categories-list.list-unstyled,
-    #content .categories-list,
-    #ajaxify .categories-list,
-    .container .categories-list,
-    .row .categories-list,
-    .categories-list {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-  }
-
   // Mobile: 1 column
   @include mobile {
-    ul.categories-list.list-unstyled,
-    .categories-list.list-unstyled,
-    #content .categories-list,
-    #ajaxify .categories-list,
-    .container .categories-list,
-    .row .categories-list,
-    .categories-list {
-      grid-template-columns: 1fr !important;
-      gap: 40px !important;
-    }
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  // Tablet and up: 2 columns
+  @include tablet-up {
+    grid-template-columns: repeat(2, 1fr) !important;
   }
 
   > li[component="categories/category"] {
@@ -397,15 +355,15 @@ ul.categories-list.list-unstyled,
     align-self: stretch !important;
     box-sizing: border-box !important;
 
-    @include desktop-xl {
-      grid-template-columns: repeat(2, 1fr) !important;
+    // Mobile: 1 column
+    @include mobile {
+      grid-template-columns: 1fr !important;
+      gap: 40px !important;
+      padding: 32px 0 0 !important;
     }
 
-    @include desktop {
-      grid-template-columns: repeat(2, 1fr) !important;
-    }
-    
-    @include tablet {
+    // Tablet and up: 2 columns
+    @include tablet-up {
       grid-template-columns: repeat(2, 1fr) !important;
     }
   }
@@ -416,8 +374,15 @@ ul.categories-list.list-unstyled,
     grid-template-columns: repeat(2, 1fr) !important;
     gap: 40px !important;
 
+    // Mobile: 1 column
     @include mobile {
       grid-template-columns: 1fr !important;
+      gap: 40px !important;
+    }
+
+    // Tablet and up: 2 columns
+    @include tablet-up {
+      grid-template-columns: repeat(2, 1fr) !important;
     }
   }
 
@@ -574,14 +539,19 @@ ul.categories-list.list-unstyled,
 }
 
 // Responsive adjustments
+// Mobile: 1 column layout with adjusted spacing
 @include mobile {
   .categories-page {
     padding: 16px !important;
 
+    .page-header {
+      margin-bottom: 24px !important;
+    }
+
     .categories-grid {
       grid-template-columns: 1fr !important;
       gap: 32px !important;
-      padding: 32px 0 0 !important;
+      padding: 16px 0 0 !important;
     }
 
     .category-card {
@@ -589,12 +559,14 @@ ul.categories-list.list-unstyled,
 
       .category-icon-container {
         left: 20px !important;
+        top: -20px !important;
       }
     }
   }
 }
 
-@include tablet {
+// Tablet and above: 2 columns layout
+@include tablet-up {
   .categories-page {
     .categories-grid {
       grid-template-columns: repeat(2, 1fr) !important;
