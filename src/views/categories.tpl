@@ -1,13 +1,6 @@
 <!-- IMPORT partials/category/selector-dropdown.tpl -->
 
 <div class="categories-page">
-	<div class="page-header">
-		<h1 class="page-title">Community</h1>
-		<p class="page-description">
-			Welcome to our supportive community. To keep the spaces relevant and conversations safe, please make sure you've read our <a href="#" class="community-guidelines-link">Community Guidelines</a>.
-		</p>
-	</div>
-
 	<div class="categories-grid">
 		{{{each categories}}}
 		{{{ if !categories.disabled }}}
