@@ -1,270 +1,378 @@
 /* ===== Speek brand tokens ===== */
 :root {
-    /* Page canvas (beige like app) */
-    --speek-bg: #efece1;
-    --speek-fg: #122023;
-  
-    /* Surfaces */
-    --speek-card: #ffffff;
-    --speek-card-fg: #122023;
-    --speek-border: #f3f1e9;
-  
-    /* Accents */
-    --speek-primary: #b6d3da;
-    --speek-primary-fg: #192c30;
-    --speek-accent: #e6ff00;
-    --speek-accent-muted: #f6ffa3;
-    --speek-accent-fg: #27454b;
-  
-    --speek-radius: 10px;
-  
-    /* Map to Bootstrap/Harmony (force tokens) */
-    --bs-body-bg: var(--speek-bg);
-    --bs-body-color: var(--speek-fg);
-    --bs-primary: var(--speek-primary);
-    --bs-primary-rgb: 182, 211, 218;
-    --bs-border-color: var(--speek-border);
-    --bs-light: var(--speek-bg);
-    --bs-light-rgb: 239, 236, 225;
-  }
-  
-  /* Also override Bootstrap theme scope so helpers like .bg-light use our canvas */
-  [data-bs-theme="light"],
-  body {
-    --bs-body-bg: var(--speek-bg) !important;
-    --bs-body-color: var(--speek-fg) !important;
-    --bs-light: var(--speek-bg) !important;
-    --bs-light-rgb: 239, 236, 225 !important;
-  }
-  
-  /* ===== Global canvas (kill bg images/gradients) ===== */
-  html, body,
-  .bg-body, .bg-body-tertiary, .bg-light,
-  main, #main, #content, #ajaxify, #ajaxifying,
-  .content, .page, .homepage,
-  .container, .container-fluid, .content > .container, .content > .container-fluid,
-  .row, .row.forum, .row.category, .row.recent, .row.popular,
-  .section, .sections,
-  .categories, .categories-list, .category,
-  .topics, .topic-list, .topic, .posts, .post-list,
-  .recent, .popular, .unread, .tags, .groups, .users, .search, .account,
-  .timeline, .pagination-block, .breadcrumb, .header, .subheader,
-  .harmony, .skin-default, .skin-harmony,
-  #panel, #panel .panel-body,
-  #sidebar, .sidebar, .sidebar-right {
-    background: var(--speek-bg) !important;
-    background-color: var(--speek-bg) !important;
-    background-image: none !important;
-    color: var(--speek-fg) !important;
-  }
-  
-  /* ===== Base typography ===== */
-  html, body {
-    font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
-  }
-  
-  /* ===== Header / Navbar ===== */
-  :root {
-    --speek-nav-bg: #efece1;
-    --speek-nav-border: #e6e2d2;
-    --speek-nav-link: #122023;
-    --speek-nav-link-active: #27454b;
-  }
-  #header, .navbar, .navbar-default, .navbar-light, .navbar.navbar-expand {
-    background: var(--speek-nav-bg) !important;
-    border-bottom: 1px solid var(--speek-nav-border) !important;
-    background-image: none !important;
-    box-shadow: none !important;
-  }
-  .navbar .navbar-brand,
-  .navbar .navbar-nav > li > a,
-  .navbar-light .navbar-nav .nav-link,
-  .breadcrumb a {
-    color: var(--speek-nav-link) !important;
-  }
-  .navbar .navbar-brand:hover,
-  .navbar .navbar-nav > li > a:hover,
-  .navbar-light .navbar-nav .nav-link:hover,
-  .navbar-light .navbar-nav .nav-link.active,
-  .breadcrumb a:hover {
-    color: var(--speek-nav-link-active) !important;
-    text-decoration: none;
-  }
-  
-  /* ===== Sidebars ===== */
-  /* Left slideout + left nav */
-  #panel, #panel .panel-body, #panel .list-group, #panel .list-group-item,
-  .slideout-menu, .sidebar-left, .sidebar, .nav-side {
-    background: var(--speek-bg) !important;
-    border-color: var(--speek-border) !important;
-  }
-  /* Right sidebar column */
-  .sidebar-right, #sidebar, .col-md-3.col-lg-3, #right, .aside, .widgets {
-    background: var(--speek-bg) !important;
-    border: 0 !important;
-  }
-  /* Sidebar widgets as white cards */
-  #panel .card, #panel .panel,
-  #sidebar .widget, .sidebar-right .widget,
-  .sidebar-right .card, #sidebar .card {
-    background: var(--speek-card) !important;
-    color: var(--speek-card-fg) !important;
-    border: 1px solid var(--speek-border) !important;
-    border-radius: var(--speek-radius) !important;
-  }
-  /* Kill any white helpers inside sidebars */
-  #panel .bg-white, #sidebar .bg-white, .sidebar-right .bg-white {
-    background: var(--speek-bg) !important;
-  }
-  
-  /* ===== Surfaces (cards/panels/composer/menus) ===== */
-  .card, .card-body,
-  .well, .panel, .panel-body,
-  .composer, .composer .title-container, .composer .write, .composer .preview,
-  .dropdown-menu, .modal-content,
-  .post, .post-container,
-  .topic-list .card, .categories .category,
-  .list-group, .list-group-item {
-    background: var(--speek-card) !important;
-    color: var(--speek-card-fg) !important;
-    border: 1px solid var(--speek-border) !important;
-    border-radius: var(--speek-radius) !important;
-    box-shadow: 0 8px 24px rgba(230, 255, 0, 0.08) !important;
-    background-image: none !important;
-  }
-  
-  /* ===== Links ===== */
-  a, .link-primary { color: var(--speek-accent-fg) !important; }
-  a:hover, .link-primary:hover { color: #355e66 !important; text-decoration: none; }
-  
-  /* ===== Buttons ===== */
-  .btn, .btn-default {
-    background: var(--speek-card) !important;
-    color: var(--speek-fg) !important;
-    border: 1px solid var(--speek-border) !important;
-    border-radius: var(--speek-radius) !important;
-  }
-  .btn-primary {
-    background: var(--speek-primary) !important;
-    border-color: var(--speek-primary) !important;
-    color: var(--speek-primary-fg) !important;
-  }
-  .btn-primary:hover { filter: brightness(0.95); }
-  .btn-link, .btn-outline { color: var(--speek-accent-fg) !important; }
-  
-  /* ===== Inputs ===== */
-  .form-control,
-  input[type="text"], input[type="email"], input[type="password"], textarea,
-  .select2-container .select2-choice {
-    background: var(--speek-card) !important;
-    color: var(--speek-fg) !important;
-    border: 1px solid var(--speek-border) !important;
-    border-radius: 8px !important;
-    box-shadow: none !important;
-  }
-  .form-control:focus, textarea:focus, .select2-container-active .select2-choice {
-    border-color: #355e66 !important;
-    box-shadow: 0 0 0 3px rgba(182, 211, 218, 0.35) !important;
-  }
-  
-  /* ===== Badges / Tags ===== */
-  .badge, .label, .tag {
-    background: var(--speek-accent-muted) !important;
-    color: var(--speek-accent-fg) !important;
-    border: 1px solid var(--speek-border) !important;
-    border-radius: 999px !important;
-  }
-  
-  /* ===== Tables / lists ===== */
-  .table > tbody > tr > td, .table > thead > tr > th, .list-group-item {
-    border-color: var(--speek-border) !important;
-  }
-  
-  /* ===== Avatars rounding ===== */
-  .avatar, .user-picture, .thumbnail, .category > a img { border-radius: 12px !important; }
-  
-  /* ===== Footer ===== */
-  #footer, .footer {
-    background: var(--speek-bg) !important;
-    color: #525252 !important;
-    border-top: 1px solid var(--speek-border) !important;
-  }
-  
-  /* ===== Catch-all helpers ===== */
-  .bg-white { background: var(--speek-card) !important; }
-  .bg-transparent { background: transparent !important; }
-  
-  
-  /* Force both sidebars and any 3-col rail to use the beige canvas */
-  #panel,
-  #panel .panel-body,
-  #ajaxify #sidebar,
-  #ajaxify .sidebar,
-  #ajaxify .sidebar-right,
-  #ajaxify .aside,
-  #ajaxify .widgets,
-  #ajaxify .row > .col-md-3,
-  #ajaxify .row > .col-lg-3,
-  #content #sidebar,
-  #content .sidebar,
-  #content .sidebar-right,
-  #content .row > .col-md-3,
-  #content .row > .col-lg-3,
-  .sidebar, .sidebar-right, #sidebar,
-  .slideout-menu,
-  .nav-side,
-  #right {
-    background-color: var(--speek-bg) !important;
-    background-image: none !important;
-    border: 0 !important;
-  }
-  
-  /* Make inner boxes look like white cards (not the whole rail) */
-  #sidebar .widget, .sidebar-right .widget,
-  #sidebar .card,   .sidebar-right .card,
-  #panel .card,     #panel .panel {
-    background: #ffffff !important;
-    color: #122023 !important;
-    border: 1px solid #f3f1e9 !important;
-    border-radius: 10px !important;
-  }
-  
-  /* Kill helpers that force white on rails */
-  #sidebar .bg-white,
-  .sidebar-right .bg-white,
-  #panel .bg-white,
-  .bg-body, .bg-body-tertiary, .bg-light {
-    background-color: var(--speek-bg) !important;
-    background-image: none !important;
-  }
-  
-  
-  /* Force sidebars to Speek canvas, overriding the skin rule */
-  .skin-noskin .bottombar-nav,
-  .skin-noskin nav.sidebar {
-    background-color: #efece1 !important; /* or var(--speek-bg) */
-    color: #122023 !important;
-  }
-  
-  /* In case a helper still forces light */
-  .skin-noskin .bottombar-nav.bg-light,
-  .skin-noskin nav.sidebar.bg-light {
-    background-color: #efece1 !important;
-  }
-  
-  
-  
-  
-  /* Hide only the Harmony sidebars, nothing else */
-  nav[component="sidebar/left"],
-  nav[component="sidebar/right"],
-  [component="sidebar/toggle"],
-  .sidebar-toggle,
-  .sidebar-toggle-container {
-    display: none !important;
-  }
-  
-  /* Hide Harmony bottom bar (mobile/navigation) */
-  .bottombar-nav { display: none !important; }
-  
-  
+  /* Page canvas (beige like app) */
+  --speek-bg: #efece1;
+  --speek-fg: #122023;
+
+  /* Surfaces */
+  --speek-card: #ffffff;
+  --speek-card-fg: #122023;
+  --speek-border: #f3f1e9;
+
+  /* Accents */
+  --speek-primary: #b6d3da;
+  --speek-primary-fg: #192c30;
+  --speek-accent: #e6ff00;
+  --speek-accent-muted: #f6ffa3;
+  --speek-accent-fg: #27454b;
+
+  --speek-radius: 10px;
+
+  /* Map to Bootstrap/Harmony (force tokens) */
+  --bs-body-bg: var(--speek-bg);
+  --bs-body-color: var(--speek-fg);
+  --bs-primary: var(--speek-primary);
+  --bs-primary-rgb: 182, 211, 218;
+  --bs-border-color: var(--speek-border);
+  --bs-light: var(--speek-bg);
+  --bs-light-rgb: 239, 236, 225;
+}
+
+/* Also override Bootstrap theme scope so helpers like .bg-light use our canvas */
+[data-bs-theme="light"],
+body {
+  --bs-body-bg: var(--speek-bg) !important;
+  --bs-body-color: var(--speek-fg) !important;
+  --bs-light: var(--speek-bg) !important;
+  --bs-light-rgb: 239, 236, 225 !important;
+  font-family: "DM Sans", sans-serif !important;
+  font-weight: 400 !important;
+  font-size: 16px !important;
+  line-height: 24px !important;
+}
+
+/* ===== Global canvas (kill bg images/gradients) ===== */
+html,
+body,
+.bg-body,
+.bg-body-tertiary,
+.bg-light,
+main,
+#main,
+#content,
+#ajaxify,
+#ajaxifying,
+.content,
+.page,
+.homepage,
+.container,
+.container-fluid,
+.content > .container,
+.content > .container-fluid,
+.row,
+.row.forum,
+.row.category,
+.row.recent,
+.row.popular,
+.section,
+.sections,
+.categories,
+.categories-list,
+.category,
+.topics,
+.topic-list,
+.topic,
+.posts,
+.post-list,
+.recent,
+.popular,
+.unread,
+.tags,
+.groups,
+.users,
+.search,
+.account,
+.timeline,
+.pagination-block,
+.breadcrumb,
+.header,
+.subheader,
+.harmony,
+.skin-default,
+.skin-harmony,
+#panel,
+#panel .panel-body,
+#sidebar,
+.sidebar,
+.sidebar-right {
+  background: var(--speek-bg) !important;
+  background-color: var(--speek-bg) !important;
+  background-image: none !important;
+  color: var(--speek-fg) !important;
+}
+
+/* ===== Base typography ===== */
+html,
+body {
+  font-family: "DM Sans", sans-serif !important;
+}
+
+/* ===== Header / Navbar ===== */
+:root {
+  --speek-nav-bg: #efece1;
+  --speek-nav-border: #e6e2d2;
+  --speek-nav-link: #122023;
+  --speek-nav-link-active: #27454b;
+}
+#header,
+.navbar,
+.navbar-default,
+.navbar-light,
+.navbar.navbar-expand {
+  background: var(--speek-nav-bg) !important;
+  border-bottom: 1px solid var(--speek-nav-border) !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+.navbar .navbar-brand,
+.navbar .navbar-nav > li > a,
+.navbar-light .navbar-nav .nav-link,
+.breadcrumb a {
+  color: var(--speek-nav-link) !important;
+}
+.navbar .navbar-brand:hover,
+.navbar .navbar-nav > li > a:hover,
+.navbar-light .navbar-nav .nav-link:hover,
+.navbar-light .navbar-nav .nav-link.active,
+.breadcrumb a:hover {
+  color: var(--speek-nav-link-active) !important;
+  text-decoration: none;
+}
+
+/* ===== Sidebars ===== */
+/* Left slideout + left nav */
+#panel,
+#panel .panel-body,
+#panel .list-group,
+#panel .list-group-item,
+.slideout-menu,
+.sidebar-left,
+.sidebar,
+.nav-side {
+  background: var(--speek-bg) !important;
+  border-color: var(--speek-border) !important;
+}
+/* Right sidebar column */
+.sidebar-right,
+#sidebar,
+.col-md-3.col-lg-3,
+#right,
+.aside,
+.widgets {
+  background: var(--speek-bg) !important;
+  border: 0 !important;
+}
+/* Sidebar widgets as white cards */
+#panel .card,
+#panel .panel,
+#sidebar .widget,
+.sidebar-right .widget,
+.sidebar-right .card,
+#sidebar .card {
+  background: var(--speek-card) !important;
+  color: var(--speek-card-fg) !important;
+  border: 1px solid var(--speek-border) !important;
+  border-radius: var(--speek-radius) !important;
+}
+/* Kill any white helpers inside sidebars */
+#panel .bg-white,
+#sidebar .bg-white,
+.sidebar-right .bg-white {
+  background: var(--speek-bg) !important;
+}
+
+/* ===== Surfaces (cards/panels/composer/menus) ===== */
+.card,
+.card-body,
+.well,
+.panel,
+.panel-body,
+.composer,
+.composer .title-container,
+.composer .write,
+.composer .preview,
+.dropdown-menu,
+.modal-content,
+.post,
+.post-container,
+.topic-list .card,
+.categories .category,
+.list-group,
+.list-group-item {
+  background: var(--speek-card) !important;
+  color: var(--speek-card-fg) !important;
+  border: 1px solid var(--speek-border) !important;
+  border-radius: var(--speek-radius) !important;
+  box-shadow: 0 8px 24px rgba(230, 255, 0, 0.08) !important;
+  background-image: none !important;
+}
+
+/* ===== Links ===== */
+a,
+.link-primary {
+  color: var(--speek-accent-fg) !important;
+}
+a:hover,
+.link-primary:hover {
+  color: #355e66 !important;
+  text-decoration: none;
+}
+
+/* ===== Buttons ===== */
+.btn,
+.btn-default {
+  background: var(--speek-card) !important;
+  color: var(--speek-fg) !important;
+  border: 1px solid var(--speek-border) !important;
+  border-radius: var(--speek-radius) !important;
+}
+.btn-primary {
+  background: var(--speek-primary) !important;
+  border-color: var(--speek-primary) !important;
+  color: var(--speek-primary-fg) !important;
+}
+.btn-primary:hover {
+  filter: brightness(0.95);
+}
+.btn-link,
+.btn-outline {
+  color: var(--speek-accent-fg) !important;
+}
+
+/* ===== Inputs ===== */
+.form-control,
+input[type="text"],
+input[type="email"],
+input[type="password"],
+textarea,
+.select2-container .select2-choice {
+  background: var(--speek-card) !important;
+  color: var(--speek-fg) !important;
+  border: 1px solid var(--speek-border) !important;
+  border-radius: 8px !important;
+  box-shadow: none !important;
+}
+.form-control:focus,
+textarea:focus,
+.select2-container-active .select2-choice {
+  border-color: #355e66 !important;
+  box-shadow: 0 0 0 3px rgba(182, 211, 218, 0.35) !important;
+}
+
+/* ===== Badges / Tags ===== */
+.badge,
+.label,
+.tag {
+  background: var(--speek-accent-muted) !important;
+  color: var(--speek-accent-fg) !important;
+  border: 1px solid var(--speek-border) !important;
+  border-radius: 999px !important;
+}
+
+/* ===== Tables / lists ===== */
+.table > tbody > tr > td,
+.table > thead > tr > th,
+.list-group-item {
+  border-color: var(--speek-border) !important;
+}
+
+/* ===== Avatars rounding ===== */
+.avatar,
+.user-picture,
+.thumbnail,
+.category > a img {
+  border-radius: 12px !important;
+}
+
+/* ===== Footer ===== */
+#footer,
+.footer {
+  background: var(--speek-bg) !important;
+  color: #525252 !important;
+  border-top: 1px solid var(--speek-border) !important;
+}
+
+/* ===== Catch-all helpers ===== */
+.bg-white {
+  background: var(--speek-card) !important;
+}
+.bg-transparent {
+  background: transparent !important;
+}
+
+/* Force both sidebars and any 3-col rail to use the beige canvas */
+#panel,
+#panel .panel-body,
+#ajaxify #sidebar,
+#ajaxify .sidebar,
+#ajaxify .sidebar-right,
+#ajaxify .aside,
+#ajaxify .widgets,
+#ajaxify .row > .col-md-3,
+#ajaxify .row > .col-lg-3,
+#content #sidebar,
+#content .sidebar,
+#content .sidebar-right,
+#content .row > .col-md-3,
+#content .row > .col-lg-3,
+.sidebar,
+.sidebar-right,
+#sidebar,
+.slideout-menu,
+.nav-side,
+#right {
+  background-color: var(--speek-bg) !important;
+  background-image: none !important;
+  border: 0 !important;
+}
+
+/* Make inner boxes look like white cards (not the whole rail) */
+#sidebar .widget,
+.sidebar-right .widget,
+#sidebar .card,
+.sidebar-right .card,
+#panel .card,
+#panel .panel {
+  background: #ffffff !important;
+  color: #122023 !important;
+  border: 1px solid #f3f1e9 !important;
+  border-radius: 10px !important;
+}
+
+/* Kill helpers that force white on rails */
+#sidebar .bg-white,
+.sidebar-right .bg-white,
+#panel .bg-white,
+.bg-body,
+.bg-body-tertiary,
+.bg-light {
+  background-color: var(--speek-bg) !important;
+  background-image: none !important;
+}
+
+/* Force sidebars to Speek canvas, overriding the skin rule */
+.skin-noskin .bottombar-nav,
+.skin-noskin nav.sidebar {
+  background-color: #efece1 !important; /* or var(--speek-bg) */
+  color: #122023 !important;
+}
+
+/* In case a helper still forces light */
+.skin-noskin .bottombar-nav.bg-light,
+.skin-noskin nav.sidebar.bg-light {
+  background-color: #efece1 !important;
+}
+
+/* Hide only the Harmony sidebars, nothing else */
+nav[component="sidebar/left"],
+nav[component="sidebar/right"],
+[component="sidebar/toggle"],
+.sidebar-toggle,
+.sidebar-toggle-container {
+  display: none !important;
+}
+
+/* Hide Harmony bottom bar (mobile/navigation) */
+.bottombar-nav {
+  display: none !important;
+}

@@ -1,0 +1,501 @@
+// Categories page styling based on Figma design
+// Target the actual page container (theme template uses .row > div.col-lg-9 or .col-lg-12)
+.row.flex-fill.py-2 > div.col-lg-9,
+.row.flex-fill.py-2 > div.col-lg-12,
+#content .row.flex-fill.py-2 > div,
+#ajaxify .row.flex-fill.py-2 > div {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+// Also target .categories-page if it exists (from core template)
+.categories-page {
+  max-width: 100% !important;
+  margin: 0 auto !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+// Target the existing categories-list structure and convert to grid
+// Increase specificity to override theme and nodebb.css
+ul.categories-list.list-unstyled,
+.categories-list.list-unstyled,
+#content .categories-list,
+#ajaxify .categories-list,
+.container .categories-list,
+.row .categories-list,
+.categories-list {
+  display: grid !important;
+  grid-template-columns: repeat(2, 1fr) !important;
+  gap: 40px !important;
+  list-style: none !important;
+  padding: 0 !important;
+  margin: 24px 0 0 0 !important;
+  position: relative !important;
+
+  // Mobile: 1 column
+  @include mobile {
+    grid-template-columns: 1fr !important;
+    gap: 40px !important;
+  }
+
+  // Tablet and up: 2 columns
+  @include tablet-up {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+
+  > li[component="categories/category"] {
+    display: flex !important;
+    flex-direction: column !important;
+    background-color: #fdfdfc !important;
+    border: 1px solid #f6ffa3 !important;
+    border-radius: 16px !important;
+    padding: 40px 24px 24px !important;
+    position: relative !important;
+    border-bottom: 1px solid #f6ffa3 !important;
+    margin: 0 !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    transition: box-shadow 0.2s ease !important;
+    overflow: visible !important; // Ensure overlay link is not clipped
+
+    &:hover {
+      box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+        0px 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    // Icon styling - position the icon absolutely
+    > div.d-flex.col-lg-7 {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 1 !important;
+      
+      .flex-shrink-0 {
+        position: absolute !important;
+        top: -24px !important;
+        left: 24px !important;
+        padding: 12px !important;
+        background-color: #f6ffa3 !important;
+        border-radius: 9999px !important;
+        box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+          0px 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 48px !important;
+        height: 48px !important;
+        z-index: 1 !important;
+
+        .icon,
+        img {
+          width: 24px !important;
+          height: 24px !important;
+          font-size: 12px !important;
+        }
+      }
+
+      // Content wrapper
+      .flex-grow-1 {
+        margin-top: 0 !important;
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+      }
+    }
+
+    // Hide the right column stats/teaser for grid layout (but keep stats visible)
+    > div.d-flex.col-lg-5 {
+      .meta.stats {
+        display: none !important; // Hide the desktop stats grid
+      }
+      .teaser {
+        display: none !important; // Hide the teaser
+      }
+    }
+
+    // Show mobile stats badges that are already in the template - make visible on all sizes
+    > div.d-flex.col-lg-7 {
+      .category-stats-badges,
+      .d-flex.gap-1.d-block.d-lg-none {
+        display: flex !important; // Show stats on all screen sizes (not just mobile)
+        margin-top: 8px !important;
+        margin-bottom: 8px !important;
+        width: 100% !important;
+        flex-wrap: wrap !important;
+
+        .badge.stats {
+          padding: 2px 8px !important;
+          border-radius: 8px !important;
+          font-family: "DM Sans", sans-serif !important;
+          font-weight: 600 !important;
+          font-size: 12px !important;
+          line-height: 1.333 !important;
+          background-color: rgba(255, 255, 255, 0.5) !important;
+          border: 1px solid #f3f1e9 !important;
+          color: #355e66 !important;
+          margin-right: 8px !important;
+          white-space: nowrap !important;
+
+          i {
+            margin-right: 4px !important;
+          }
+
+          .stats-label {
+            margin-left: 2px !important;
+          }
+        }
+      }
+    }
+
+    // Title and description styling
+    h2.title {
+      font-family: "DM Sans", sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 18px !important;
+      line-height: 1.556 !important;
+      color: #355e66 !important;
+      margin-bottom: 4px !important;
+      width: 100% !important;
+
+      a {
+        color: #355e66 !important;
+        text-decoration: none !important;
+
+        &:hover {
+          color: #355e66 !important;
+          text-decoration: none !important;
+        }
+      }
+    }
+
+    .description {
+      font-family: "DM Sans", sans-serif !important;
+      font-weight: 400 !important;
+      font-size: 14px !important;
+      line-height: 1.429 !important;
+      color: #525252 !important;
+      margin-bottom: 8px !important;
+      margin-top: 4px !important;
+      width: 100% !important;
+      display: block !important;
+    }
+
+    // Badge styling
+    .badge.stats {
+      padding: 2px 8px !important;
+      border-radius: 8px !important;
+      font-family: "DM Sans", sans-serif !important;
+      font-weight: 600 !important;
+      font-size: 12px !important;
+      line-height: 1.333 !important;
+      background-color: rgba(255, 255, 255, 0.5) !important;
+      border: 1px solid #f3f1e9 !important;
+      color: #355e66 !important;
+      margin-right: 8px !important;
+    }
+
+    // Add "View space" link button at bottom using ::after
+    &::after {
+      content: "View space →" !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      gap: 8px !important;
+      padding: 8px 16px !important;
+      height: 36px !important;
+      background-color: #fdfdfc !important;
+      border: 1px solid #d4d4d4 !important;
+      border-radius: 9999px !important;
+      box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05),
+        0px 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+      font-family: "DM Sans", sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 14px !important;
+      line-height: 1.429 !important;
+      color: #355e66 !important;
+      margin-top: auto !important;
+      width: fit-content !important;
+      cursor: pointer !important;
+      transition: all 0.2s ease !important;
+      text-decoration: none !important;
+      pointer-events: none !important; // Let the overlay link handle clicks
+    }
+
+    &:hover::after {
+      background-color: #f8f8f8 !important;
+      border-color: #355e66 !important;
+    }
+
+    // Overlay link that makes the button clickable
+    .btn-view-space-link-overlay {
+      position: absolute !important;
+      bottom: 24px !important;
+      left: 24px !important;
+      height: 36px !important;
+      min-width: 120px !important;
+      width: auto !important;
+      max-width: calc(100% - 48px) !important;
+      display: block !important;
+      z-index: 100 !important; // Higher z-index to ensure it's on top
+      cursor: pointer !important;
+      text-decoration: none !important;
+      background: transparent !important;
+      border: none !important;
+      padding: 0 !important;
+      margin: 0 !important;
+      opacity: 0 !important; // Make it invisible but keep it clickable
+
+      &:hover {
+        text-decoration: none !important;
+      }
+
+      // Make sure it's on top and clickable
+      pointer-events: auto !important;
+    }
+
+    // Make the entire card clickable via the title link
+    h2.title a {
+      display: block !important;
+    }
+  }
+}
+
+// Ensure parent containers don't break grid
+#content .categories-page,
+#ajaxify .categories-page,
+.container .categories-page,
+.categories-page {
+  padding: 48px 5% 48px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  gap: 24px !important;
+  max-width: 100% !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+
+  .categories-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 40px !important;
+    width: 100% !important;
+    padding: 24px 0 0 !important;
+    align-self: stretch !important;
+    box-sizing: border-box !important;
+
+    // Mobile: 1 column
+    @include mobile {
+      grid-template-columns: 1fr !important;
+      gap: 40px !important;
+      padding: 32px 0 0 !important;
+    }
+
+    // Tablet and up: 2 columns
+    @include tablet-up {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  // Also target categories-list if it's the default template
+  .categories-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 40px !important;
+
+    // Mobile: 1 column
+    @include mobile {
+      grid-template-columns: 1fr !important;
+      gap: 40px !important;
+    }
+
+    // Tablet and up: 2 columns
+    @include tablet-up {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+
+  .category-card {
+    background-color: #fdfdfc !important;
+    border: 1px solid #f6ffa3 !important;
+    border-radius: 16px !important;
+    padding: 40px 24px 24px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 16px !important;
+    position: relative !important;
+    transition: box-shadow 0.2s ease !important;
+
+    &:hover {
+      box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+        0px 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+    }
+
+    .category-icon-container {
+      position: absolute !important;
+      top: -24px !important;
+      left: 24px !important;
+      padding: 12px !important;
+      background-color: #f6ffa3 !important;
+      border-radius: 9999px !important;
+      box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+        0px 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
+      display: flex !important;
+      align-items: center !important;
+      justify-content: center !important;
+      width: 48px !important;
+      height: 48px !important;
+
+      .icon {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 12px !important;
+      }
+    }
+
+    .category-content {
+      display: flex !important;
+      flex-direction: column !important;
+      gap: 8px !important;
+      flex: 1 !important;
+
+      .category-title-section {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 4px !important;
+
+        .category-title {
+          font-family: "DM Sans", sans-serif !important;
+          font-weight: 700 !important;
+          font-size: 18px !important;
+          line-height: 28px !important;
+          color: #355e66 !important;
+          margin: 0 !important;
+        }
+
+        .category-description {
+          font-family: "DM Sans", sans-serif !important;
+          font-weight: 400 !important;
+          font-size: 14px !important;
+          line-height: 20px !important;
+          color: #525252 !important;
+          margin: 0 !important;
+        }
+      }
+
+      .category-badges {
+        display: flex !important;
+        flex-direction: row !important;
+        gap: 8px !important;
+        align-items: center !important;
+
+        .badge {
+          padding: 2px 8px !important;
+          border-radius: 8px !important;
+          font-family: "DM Sans", sans-serif !important;
+          font-weight: 600 !important;
+          font-size: 12px !important;
+          line-height: 1.333 !important;
+          display: inline-flex !important;
+          align-items: center !important;
+          justify-content: center !important;
+
+          &.badge-posts {
+            background-color: rgba(255, 255, 255, 0.5) !important;
+            border: 1px solid #f3f1e9 !important;
+            color: #355e66 !important;
+          }
+
+          &.badge-new {
+            background-color: #b6d3da !important;
+            border: 1px solid rgba(255, 255, 255, 0) !important;
+            color: #192c30 !important;
+          }
+        }
+      }
+    }
+
+    .btn-view-space {
+      display: flex !important;
+      flex-direction: row !important;
+      justify-content: center !important;
+      align-items: center !important;
+      gap: 8px !important;
+      padding: 8px 16px !important;
+      height: 36px !important;
+      background-color: #fdfdfc !important;
+      border: 1px solid #d4d4d4 !important;
+      border-radius: 9999px !important;
+      box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05),
+        0px 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+      font-family: "DM Sans", sans-serif !important;
+      font-weight: 700 !important;
+      font-size: 14px !important;
+      line-height: 1.429 !important;
+      color: #355e66 !important;
+      text-decoration: none !important;
+      transition: all 0.2s ease !important;
+      align-self: flex-start !important;
+
+      i,
+      svg {
+        font-size: 16px !important;
+        width: 16px !important;
+        height: 16px !important;
+      }
+
+      &:hover {
+        background-color: #f8f8f8 !important;
+        border-color: #355e66 !important;
+        text-decoration: none !important;
+        color: #355e66 !important;
+      }
+
+      &:active {
+        transform: translateY(1px) !important;
+        box-shadow: 0px 1px 2px -1px rgba(0, 0, 0, 0.05),
+          0px 2px 3px -1px rgba(0, 0, 0, 0.05) !important;
+      }
+    }
+  }
+
+  .pagination-container {
+    width: 100% !important;
+    display: flex !important;
+    justify-content: center !important;
+    margin-top: 24px !important;
+  }
+}
+
+// Responsive adjustments
+// Mobile: 1 column layout with adjusted spacing
+@include mobile {
+  .categories-page {
+    padding: 24px 5% !important;
+
+    .categories-grid {
+      grid-template-columns: 1fr !important;
+      gap: 32px !important;
+      padding: 16px 0 0 !important;
+    }
+
+    .category-card {
+      padding: 32px 20px 20px !important;
+
+      .category-icon-container {
+        left: 20px !important;
+        top: -20px !important;
+      }
+    }
+  }
+}
+
+// Tablet and above: 2 columns layout
+@include tablet-up {
+  .categories-page {
+    .categories-grid {
+      grid-template-columns: repeat(2, 1fr) !important;
+    }
+  }
+}

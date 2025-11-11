@@ -146,6 +146,19 @@ fi
 echo "   🔧 Enabling nodebb-plugin-session-sharing..."
 ./nodebb plugins enable nodebb-plugin-session-sharing || echo "   ⚠️  Failed to enable session-sharing plugin"
 
+# Ensure Speek Harmony theme is installed and activated
+echo "🎨 Ensuring Speek Harmony theme is available..."
+if [ ! -d "node_modules/nodebb-theme-harmony-speek" ]; then
+  echo "   📦 Installing nodebb-theme-harmony-speek from local themes directory..."
+  npm install ./themes/nodebb-theme-harmony-speek || echo "   ⚠️  Failed to install Speek Harmony theme"
+else
+  echo "   ✅ Speek Harmony theme already installed"
+fi
+
+echo "   🔧 Activating nodebb-theme-harmony-speek..."
+./nodebb activate nodebb-theme-harmony-speek || echo "   ⚠️  Failed to activate Speek Harmony theme"
+./nodebb config set theme:id "nodebb-theme-harmony-speek" || echo "   ⚠️  Failed to set Speek Harmony theme as default"
+
 # Configure session-sharing plugin (JWT via cookie)
 if [ -n "${NODEBB_SSO_SECRET}" ]; then
   echo "   🔐 Configuring session-sharing plugin..."

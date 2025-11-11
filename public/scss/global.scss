@@ -6,18 +6,105 @@
 	==========
 */
 
+// Note: Font imports should be handled by individual themes for better performance and privacy
+// Themes can use @fontsource or other methods to load fonts locally
+
+// ===== Design System Breakpoints =====
+// Mobile-first breakpoint system
+$breakpoint-mobile: 767px;
+$breakpoint-tablet: 768px;
+$breakpoint-tablet-max: 1023px;
+$breakpoint-desktop: 1024px;
+$breakpoint-desktop-max: 1279px;
+$breakpoint-desktop-xl: 1280px;
+
+// Breakpoint Mixins
+// Usage: @include mobile { ... }
+@mixin mobile {
+  @media (max-width: $breakpoint-mobile) {
+    @content;
+  }
+}
+
+// Usage: @include tablet { ... }
+@mixin tablet {
+  @media (min-width: $breakpoint-tablet) and (max-width: $breakpoint-tablet-max) {
+    @content;
+  }
+}
+
+// Usage: @include tablet-up { ... }
+@mixin tablet-up {
+  @media (min-width: $breakpoint-tablet) {
+    @content;
+  }
+}
+
+// Usage: @include desktop { ... }
+@mixin desktop {
+  @media (min-width: $breakpoint-desktop) and (max-width: $breakpoint-desktop-max) {
+    @content;
+  }
+}
+
+// Usage: @include desktop-up { ... }
+@mixin desktop-up {
+  @media (min-width: $breakpoint-desktop) {
+    @content;
+  }
+}
+
+// Usage: @include desktop-xl { ... }
+@mixin desktop-xl {
+  @media (min-width: $breakpoint-desktop-xl) {
+    @content;
+  }
+}
+
+// Note: Font properties should be set by individual themes
+// Themes can override these in their own stylesheets
+
+// Hide scrollbar but keep scroll functionality
+html {
+  // Firefox
+  scrollbar-width: none !important;
+  // IE and Edge (older)
+  -ms-overflow-style: none !important;
+
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
+body {
+  // Firefox
+  scrollbar-width: none !important;
+  // IE and Edge (older)
+  -ms-overflow-style: none !important;
+
+  // Webkit browsers (Chrome, Safari, Edge)
+  &::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+  }
+}
+
 // rtl fixes for text-break and code blocks
 /*rtl:begin:ignore*/
 html[data-dir="rtl"] {
-	.text-break {
-		word-wrap: break-word!important;
-		word-break: break-word!important;
-	}
+  .text-break {
+    word-wrap: break-word !important;
+    word-break: break-word !important;
+  }
 
-	[component="post/content"] code {
-		direction: ltr;
-		text-align: left;
-	}
+  [component="post/content"] code {
+    direction: ltr;
+    text-align: left;
+  }
 }
 /*rtl:end:ignore*/
 
@@ -25,25 +112,50 @@ html[data-dir="rtl"] {
 [component="post/parent/content"],
 [component="chat/message/body"],
 [component="composer"] .preview {
-	h1 { font-size: calc(1.15rem + 1vw); }
-	h2 { font-size: calc(1.1rem + 0.8vw); }
-	h3 { font-size: calc(1.075rem + 0.6vw); }
-	h4 { font-size: calc(1.05rem + 0.3vw); }
-	h5 { font-size: 1.125rem; }
-	h6 { font-size: 1rem; }
-	@include media-breakpoint-up(xl) {
-		h1 { font-size: 1.75rem; }
-		h2 { font-size: 1.5rem; }
-		h3 { font-size: 1.375rem; }
-		h4 { font-size: 1.250rem; }
-		h5 { font-size: 1.125rem; }
-		h6 { font-size: 1rem; }
-	}
+  h1 {
+    font-size: calc(1.15rem + 1vw);
+  }
+  h2 {
+    font-size: calc(1.1rem + 0.8vw);
+  }
+  h3 {
+    font-size: calc(1.075rem + 0.6vw);
+  }
+  h4 {
+    font-size: calc(1.05rem + 0.3vw);
+  }
+  h5 {
+    font-size: 1.125rem;
+  }
+  h6 {
+    font-size: 1rem;
+  }
+  @include media-breakpoint-up(xl) {
+    h1 {
+      font-size: 1.75rem;
+    }
+    h2 {
+      font-size: 1.5rem;
+    }
+    h3 {
+      font-size: 1.375rem;
+    }
+    h4 {
+      font-size: 1.25rem;
+    }
+    h5 {
+      font-size: 1.125rem;
+    }
+    h6 {
+      font-size: 1rem;
+    }
+  }
 }
 
 .btn-link {
-	&:hover, &.active {
-		background-color: var(--btn-ghost-hover-color);
-		text-decoration: none;
-	}
+  &:hover,
+  &.active {
+    background-color: var(--btn-ghost-hover-color);
+    text-decoration: none;
+  }
 }

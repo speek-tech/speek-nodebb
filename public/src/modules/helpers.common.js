@@ -14,6 +14,8 @@ module.exports = function (utils, Benchpress, relative_path) {
 		stripTags,
 		buildCategoryIcon,
 		buildCategoryLabel,
+		buildLucideIcon,
+		getCategoryIconName,
 		generateCategoryBackground,
 		generateChildrenCategories,
 		generateTopicClass,
@@ -112,6 +114,175 @@ module.exports = function (utils, Benchpress, relative_path) {
 			${category.icon && category.icon !== 'fa-nbb-none' ? `<i class="fa fa-fw ${category.icon}"></i>` : ''}
 			${category.name}
 		</${tag}>`;
+	}
+
+	/**
+	 * Build a Lucide icon HTML element
+	 * @param {string} iconName - Name of the Lucide icon (e.g., 'home', 'user', 'settings')
+	 * @param {number|string} size - Size in pixels (default: 24)
+	 * @param {string} className - Additional CSS classes
+	 * @param {string} color - Icon color (default: 'currentColor')
+	 * @param {number} strokeWidth - Stroke width (default: 2)
+	 * @returns {string} HTML string for the icon
+	 */
+	function buildLucideIcon(iconName, size = 24, className = '', color = 'currentColor', strokeWidth = 2) {
+		if (!iconName) {
+			return '';
+		}
+
+		// Convert FontAwesome icon names to Lucide if needed
+		const faToLucideMap = {
+			'fa-home': 'home',
+			'fa-user': 'user',
+			'fa-users': 'users',
+			'fa-cog': 'settings',
+			'fa-gear': 'settings',
+			'fa-settings': 'settings',
+			'fa-search': 'search',
+			'fa-envelope': 'mail',
+			'fa-bell': 'bell',
+			'fa-heart': 'heart',
+			'fa-star': 'star',
+			'fa-bars': 'menu',
+			'fa-navicon': 'menu',
+			'fa-times': 'x',
+			'fa-xmark': 'x',
+			'fa-close': 'x',
+			'fa-check': 'check',
+			'fa-plus': 'plus',
+			'fa-minus': 'minus',
+			'fa-trash': 'trash-2',
+			'fa-trash-can': 'trash-2',
+			'fa-edit': 'edit',
+			'fa-pen': 'pen',
+			'fa-pen-to-square': 'pen-square',
+			'fa-square-pen': 'pen-square',
+			'fa-pencil': 'pencil',
+			'fa-share': 'share-2',
+			'fa-share-from-square': 'share-2',
+			'fa-arrow-right': 'arrow-right',
+			'fa-arrow-left': 'arrow-left',
+			'fa-arrow-up': 'arrow-up',
+			'fa-arrow-down': 'arrow-down',
+			'fa-chevron-right': 'chevron-right',
+			'fa-chevron-left': 'chevron-left',
+			'fa-chevron-up': 'chevron-up',
+			'fa-chevron-down': 'chevron-down',
+			'fa-circle-info': 'info',
+			'fa-info-circle': 'info',
+			'fa-circle-question': 'help-circle',
+			'fa-question-circle': 'help-circle',
+			'fa-circle-exclamation': 'alert-circle',
+			'fa-exclamation-circle': 'alert-circle',
+			'fa-triangle-exclamation': 'alert-triangle',
+			'fa-exclamation-triangle': 'alert-triangle',
+			'fa-circle-check': 'check-circle',
+			'fa-check-circle': 'check-circle',
+			'fa-circle-xmark': 'x-circle',
+			'fa-times-circle': 'x-circle',
+			'fa-lock': 'lock',
+			'fa-unlock': 'unlock',
+			'fa-eye': 'eye',
+			'fa-eye-slash': 'eye-off',
+			'fa-calendar': 'calendar',
+			'fa-clock': 'clock',
+			'fa-clock-o': 'clock',
+			'fa-comment': 'message-circle',
+			'fa-comments': 'message-square',
+			'fa-message': 'message-square',
+			'fa-file': 'file',
+			'fa-folder': 'folder',
+			'fa-image': 'image',
+			'fa-camera': 'camera',
+			'fa-video': 'video',
+			'fa-music': 'music',
+			'fa-download': 'download',
+			'fa-upload': 'upload',
+			'fa-link': 'link',
+			'fa-unlink': 'unlink',
+			'fa-link-slash': 'link-2-off',
+			'fa-paperclip': 'paperclip',
+			'fa-thumbtack': 'pin',
+			'fa-bookmark': 'bookmark',
+			'fa-flag': 'flag',
+			'fa-tag': 'tag',
+			'fa-tags': 'tags',
+			'fa-phone': 'phone',
+			'fa-phone-volume': 'phone',
+			'fa-globe': 'globe',
+			'fa-map-marker': 'map-pin',
+			'fa-location-dot': 'map-pin',
+			'fa-print': 'printer',
+			'fa-copy': 'copy',
+			'fa-clipboard': 'clipboard',
+			'fa-filter': 'filter',
+			'fa-sort': 'arrow-up-down',
+			'fa-sort-up': 'arrow-up',
+			'fa-sort-down': 'arrow-down',
+			'fa-list': 'list',
+			'fa-list-ul': 'list',
+			'fa-list-ol': 'list-ordered',
+			'fa-table': 'table',
+			'fa-th': 'layout-grid',
+			'fa-ellipsis': 'more-horizontal',
+			'fa-ellipsis-vertical': 'more-vertical',
+			'fa-play': 'play',
+			'fa-pause': 'pause',
+			'fa-circle-play': 'play-circle',
+			'fa-circle-pause': 'pause-circle',
+			'fa-refresh': 'refresh-cw',
+			'fa-arrows-rotate': 'refresh-cw',
+			'fa-arrow-rotate-right': 'rotate-cw',
+			'fa-arrow-rotate-left': 'rotate-ccw',
+			'fa-window-maximize': 'maximize',
+			'fa-window-minimize': 'minimize',
+			'fa-right-from-bracket': 'log-out',
+			'fa-sign-out': 'log-out',
+			'fa-right-to-bracket': 'log-in',
+			'fa-sign-in': 'log-in',
+			'fa-user-plus': 'user-plus',
+			'fa-user-minus': 'user-minus',
+			'fa-circle-user': 'user-circle',
+			'fa-shield': 'shield',
+			'fa-code': 'code',
+			'fa-bug': 'bug',
+			'fa-chart-pie': 'pie-chart',
+			'fa-database': 'database',
+			'fa-server': 'server',
+			'fa-cloud': 'cloud',
+			'fa-paper-plane': 'send',
+			'fa-reply': 'reply',
+			'fa-reply-all': 'reply-all',
+			'fa-square-plus': 'square-plus',
+			'fa-square-minus': 'square-minus',
+			'fa-sun': 'sun',
+			'fa-moon': 'moon',
+			'fa-face-smile': 'smile',
+			'fa-thumbs-up': 'thumbs-up',
+			'fa-thumbs-down': 'thumbs-down',
+			'fa-graduation-cap': 'graduation-cap',
+			'fa-book': 'book',
+			'fa-newspaper': 'newspaper',
+			'fa-gift': 'gift',
+			'fa-shopping-cart': 'shopping-cart',
+			'fa-smartphone': 'smartphone',
+			'fa-mobile-screen-button': 'smartphone',
+			'fa-laptop': 'laptop',
+			'fa-monitor': 'monitor',
+			'fa-headphones': 'headphones',
+			'fa-microphone': 'mic',
+			'fa-microphone-slash': 'mic-off',
+			'fa-nbb-none': 'circle-dot',
+		};
+
+		// Convert icon name if it starts with 'fa-'
+		let lucideIconName = iconName.startsWith('fa-') ? faToLucideMap[iconName] || iconName.replace(/^fa-/, '') : iconName;
+
+		// Ensure size is a number
+		const iconSize = typeof size === 'string' ? parseInt(size, 10) : size;
+
+		// Build the icon element using data attributes for Lucide
+		return `<i data-lucide="${lucideIconName}" data-lucide-size="${iconSize}" data-lucide-stroke-width="${strokeWidth}" class="lucide-icon ${className}" ${color !== 'currentColor' ? `style="color: ${color}"` : ''}></i>`;
 	}
 
 	function generateCategoryBackground(category) {
@@ -399,6 +570,21 @@ module.exports = function (utils, Benchpress, relative_path) {
 		});
 
 		return html.join('');
+	}
+
+	function getCategoryIconName(identifier) {
+		if (!identifier && identifier !== 0) {
+			return 'folder';
+		}
+
+		const iconMap = {
+			'1': 'messages-square',
+			'2': 'heart-handshake',
+			'3': 'building-2',
+			'4': 'user-check',
+		};
+		const key = String(identifier);
+		return iconMap[key] || 'folder';
 	}
 
 	function register() {

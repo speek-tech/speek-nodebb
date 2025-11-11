@@ -1,0 +1,99 @@
+// DM Sans font definitions using @fontsource (local files, no CDN)
+// Manual @font-face declarations for compatibility with NodeBB's build process
+
+$dm-sans-path: "./plugins/nodebb-theme-harmony-speek/node_modules/@fontsource/dm-sans/files";
+
+// DM Sans Light (300)
+@font-face {
+	font-family: 'DM Sans';
+	font-style: normal;
+	font-weight: 300;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-300-normal.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-300-normal.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	font-style: italic;
+	font-weight: 300;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-300-italic.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-300-italic.woff') format('woff');
+}
+
+// DM Sans Regular (400)
+@font-face {
+	font-family: 'DM Sans';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-400-normal.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-400-normal.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	font-style: italic;
+	font-weight: 400;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-400-italic.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-400-italic.woff') format('woff');
+}
+
+// DM Sans Medium (500)
+@font-face {
+	font-family: 'DM Sans';
+	font-style: normal;
+	font-weight: 500;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-500-normal.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-500-normal.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	font-style: italic;
+	font-weight: 500;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-500-italic.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-500-italic.woff') format('woff');
+}
+
+// DM Sans Semi-Bold (600)
+@font-face {
+	font-family: 'DM Sans';
+	font-style: normal;
+	font-weight: 600;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-600-normal.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-600-normal.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	font-style: italic;
+	font-weight: 600;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-600-italic.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-600-italic.woff') format('woff');
+}
+
+// DM Sans Bold (700)
+@font-face {
+	font-family: 'DM Sans';
+	font-style: normal;
+	font-weight: 700;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-700-normal.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-700-normal.woff') format('woff');
+}
+
+@font-face {
+	font-family: 'DM Sans';
+	font-style: italic;
+	font-weight: 700;
+	font-display: swap;
+	src: url('#{$dm-sans-path}/dm-sans-latin-700-italic.woff2') format('woff2'),
+		 url('#{$dm-sans-path}/dm-sans-latin-700-italic.woff') format('woff');
+}

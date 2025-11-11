@@ -1,0 +1,24 @@
+{
+	"id": "nodebb-theme-harmony-speek",
+	"hooks": [
+		{ "hook": "static:app.load", "method": "init" },
+		{ "hook": "filter:admin.header.build", "method": "addAdminNavigation" },
+		{ "hook": "filter:widgets.getAreas", "method": "defineWidgetAreas" },
+		{ "hook": "filter:config.get", "method": "getThemeConfig" },
+		{ "hook": "filter:settings.get", "method": "getAdminSettings"},
+		{ "hook": "filter:user.saveSettings", "method": "saveUserSettings" },
+		{ "hook": "filter:user.profileMenu", "method": "addProfileItem" },
+		{ "hook": "filter:middleware.renderHeader", "method": "filterMiddlewareRenderHeader" }
+	],
+	"scripts": [
+		"public/harmony.js"
+	],
+	"modules": {
+		"../admin/plugins/harmony.js": "public/admin.js",
+		"../client/account/theme.js": "public/settings.js"
+	},
+	"staticDirs": {
+		"dm-sans": "node_modules/@fontsource/dm-sans/files"
+	},
+	"languages": "languages"
+}

@@ -27,7 +27,7 @@
 								<span class="register-feedback text-xs text-danger" id="password-notify" aria-live="polite"></span>
 								<span class="form-text text-xs">[[register:help.minimum-password-length, {minimumPasswordLength}]]</span>
 								<p id="caps-lock-warning" class="text-danger hidden">
-									<i class="fa fa-exclamation-triangle"></i> [[login:caps-lock-enabled]]
+									{buildLucideIcon("alert-triangle", 16, "me-1")} [[login:caps-lock-enabled]]
 								</p>
 							</div>
 						</div>

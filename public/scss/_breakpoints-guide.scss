@@ -1,0 +1,121 @@
+/*
+  ============================================
+  SPEEK DESIGN SYSTEM - BREAKPOINT GUIDE
+  ============================================
+  
+  Global breakpoints are defined in global.scss and automatically available in all SCSS files.
+  
+  BREAKPOINT VALUES:
+  ------------------
+  Mobile:      max-width: 767px
+  Tablet:      768px - 1023px
+  Desktop:     1024px - 1279px
+  Desktop XL:  min-width: 1280px
+  
+  AVAILABLE MIXINS:
+  -----------------
+  
+  @include mobile { }
+    → Applies styles for mobile devices (max-width: 767px)
+    
+  @include tablet { }
+    → Applies styles for tablet only (768px - 1023px)
+    
+  @include tablet-up { }
+    → Applies styles for tablet and above (min-width: 768px)
+    
+  @include desktop { }
+    → Applies styles for desktop only (1024px - 1279px)
+    
+  @include desktop-up { }
+    → Applies styles for desktop and above (min-width: 1024px)
+    
+  @include desktop-xl { }
+    → Applies styles for extra large screens (min-width: 1280px)
+  
+  USAGE EXAMPLES:
+  ---------------
+  
+  // Example 1: Basic responsive layout
+  .my-element {
+    padding: 16px;
+    
+    @include tablet-up {
+      padding: 24px;
+    }
+    
+    @include desktop-xl {
+      padding: 32px;
+    }
+  }
+  
+  // Example 2: Grid columns
+  .my-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    
+    @include tablet {
+      grid-template-columns: repeat(2, 1fr);
+    }
+    
+    @include desktop-up {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+  
+  // Example 3: Show/hide elements
+  .mobile-only {
+    display: block;
+    
+    @include tablet-up {
+      display: none;
+    }
+  }
+  
+  .desktop-only {
+    display: none;
+    
+    @include desktop-up {
+      display: block;
+    }
+  }
+  
+  // Example 4: Font sizes
+  .heading {
+    font-size: 24px;
+    
+    @include tablet {
+      font-size: 28px;
+    }
+    
+    @include desktop {
+      font-size: 32px;
+    }
+    
+    @include desktop-xl {
+      font-size: 36px;
+    }
+  }
+  
+  BEST PRACTICES:
+  ---------------
+  ✅ Use mobile-first approach (define mobile styles first, then override for larger screens)
+  ✅ Use consistent breakpoints across all pages
+  ✅ Test on all breakpoint ranges
+  ✅ Use tablet-up or desktop-up for progressive enhancement
+  
+  ❌ Don't use custom media queries - use the provided mixins
+  ❌ Don't mix old breakpoints (992px, 1200px) with new design system
+  
+  MIGRATION:
+  ----------
+  Old: @media (max-width: 767px) { }
+  New: @include mobile { }
+  
+  Old: @media (min-width: 768px) and (max-width: 1023px) { }
+  New: @include tablet { }
+  
+  Old: @media (min-width: 1024px) { }
+  New: @include desktop-up { }
+*/
+
