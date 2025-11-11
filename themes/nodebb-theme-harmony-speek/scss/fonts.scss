@@ -1,0 +1,15 @@
+@use "pkg:@fontsource-utils/scss" as fontsource;
+@use "pkg:@fontsource/dm-sans/scss" as dmSans;
+
+$weights: $font-weight-light, $font-weight-normal, $font-weight-semibold, $font-weight-bold;
+$subsets: (latin, latin-ext);
+$font-path: "./plugins/nodebb-theme-harmony-speek" !default;
+
+
+@include fontsource.faces(
+	$metadata: dmSans.$metadata,
+	$subsets: $subsets,
+	$weights: $weights,
+	$styles: all,
+	$directory: "#{$font-path}/dm-sans"
+);

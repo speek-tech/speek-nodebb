@@ -1,0 +1,196 @@
+.category-header .description p { margin: 0; }
+.page-category .breadcrumb .breadcrumb-item:last-child {
+	display: none;
+}
+
+.categories-selector-container {
+	margin-bottom: 1.5rem;
+}
+
+.categories-page {
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+	padding: 3rem 5%;
+}
+
+.categories-grid {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 2.5rem;
+	width: 100%;
+}
+
+.category-card {
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	gap: 1.25rem;
+	background-color: var(--speek-card, #fdfdfc);
+	border: 1px solid var(--speek-accent-muted, #f6ffa3);
+	border-radius: 16px;
+	padding: 2.5rem 1.5rem 1.5rem;
+	box-shadow: 0 0 0 0 rgba(0, 0, 0, 0);
+	transition: box-shadow 0.2s ease;
+	min-height: 220px;
+}
+
+.category-card:hover {
+	box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+		0px 10px 15px -3px rgba(0, 0, 0, 0.08);
+}
+
+.category-card .category-icon-container {
+	position: absolute;
+	top: -24px;
+	left: 24px;
+	width: 48px;
+	height: 48px;
+	border-radius: 9999px;
+	background-color: var(--speek-accent-muted, #f6ffa3);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
+		0px 10px 15px -3px rgba(0, 0, 0, 0.05);
+}
+
+.category-card .category-icon-container .icon,
+.category-card .category-icon-container svg {
+	width: 24px;
+	height: 24px;
+}
+
+.category-card .category-content {
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	flex: 1;
+}
+
+.category-card .category-title-section {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
+}
+
+.category-card .category-title {
+	font-family: "DM Sans", var(--bs-body-font-family);
+	font-weight: 700;
+	font-size: 1.125rem;
+	line-height: 1.556;
+	color: var(--speek-fg, #355e66);
+	margin: 0;
+}
+
+.category-card .category-title a {
+	color: inherit;
+	text-decoration: none;
+}
+
+.category-card .category-description {
+	font-family: "DM Sans", var(--bs-body-font-family);
+	font-size: 0.875rem;
+	line-height: 1.5;
+	color: rgba(53, 94, 102, 0.85);
+	margin: 0;
+}
+
+.category-card .category-badges {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	align-items: center;
+}
+
+.category-card .category-badges .badge {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.25rem 0.75rem;
+	border-radius: 9999px;
+	font-weight: 600;
+	font-size: 0.75rem;
+	line-height: 1.333;
+	font-family: "DM Sans", var(--bs-body-font-family);
+	border: 1px solid transparent;
+}
+
+.category-card .badge-posts {
+	background-color: rgba(255, 255, 255, 0.65);
+	border-color: var(--speek-border, #f3f1e9);
+	color: var(--speek-fg, #355e66);
+}
+
+.category-card .badge-new {
+	background-color: var(--speek-primary, #b6d3da);
+	border-color: transparent;
+	color: var(--speek-primary-fg, #192c30);
+}
+
+.category-card .category-children {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	padding: 0;
+	margin: 0;
+	list-style: none;
+}
+
+.category-card .category-children li::before {
+	content: "•";
+	color: var(--speek-primary-fg, #27454b);
+	margin-right: 0.4rem;
+}
+
+.category-card .category-children a {
+	text-decoration: none;
+	color: var(--speek-fg, #27454b);
+	font-weight: 600;
+	font-size: 0.875rem;
+}
+
+.btn-view-space {
+	align-self: flex-start;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	border-radius: 9999px;
+	border: 1px solid #d4d4d4;
+	background-color: #fdfdfc;
+	font-weight: 700;
+	font-size: 0.875rem;
+	line-height: 1.4;
+	font-family: "DM Sans", var(--bs-body-font-family);
+	color: var(--speek-fg, #355e66);
+	text-decoration: none;
+	box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05),
+		0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+	transition: all 0.2s ease;
+	margin-top: auto;
+}
+
+.btn-view-space:hover {
+	border-color: var(--speek-fg, #355e66);
+	color: inherit;
+	text-decoration: none;
+	background-color: #f8f8f8;
+}
+
+.pagination-container {
+	display: flex;
+	justify-content: center;
+	margin-top: 2rem;
+}
+
+@media (max-width: 991.98px) {
+	.categories-grid {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+
+	.categories-page {
+		padding: 2rem 5%;
+	}
+}
