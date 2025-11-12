@@ -103,6 +103,24 @@ define('quickreply', [
 			element.val(draft);
 		}
 
+		// Character count functionality - Figma Design
+		const $charCount = $('.reply-char-count');
+		const maxLength = parseInt(element.attr('maxlength') || 1000, 10);
+		
+		function updateCharCount() {
+			const length = element.val().length;
+			if ($charCount.length) {
+				$charCount.text(`${length} / ${maxLength}`);
+			}
+		}
+		
+		// Initialize character count
+		updateCharCount();
+		
+		element.on('input', function () {
+			updateCharCount();
+		});
+
 		element.on('keyup', utils.debounce(function () {
 			const text = element.val();
 			if (text) {
@@ -110,6 +128,7 @@ define('quickreply', [
 			} else {
 				storage.removeItem(qrDraftId);
 			}
+			updateCharCount();
 		}, 1000));
 
 		components.get('topic/quickreply/expand').on('click', (e) => {

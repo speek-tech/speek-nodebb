@@ -116,6 +116,444 @@ body.template-topic {
 	[component="topic/thumb/list"] > a{
 		height: calc($font-size-base * 4);
 	}
+
+	// Posts Screen Styling - Pixel Perfect Match to Figma Design
+	// Responsive breakpoints: 390px (mobile), 768px (tablet), 1024px (small desktop), 1280px (large desktop)
+
+	// Color variables from design
+	$color-bg-primary: #FDFDFC;
+	$color-bg-secondary: #E6E2D2;
+	$color-bg-accent: #F6FFA3;
+	$color-bg-button: #E6FF00;
+	$color-bg-button-ghost: rgba(230, 226, 210, 0.9);
+	$color-text-primary: #355E66;
+	$color-text-secondary: #122023;
+	$color-text-muted: #525252;
+	$color-text-light: #D4D4D4;
+	$color-border: #D4D4D4;
+	$color-border-light: #E0DBC7;
+	$color-border-accent: #F3F1E9;
+	$color-badge-default: #B6D3DA;
+	$color-badge-outline: rgba(255, 255, 255, 0.5);
+
+	// Main container adjustments
+	.flex-fill {
+		// Mobile: padding 60px 16px 0px
+		@media (max-width: 767px) {
+			padding: 60px 16px 0px;
+		}
+		
+		// Tablet: padding 76px 16px 0px
+		@media (min-width: 768px) and (max-width: 1023px) {
+			padding: 76px 16px 0px;
+		}
+		
+		// Small desktop: padding 76px 24px 0px
+		@media (min-width: 1024px) and (max-width: 1279px) {
+			padding: 76px 24px 0px;
+		}
+		
+		// Large desktop: padding 76px 24px 0px
+		@media (min-width: 1280px) {
+			padding: 76px 24px 0px;
+		}
+	}
+
+	// Heading area styling - Figma Design
+	.posts-heading-area {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 16px;
+		width: 100%;
+	}
+
+	.posts-title-section {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 16px;
+	}
+
+	.posts-title-wrapper {
+		display: flex;
+		align-items: center;
+		align-self: stretch;
+		gap: 10px;
+	}
+
+	.btn-back {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		padding: 8px;
+		background: transparent;
+		border: none;
+		cursor: pointer;
+		color: $color-text-primary;
+		flex-shrink: 0;
+		
+		&:hover {
+			opacity: 0.8;
+		}
+		
+		.lucide-icon {
+			width: 20px;
+			height: 20px;
+		}
+	}
+
+	.topic-title, .posts-title {
+		font-family: 'DM Sans', sans-serif;
+		font-size: 24px;
+		font-weight: 700;
+		line-height: 1.333;
+		color: $color-text-primary;
+		margin: 0;
+	}
+
+	.posts-space-actions {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 12px;
+		
+		@media (min-width: 768px) {
+			flex-direction: row;
+			justify-content: space-between;
+			align-items: center;
+			gap: 10px;
+		}
+	}
+
+	.posts-badges {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 8px;
+	}
+
+	// Badge styling - Figma Design
+	.post-badge {
+		display: inline-flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 8px;
+		border-radius: 8px;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 1.333;
+		
+		.post-badge-icon {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			width: 12px;
+			height: 12px;
+			flex-shrink: 0;
+			
+			.lucide-icon {
+				width: 12px;
+				height: 12px;
+			}
+		}
+		
+		.post-badge-text {
+			color: inherit;
+		}
+		
+		&.post-badge-default {
+			background-color: $color-badge-default;
+			color: $color-text-secondary;
+			border: 1px solid transparent;
+		}
+		
+		&.post-badge-outline {
+			background-color: $color-badge-outline;
+			color: $color-text-primary;
+			border: 1px solid $color-border-accent;
+		}
+	}
+
+	// Post card styling
+	.post-container {
+		background-color: $color-bg-primary;
+		border-radius: 16px;
+		padding: 24px;
+		margin-bottom: 24px;
+		
+		&:first-child {
+			background-color: $color-bg-primary;
+		}
+	}
+
+	// Comment/reply styling (non-first posts)
+	.posts [component="post"]:not(:first-child) .post-container {
+		background-color: $color-bg-secondary;
+		border: 1px solid $color-border-light;
+		border-radius: 16px;
+		padding: 16px;
+	}
+
+	// Post header styling
+	.post-header {
+		.post-user-name {
+			font-family: 'DM Sans', sans-serif;
+			font-size: 16px;
+			font-weight: 700;
+			line-height: 1.5;
+			color: $color-text-secondary;
+		}
+		
+		.text-muted {
+			font-family: 'DM Sans', sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 1.429;
+			color: $color-text-muted;
+		}
+	}
+
+	// Post content styling
+	[component="post/content"] {
+		font-family: 'DM Sans', sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.5;
+		color: $color-text-secondary;
+		margin-top: 16px;
+	}
+
+	.post-title-main {
+		font-family: 'DM Sans', sans-serif;
+		font-size: 18px;
+		font-weight: 700;
+		line-height: 1.556;
+		color: $color-text-primary;
+		margin: 0 0 4px 0;
+	}
+
+	// Reactions styling - Figma Design
+	.post-footer {
+		margin-top: 16px;
+		border-bottom: none;
+		padding-bottom: 0;
+	}
+
+	.post-reactions {
+		display: flex;
+		flex-direction: row;
+		gap: 0;
+		margin-top: 16px;
+		
+		.reaction-item {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 8px;
+			width: 84px;
+			
+			.lucide-icon {
+				width: 24px;
+				height: 24px;
+				color: $color-text-primary;
+			}
+			
+			.reaction-count {
+				font-family: 'DM Sans', sans-serif;
+				font-size: 16px;
+				font-weight: 700;
+				line-height: 1.5;
+				color: $color-text-primary;
+			}
+		}
+	}
+
+	// Action buttons - Figma Design
+	.posts-actions {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		gap: 16px;
+		
+		@media (max-width: 767px) {
+			width: 100%;
+			justify-content: flex-end;
+		}
+	}
+
+	.btn-filter {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		height: 44px;
+		background-color: $color-bg-button-ghost;
+		backdrop-filter: blur(12px);
+		border: none;
+		border-radius: 9999px;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 14px;
+		font-weight: 700;
+		line-height: 1.429;
+		color: $color-text-primary;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		
+		&:hover {
+			opacity: 0.9;
+		}
+		
+		.btn-text {
+			white-space: nowrap;
+		}
+		
+		.lucide-icon {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	.btn-reply-primary {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 32px;
+		height: 44px;
+		background-color: $color-bg-button;
+		box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+		border: none;
+		border-radius: 9999px;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 14px;
+		font-weight: 700;
+		line-height: 1.429;
+		color: $color-text-secondary;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		text-decoration: none;
+		
+		@media (max-width: 767px) {
+			flex: 1;
+		}
+		
+		&:hover {
+			filter: brightness(0.95);
+			text-decoration: none;
+			color: $color-text-secondary;
+		}
+		
+		.btn-text {
+			white-space: nowrap;
+		}
+		
+		.lucide-icon {
+			width: 16px;
+			height: 16px;
+		}
+	}
+
+	// Quick reply styling - Figma Design
+	.reply-form-container {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 16px;
+		margin-top: 24px;
+	}
+
+	.reply-form {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 16px;
+	}
+
+	.reply-label {
+		font-family: 'DM Sans', sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.5;
+		color: $color-text-secondary;
+	}
+
+	.reply-textarea-wrapper {
+		display: flex;
+		flex-direction: column;
+		align-self: stretch;
+		gap: 4px;
+		padding: 8px 12px;
+		background-color: $color-bg-primary;
+		border: 1px solid $color-border;
+		box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+		border-radius: 8px;
+		position: relative;
+	}
+
+	.reply-textarea {
+		width: 100%;
+		min-height: 80px;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.429;
+		color: $color-text-secondary;
+		background: transparent;
+		border: none;
+		outline: none;
+		resize: vertical;
+		
+		&::placeholder {
+			color: $color-text-muted;
+		}
+	}
+
+	.reply-char-count {
+		font-family: 'DM Sans', sans-serif;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1.333;
+		color: $color-text-light;
+		text-align: right;
+	}
+
+	.btn-submit-reply {
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		gap: 8px;
+		padding: 8px 16px;
+		height: 36px;
+		background-color: $color-bg-button;
+		box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+		border: none;
+		border-radius: 9999px;
+		font-family: 'DM Sans', sans-serif;
+		font-size: 14px;
+		font-weight: 700;
+		color: $color-text-secondary;
+		cursor: pointer;
+		transition: all 0.2s ease;
+		align-self: flex-start;
+		
+		&:hover {
+			filter: brightness(0.95);
+		}
+		
+		.btn-text {
+			white-space: nowrap;
+		}
+	}
 }
 
 @include media-breakpoint-up(lg) {
