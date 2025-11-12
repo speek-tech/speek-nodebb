@@ -11,14 +11,14 @@
     "postgres": {
       "host": "localhost",
       "port": 5432,
-      "username": "nodebb",
-      "password": "nodebb123",
-      "database": "nodebb"
+      "username": "speek_admin",
+      "password": "Admin12345",
+      "database": "speek_production"
     }
   },
   "redis": {
     "host": "localhost",
     "port": 6379,
-    "password": "redis123"
+    "password": "RedisSecure2024!"
   }
 }
