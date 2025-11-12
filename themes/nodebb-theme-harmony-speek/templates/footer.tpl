@@ -20,5 +20,6 @@
 	{{{ end }}}
 
 	<!-- IMPORT partials/footer/js.tpl -->
+	<!-- IMPORT partials/url-change-notifier.tpl -->
 </body>
 </html>
