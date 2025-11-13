@@ -388,6 +388,15 @@ body.template-topic {
 			}
 		}
 		
+		// Latest comment should have white background
+		&:not(:first-child).latest-comment,
+		&:not(:first-child):last-child {
+			.post-container {
+				background-color: $color-bg-primary;
+				border: none;
+			}
+		}
+		
 		&:first-child {
 			margin-top: 0;
 			
@@ -650,7 +659,8 @@ body.template-topic {
 		font-weight: 700;
 		line-height: 1.333;
 		color: $color-text-light;
-		text-align: right;
+		text-align: left;
+		margin-right: auto;
 	}
 
 	.btn-submit-reply {
@@ -671,7 +681,7 @@ body.template-topic {
 		color: $color-text-secondary;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		align-self: flex-start;
+		margin-left: 0;
 		
 		&:hover {
 			filter: brightness(0.95);

@@ -8,7 +8,7 @@
 {{{ if (./parent && !hideParent) }}}
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
-<div class="d-flex align-items-start post-container-parent {{{ if ./index }}}comment-post{{{ end }}}">
+<div class="d-flex align-items-start post-container-parent {{{ if ./index }}}comment-post{{{ if (./index === ../postcount) }}} latest-comment{{{ end }}}{{{ end }}}">
 	<div class="bg-body d-none d-sm-block rounded-circle" style="outline: 2px solid var(--bs-body-bg);">
 		<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
 			{buildAvatar(posts.user, "48px", true, "", "user/picture")}

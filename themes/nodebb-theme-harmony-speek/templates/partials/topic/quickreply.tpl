@@ -14,11 +14,11 @@
 					placeholder="Enter your reply here"
 					maxlength="1000"
 				></textarea>
-				<div class="reply-char-count">0 / 1000</div>
 				<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
 			</div>
 			<div>
-				<div class="d-flex justify-content-end gap-2">
+				<div class="d-flex justify-content-start gap-2 align-items-center">
+					<div class="reply-char-count">0 / 1000</div>
 					<button type="button" component="topic/quickreply/upload/button" class="btn btn-ghost btn-sm border d-none"><i class="fa fa-upload"></i></button>
 					<button type="button" component="topic/quickreply/expand" class="btn btn-ghost btn-sm border d-none" title="[[topic:open-composer]]"><i class="fa fa-expand"></i></button>
 					<button type="submit" component="topic/quickreply/button" class="btn-submit-reply">
