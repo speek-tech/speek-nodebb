@@ -16,6 +16,7 @@ const helpers = require('./helpers');
 const utils = require('../utils');
 const translator = require('../translator');
 const analytics = require('../analytics');
+const topics = require('../topics');
 
 const categoryController = module.exports;
 
@@ -189,6 +190,21 @@ categoryController.get = async function (req, res, next) {
 
 	categoryData.recentConversations = recentConversations;
 	categoryData.relatedSpaces = relatedSpaces;
+
+	let unreadCount = 0;
+	if (req.uid > 0) {
+		try {
+			const unreadData = await topics.getUnreadData({
+				uid: req.uid,
+				cid: [parseInt(cid, 10)],
+				count: true,
+			});
+			unreadCount = (unreadData.counts && unreadData.counts['']) || 0;
+		} catch (err) {
+			console.error(`Error getting unread count for category ${cid}:`, err.message);
+		}
+	}
+	categoryData.unreadCount = unreadCount;
 
 	res.render('category', categoryData);
 };

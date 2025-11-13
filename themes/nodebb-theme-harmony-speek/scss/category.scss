@@ -1032,7 +1032,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		}
 	}
 
-	.speek-space-content {
+.speek-space-content {
 		display: flex;
 		flex-direction: column;
 		gap: 8px;
@@ -1117,22 +1117,6 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		
 		.speek-category-description {
 			font-size: 14px;
-		}
-	}
-
-	.speek-action-bar {
-		padding: 12px 16px;
-		flex-direction: column;
-		align-items: stretch;
-
-		.speek-action-bar-left,
-		.speek-action-bar-right {
-			width: 100%;
-			justify-content: center;
-		}
-
-		.speek-btn {
-			flex: 1;
 		}
 	}
 
