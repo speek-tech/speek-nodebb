@@ -81,21 +81,30 @@
 		</div>
 
 		<div class="content text-break" component="post/content" itemprop="text">
-			{ if (!./index) }
+			{{{ if (!./index) }}}
 			<h2 class="post-title-main">{../title}</h2>
 			{{{ end }}}
 			{posts.content}
 		</div>
 
 		<div component="post/footer" class="post-footer">
-			{ if (!./index) }
+			{{{ if (!./index) }}}
 			<!-- Main post reactions - Figma Design -->
 			<div class="post-reactions">
-				{ if !reputation:disabled && (posts.upvotes || posts.votes) }
+				{{{ if !reputation:disabled }}}
+				{{{ if posts.upvotes }}}
 				<div class="reaction-item reaction-likes">
 					{buildLucideIcon("heart", 24)}
-					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{{{posts.upvotes || posts.votes || 0}}}</span>
+					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.upvotes}</span>
 				</div>
+				{{{ else }}}
+				{{{ if posts.votes }}}
+				<div class="reaction-item reaction-likes">
+					{buildLucideIcon("heart", 24)}
+					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.votes}</span>
+				</div>
+				{{{ end }}}
+				{{{ end }}}
 				{{{ end }}}
 				{{{ if ../postcount }}}
 				<div class="reaction-item reaction-replies">
@@ -104,7 +113,7 @@
 				</div>
 				{{{ end }}}
 			</div>
-			{ end }
+			{{{ end }}}
 			{{{ if posts.user.signature }}}
 			<div component="post/signature" data-uid="{posts.user.uid}" class="text-xs text-muted mt-2">{posts.user.signature}</div>
 			{{{ end }}}
@@ -136,7 +145,7 @@
 					<a component="post/announce-count" href="#" class="btn btn-ghost btn-sm d-flex gap-2 align-items-center" title="[[topic:announcers]]"><i class="fa fa-share-alt text-primary"></i> {./announces}</a>
 					{{{ end }}}
 
-					{ if !reputation:disabled && ./index }
+					{{{ if !reputation:disabled && ./index }}}
 					<div class="d-flex votes align-items-center">
 						<a component="post/upvote" href="#" class="btn btn-ghost btn-sm{{{ if posts.upvoted }}} upvoted{{{ end }}}" title="[[topic:upvote-post]]">
 							<i class="fa fa-fw fa-chevron-up text-primary"></i>
@@ -150,9 +159,9 @@
 						<a component="post/downvote" href="#" class="btn btn-ghost btn-sm{{{ if posts.downvoted }}} downvoted{{{ end }}}" title="[[topic:downvote-post]]">
 							<i class="fa fa-fw fa-chevron-down text-primary"></i>
 						</a>
-						{ end }
+						{{{ end }}}
 					</div>
-					{ end }
+					{{{ end }}}
 
 					<!-- IMPORT partials/topic/post-menu.tpl -->
 				</div>

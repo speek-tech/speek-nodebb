@@ -40,7 +40,7 @@
 						</span>
 						<span class="post-badge-text">{category.name}</span>
 					</div>
-					{ end }
+					{{{ end }}}
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
 							{buildLucideIcon("message-square", 12)}
@@ -59,14 +59,16 @@
 						</span>
 						<span class="post-badge-text" title="{viewcount}">{viewcount}</span>
 					</div>
-					{ if browsingUsers && browsingUsers.length }
+					{{{ if browsingUsers }}}
+					{{{ if browsingUsers.length }}}
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
 							{buildLucideIcon("eye", 12)}
 						</span>
 						<span class="post-badge-text">{browsingUsers.length}</span>
 					</div>
-					{ end }
+					{{{ end }}}
+					{{{ end }}}
 				</div>
 				
 				<div class="posts-actions">
@@ -80,7 +82,7 @@
 						{buildLucideIcon("reply", 16)}
 						<span class="btn-text">Reply</span>
 					</a>
-					{ end }
+					{{{ end }}}
 				</div>
 			</div>
 		</div>
