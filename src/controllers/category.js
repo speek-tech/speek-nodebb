@@ -16,6 +16,7 @@ const helpers = require('./helpers');
 const utils = require('../utils');
 const translator = require('../translator');
 const analytics = require('../analytics');
+const topics = require('../topics');
 
 const categoryController = module.exports;
 
@@ -181,6 +182,30 @@ categoryController.get = async function (req, res, next) {
 		}
 	}
 
+	// Add carousel data for Speek design
+	const [recentConversations, relatedSpaces] = await Promise.all([
+		getRecentConversationsFromSiblings(cid, req.uid, 10),
+		getRelatedSpaces(cid, req.uid, 10),
+	]);
+
+	categoryData.recentConversations = recentConversations;
+	categoryData.relatedSpaces = relatedSpaces;
+
+	let unreadCount = 0;
+	if (req.uid > 0) {
+		try {
+			const unreadData = await topics.getUnreadData({
+				uid: req.uid,
+				cid: [parseInt(cid, 10)],
+				count: true,
+			});
+			unreadCount = (unreadData.counts && unreadData.counts['']) || 0;
+		} catch (err) {
+			console.error(`Error getting unread count for category ${cid}:`, err.message);
+		}
+	}
+	categoryData.unreadCount = unreadCount;
+
 	res.render('category', categoryData);
 };
 
@@ -261,5 +286,151 @@ function addTags(categoryData, res, currentPage) {
 			type: 'application/activity+json',
 			href: `${nconf.get('url')}/category/${categoryData.cid}`,
 		});
+	}
+}
+
+// =====================================
+// Helper Functions for Carousel Data
+// =====================================
+
+/**
+ * Get recent conversations (posts) from sibling categories
+ * @param {number} currentCid - Current category ID
+ * @param {number} uid - User ID
+ * @param {number} limit - Number of posts to fetch
+ * @returns {Array} Array of recent post data with category info
+ */
+async function getRecentConversationsFromSiblings(currentCid, uid, limit = 10) {
+	try {
+		// Get current category data to find siblings
+		const currentCategory = await categories.getCategoryData(currentCid);
+		if (!currentCategory) {
+			return [];
+		}
+
+		const parentCid = currentCategory.parentCid || 0;
+
+		// Get all sibling categories (same parent)
+		const siblingCids = await db.getSortedSetRange(`cid:${parentCid}:children`, 0, -1);
+		const filteredSiblings = siblingCids
+			.map(cid => parseInt(cid, 10))
+			.filter(cid => cid !== parseInt(currentCid, 10)); // Exclude current category
+
+		if (!filteredSiblings.length) {
+			return [];
+		}
+
+		// Filter by user privileges
+		const allowedCids = await privileges.categories.filterCids('topics:read', filteredSiblings, uid);
+
+		if (!allowedCids.length) {
+			return [];
+		}
+
+		// Get recent topics from these categories
+		const recentTopics = [];
+		for (const cid of allowedCids.slice(0, 5)) { // Limit to 5 categories to avoid too many queries
+			const tids = await db.getSortedSetRevRange(`cid:${cid}:tids:lastposttime`, 0, 2);
+			if (tids && tids.length) {
+				recentTopics.push(...tids.map(tid => ({ tid, cid })));
+			}
+		}
+
+		// Sort by recent and limit
+		const limitedTopics = recentTopics.slice(0, limit);
+
+		// Get topic data
+		const topics = await require('../topics').getTopics(limitedTopics.map(t => t.tid), uid);
+
+		// Get category data for each topic
+		const cidsToFetch = [...new Set(limitedTopics.map(t => t.cid))];
+		const categoriesData = await categories.getCategoriesData(cidsToFetch);
+		const categoryMap = {};
+		categoriesData.forEach(cat => {
+			if (cat) categoryMap[cat.cid] = cat;
+		});
+
+		// Combine data
+		const result = topics.filter(t => t).map((topic, index) => {
+			const topicCid = limitedTopics[index].cid;
+			return {
+				...topic,
+				category: categoryMap[topicCid] || { name: 'Unknown' },
+			};
+		});
+
+		return result;
+	} catch (error) {
+		console.error('Error fetching recent conversations:', error);
+		return [];
+	}
+}
+
+/**
+ * Get related spaces (sibling categories)
+ * @param {number} currentCid - Current category ID
+ * @param {number} uid - User ID
+ * @param {number} limit - Number of categories to fetch
+ * @returns {Array} Array of related category data
+ */
+async function getRelatedSpaces(currentCid, uid, limit = 10) {
+	try {
+		// Get current category data
+		const currentCategory = await categories.getCategoryData(currentCid);
+		if (!currentCategory) {
+			return [];
+		}
+
+		const parentCid = currentCategory.parentCid || 0;
+
+		// Get sibling categories
+		const siblingCids = await db.getSortedSetRange(`cid:${parentCid}:children`, 0, -1);
+		const filteredSiblings = siblingCids
+			.map(cid => parseInt(cid, 10))
+			.filter(cid => cid !== parseInt(currentCid, 10)); // Exclude current category
+
+		if (!filteredSiblings.length) {
+			return [];
+		}
+
+		// Filter by user privileges
+		const allowedCids = await privileges.categories.filterCids('find', filteredSiblings, uid);
+
+		if (!allowedCids.length) {
+			return [];
+		}
+
+		// Get category data
+		const categoriesData = await categories.getCategoriesData(allowedCids.slice(0, limit));
+
+		// Get unread counts for each category
+		const result = await Promise.all(
+			categoriesData.filter(c => c && !c.disabled).map(async (category) => {
+				// Get unread count for user using topics module
+				let unreadCount = 0;
+				if (uid > 0) {
+					try {
+						const unreadData = await require('../topics').getUnreadData({
+							uid: uid,
+							cid: [category.cid],
+							count: true,
+						});
+						unreadCount = (unreadData.counts && unreadData.counts['']) || 0;
+					} catch (err) {
+						console.error(`Error getting unread count for category ${category.cid}:`, err.message);
+					}
+				}
+
+				return {
+					...category,
+					unreadCount: unreadCount,
+				};
+			})
+		);
+
+		return result;
+	} catch (error) {
+		console.error('Error fetching related spaces:', error);
+		return [];
 	}
 }
