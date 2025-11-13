@@ -17,12 +17,12 @@ body.template-topic {
 		
 		// Small desktop: padding 76px 24px 0px
 		@media (min-width: 1024px) and (max-width: 1279px) {
-			padding: 76px 24px 0px;
+			padding: 0px 24px 0px;
 		}
 		
 		// Large desktop: padding 76px 24px 0px
 		@media (min-width: 1280px) {
-			padding: 76px 24px 0px;
+			padding: 0px 24px 0px;
 		}
 	}
 
@@ -30,20 +30,21 @@ body.template-topic {
 	.posts-content-wrapper {
 		display: flex;
 		flex-direction: column;
-		align-items: center;
+		align-items: stretch;
 		align-self: stretch;
 		gap: 24px;
-		padding: 16px 0px 48px;
+		padding: 0px 0px 48px;
+		width: 100%;
 		max-width: 100%;
 		
 		@media (min-width: 1024px) {
 			gap: 32px;
-			padding: 24px 0px 48px;
+			padding: 0px 0px 48px;
 		}
 		
 		@media (min-width: 1280px) {
 			gap: 24px;
-			padding: 24px 0px 48px;
+			padding: 0px 0px 48px;
 		}
 	}
 
@@ -55,6 +56,7 @@ body.template-topic {
 		gap: 24px;
 		width: 100%;
 		max-width: 960px;
+		margin: 0 auto;
 		
 		> *:not(.posts) {
 			width: 100%;
@@ -219,6 +221,7 @@ body.template-topic {
 		gap: 16px;
 		width: 100%;
 		max-width: 960px;
+		margin: 0 auto;
 	}
 
 	.posts-title-section {
@@ -339,6 +342,7 @@ body.template-topic {
 		gap: 12px;
 		align-items: flex-start;
 		width: 100%;
+		display: flex;
 	}
 
 	.post-container {
@@ -351,6 +355,22 @@ body.template-topic {
 		gap: 16px;
 		width: 100%;
 		flex: 1;
+	}
+	
+	// Main post specific styling
+	.posts-frame .posts [component="post"]:first-child {
+		.post-container-parent {
+			background-color: transparent;
+			border: none;
+			padding: 0;
+		}
+		
+		.post-container {
+			background-color: $color-bg-primary;
+			border-radius: 16px;
+			padding: 24px;
+			gap: 16px;
+		}
 	}
 
 	// Comment/reply styling (non-first posts) - Figma Design
@@ -366,13 +386,17 @@ body.template-topic {
 				gap: 12px;
 				width: 100%;
 				align-items: flex-start;
-			}
-			
-			.post-container {
 				background-color: $color-bg-secondary;
 				border: 1px solid $color-border-light;
 				border-radius: 16px;
 				padding: 16px;
+			}
+			
+			.post-container {
+				background-color: transparent;
+				border: none;
+				border-radius: 0;
+				padding: 4px 0px 0px;
 				gap: 12px;
 				width: 100%;
 				flex: 1;
@@ -381,12 +405,13 @@ body.template-topic {
 			}
 			
 			.post-container > .post-header {
-				padding-top: 4px;
+				padding-top: 0;
 				margin-bottom: 0;
 			}
 			
 			[component="post/content"] {
 				margin-top: 0;
+				gap: 0;
 			}
 			
 			// Hide reactions and footer actions for comments
@@ -398,7 +423,7 @@ body.template-topic {
 		// Latest comment should have white background (last comment for oldest-to-newest sort)
 		&:last-child {
 			&:not(:first-child) {
-				.post-container {
+				.post-container-parent {
 					background-color: $color-bg-primary;
 					border: none;
 				}
@@ -410,6 +435,9 @@ body.template-topic {
 			
 			.post-container-parent {
 				width: 100%;
+				background-color: transparent;
+				border: none;
+				padding: 0;
 			}
 			
 			.post-container {
@@ -422,6 +450,16 @@ body.template-topic {
 	// Post header styling - Figma Design
 	.post-header {
 		margin-bottom: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 0;
+		
+		> div:first-child {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 12px;
+		}
 		
 		.post-user-name {
 			font-family: 'DM Sans', sans-serif;
@@ -447,6 +485,20 @@ body.template-topic {
 			color: $color-text-secondary;
 		}
 	}
+	
+	// User info styling for comments - Figma Design
+	.posts-frame .posts [component="post"]:not(:first-child) {
+		.post-header > div:first-child {
+			display: flex;
+			flex-direction: row;
+			align-items: center;
+			gap: 12px;
+		}
+		
+		.post-header > div:last-child {
+			display: none; // Hide bookmark and post index for comments
+		}
+	}
 
 	// Post content styling
 	[component="post/content"] {
@@ -456,6 +508,9 @@ body.template-topic {
 		line-height: 1.5;
 		color: $color-text-secondary;
 		margin-top: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
 		
 		.post-title-main {
 			font-family: 'DM Sans', sans-serif;
@@ -463,7 +518,25 @@ body.template-topic {
 			font-weight: 700;
 			line-height: 1.556;
 			color: $color-text-primary;
-			margin: 0 0 4px 0;
+			margin: 0;
+		}
+	}
+	
+	// Content container gap for main post
+	.posts-frame .posts [component="post"]:first-child {
+		.post-container {
+			> [component="post/content"] {
+				gap: 8px;
+			}
+		}
+	}
+	
+	// Content container gap for comments
+	.posts-frame .posts [component="post"]:not(:first-child) {
+		.post-container {
+			> [component="post/content"] {
+				gap: 0;
+			}
 		}
 	}
 
@@ -637,7 +710,7 @@ body.template-topic {
 		gap: 4px;
 		padding: 8px 12px;
 		background-color: $color-bg-primary;
-		border: 1px solid $color-border;
+		border: none;
 		box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
 		border-radius: 8px;
 		position: relative;
