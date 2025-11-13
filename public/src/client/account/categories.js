@@ -48,16 +48,16 @@ define('forum/account/categories', ['forum/account/header', 'alerts', 'api'], fu
 		modified_cids.forEach(function (cid) {
 			const category = $('[data-cid="' + cid + '"]');
 			category.find('[component="category/watching/menu"]').toggleClass('hidden', state !== 'watching');
-			category.find('[component="category/watching/check"]').toggleClass('fa-check', state === 'watching');
+			category.find('[component="category/watching/check"]').toggleClass('is-active', state === 'watching');
 
 			category.find('[component="category/tracking/menu"]').toggleClass('hidden', state !== 'tracking');
-			category.find('[component="category/tracking/check"]').toggleClass('fa-check', state === 'tracking');
+			category.find('[component="category/tracking/check"]').toggleClass('is-active', state === 'tracking');
 
 			category.find('[component="category/notwatching/menu"]').toggleClass('hidden', state !== 'notwatching');
-			category.find('[component="category/notwatching/check"]').toggleClass('fa-check', state === 'notwatching');
+			category.find('[component="category/notwatching/check"]').toggleClass('is-active', state === 'notwatching');
 
 			category.find('[component="category/ignoring/menu"]').toggleClass('hidden', state !== 'ignoring');
-			category.find('[component="category/ignoring/check"]').toggleClass('fa-check', state === 'ignoring');
+			category.find('[component="category/ignoring/check"]').toggleClass('is-active', state === 'ignoring');
 		});
 	}
 
