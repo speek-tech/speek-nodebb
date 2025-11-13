@@ -8,79 +8,79 @@
 		aria-expanded="false"
 	>
 		<span class="category-watch__current">
-			<span component="category/watching/menu" class="category-watch__state{{{ if !./isWatched }}} hidden{{{ end }}}}">
-				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-bell"></i></span>
+			<span component="category/watching/menu" class="category-watch__state{{{ if !./isWatched }}} hidden{{{ end }}}">
+				<span class="category-pill__icon" aria-hidden="true">{buildLucideIcon("bell", 20, "category-pill__icon-svg")}</span>
 				<span class="category-watch__state-label">[[category:watching]]</span>
 			</span>
 
-			<span component="category/tracking/menu" class="category-watch__state{{{ if !./isTracked }}} hidden{{{ end }}}}">
-				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-inbox"></i></span>
+			<span component="category/tracking/menu" class="category-watch__state{{{ if !./isTracked }}} hidden{{{ end }}}">
+				<span class="category-pill__icon" aria-hidden="true">{buildLucideIcon("inbox", 20, "category-pill__icon-svg")}</span>
 				<span class="category-watch__state-label">[[category:tracking]]</span>
 			</span>
 
-			<span component="category/notwatching/menu" class="category-watch__state{{{ if !./isNotWatched }}} hidden{{{ end }}}}">
-				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-clock-o"></i></span>
+			<span component="category/notwatching/menu" class="category-watch__state{{{ if !./isNotWatched }}} hidden{{{ end }}}">
+				<span class="category-pill__icon" aria-hidden="true">{buildLucideIcon("clock", 20, "category-pill__icon-svg")}</span>
 				<span class="category-watch__state-label">[[category:not-watching]]</span>
 			</span>
 
-			<span component="category/ignoring/menu" class="category-watch__state{{{ if !./isIgnored }}} hidden{{{ end }}}}">
-				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-eye-slash"></i></span>
+			<span component="category/ignoring/menu" class="category-watch__state{{{ if !./isIgnored }}} hidden{{{ end }}}">
+				<span class="category-pill__icon" aria-hidden="true">{buildLucideIcon("eye-off", 20, "category-pill__icon-svg")}</span>
 				<span class="category-watch__state-label">[[category:ignoring]]</span>
 			</span>
 		</span>
-		<span class="category-pill__caret" aria-hidden="true"><i class="fa fa-chevron-down"></i></span>
+		<span class="category-pill__caret" aria-hidden="true">{buildLucideIcon("chevron-down", 20, "category-pill__caret-icon")}</span>
 	</button>
 
 	<ul class="dropdown-menu category-pill__menu {{{ if template.account/categories }}}dropdown-menu-end{{{ end }}} category-watch__menu" role="menu">
 		<li>
 			<a class="dropdown-item category-pill__option category-watch__option" href="#" component="category/watching" data-state="watching" role="menuitem">
 				<span class="category-watch__option-content">
-					<span class="category-watch__option-icon"><i class="fa fa-bell"></i></span>
+					<span class="category-watch__option-icon" aria-hidden="true">{buildLucideIcon("bell", 18, "category-watch__option-icon-svg")}</span>
 					<span class="category-watch__option-text">
 						<span class="category-watch__option-title">[[category:watching]]</span>
 						<span class="category-watch__option-description">[[category:watching.description]]</span>
 					</span>
 				</span>
-				<i component="category/watching/check" class="category-pill__option-check fa fa-fw {{{ if ./isWatched }}}fa-check{{{ end }}}"></i>
+				<span component="category/watching/check" class="category-pill__option-check {{{ if ./isWatched }}}is-active{{{ end }}}">{buildLucideIcon("check", 18, "category-pill__option-check-icon")}</span>
 			</a>
 		</li>
 
 		<li>
 			<a class="dropdown-item category-pill__option category-watch__option" href="#" component="category/tracking" data-state="tracking" role="menuitem">
 				<span class="category-watch__option-content">
-					<span class="category-watch__option-icon"><i class="fa fa-inbox"></i></span>
+					<span class="category-watch__option-icon" aria-hidden="true">{buildLucideIcon("inbox", 18, "category-watch__option-icon-svg")}</span>
 					<span class="category-watch__option-text">
 						<span class="category-watch__option-title">[[category:tracking]]</span>
 						<span class="category-watch__option-description">[[category:tracking.description]]</span>
 					</span>
 				</span>
-				<i component="category/tracking/check" class="category-pill__option-check fa fa-fw {{{ if ./isTracked }}}fa-check{{{ end }}}"></i>
+				<span component="category/tracking/check" class="category-pill__option-check {{{ if ./isTracked }}}is-active{{{ end }}}">{buildLucideIcon("check", 18, "category-pill__option-check-icon")}</span>
 			</a>
 		</li>
 
 		<li>
 			<a class="dropdown-item category-pill__option category-watch__option" href="#" component="category/notwatching" data-state="notwatching" role="menuitem">
 				<span class="category-watch__option-content">
-					<span class="category-watch__option-icon"><i class="fa fa-clock-o"></i></span>
+					<span class="category-watch__option-icon" aria-hidden="true">{buildLucideIcon("clock", 18, "category-watch__option-icon-svg")}</span>
 					<span class="category-watch__option-text">
 						<span class="category-watch__option-title">[[category:not-watching]]</span>
 						<span class="category-watch__option-description">[[category:not-watching.description]]</span>
 					</span>
 				</span>
-				<i component="category/notwatching/check" class="category-pill__option-check fa fa-fw {{{ if ./isNotWatched }}}fa-check{{{ end }}}"></i>
+				<span component="category/notwatching/check" class="category-pill__option-check {{{ if ./isNotWatched }}}is-active{{{ end }}}">{buildLucideIcon("check", 18, "category-pill__option-check-icon")}</span>
 			</a>
 		</li>
 
 		<li>
 			<a class="dropdown-item category-pill__option category-watch__option" href="#" component="category/ignoring" data-state="ignoring" role="menuitem">
 				<span class="category-watch__option-content">
-					<span class="category-watch__option-icon"><i class="fa fa-eye-slash"></i></span>
+					<span class="category-watch__option-icon" aria-hidden="true">{buildLucideIcon("eye-off", 18, "category-watch__option-icon-svg")}</span>
 					<span class="category-watch__option-text">
 						<span class="category-watch__option-title">[[category:ignoring]]</span>
 						<span class="category-watch__option-description">[[category:ignoring.description]]</span>
 					</span>
 				</span>
-				<i component="category/ignoring/check" class="category-pill__option-check fa fa-fw {{{ if ./isIgnored }}}fa-check{{{ end }}}"></i>
+				<span component="category/ignoring/check" class="category-pill__option-check {{{ if ./isIgnored }}}is-active{{{ end }}}">{buildLucideIcon("check", 18, "category-pill__option-check-icon")}</span>
 			</a>
 		</li>
 	</ul>
