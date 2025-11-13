@@ -3,7 +3,7 @@
 	{{widgets.header.html}}
 	{{{ end }}}
 </div>
-<div class="row flex-fill py-2">
+<div class="row flex-fill">
 	<div class="{{{ if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
 		{{{ if pagination.pages.length }}}
 		<div class="categories-selector-container"><!-- IMPORT partials/category/selector-dropdown-left.tpl --></div>
