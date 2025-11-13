@@ -365,6 +365,74 @@ $speek-border-light: #f3f1e9;
 			gap: 16px !important;
 		}
 
+		// Style category pills (watch, sort dropdowns)
+		.category-pill {
+			.category-pill__trigger {
+				background: rgba(255, 255, 255, 0.7);
+				backdrop-filter: blur(12px);
+				color: $speek-primary;
+				border: 1px solid transparent;
+				border-radius: 9999px;
+				padding: 8px 24px;
+				height: 44px;
+				font-weight: 700;
+				font-size: 14px;
+				display: inline-flex;
+				align-items: center;
+				gap: 8px;
+
+				&:hover {
+					background: rgba(255, 255, 255, 0.9);
+					color: $speek-primary;
+				}
+
+				.category-pill__icon {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					width: 16px;
+					height: 16px;
+					
+					i {
+						font-size: 16px;
+						display: inline-block;
+						width: 16px;
+						text-align: center;
+					}
+					
+					i.fa {
+						font-family: "FontAwesome" !important;
+						font-style: normal;
+						font-weight: normal;
+						line-height: 1;
+					}
+				}
+
+				.category-pill__caret {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					margin-left: 4px;
+					width: 12px;
+					height: 12px;
+					
+					i {
+						font-size: 12px;
+						display: inline-block;
+						width: 12px;
+						text-align: center;
+					}
+					
+					i.fa {
+						font-family: "FontAwesome" !important;
+						font-style: normal;
+						font-weight: normal;
+						line-height: 1;
+					}
+				}
+			}
+		}
+
 		// Style filter/sort buttons as ghost buttons
 		.btn-ghost,
 		.dropdown > button,
@@ -386,6 +454,16 @@ $speek-border-light: #f3f1e9;
 
 			i {
 				font-size: 16px;
+				display: inline-block;
+				width: 16px;
+				text-align: center;
+			}
+			
+			i.fa {
+				font-family: "FontAwesome" !important;
+				font-style: normal;
+				font-weight: normal;
+				line-height: 1;
 			}
 		}
 
