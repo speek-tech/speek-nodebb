@@ -390,12 +390,24 @@ async function getRelatedSpaces(currentCid, uid, limit = 10) {
 		// Get unread counts for each category
 		const result = await Promise.all(
 			categoriesData.filter(c => c && !c.disabled).map(async (category) => {
-				// Get unread count for user
-				const unreadCount = await categories.getUnreadCount(uid, category.cid);
+				// Get unread count for user using topics module
+				let unreadCount = 0;
+				if (uid > 0) {
+					try {
+						const unreadData = await require('../topics').getUnreadData({
+							uid: uid,
+							cid: [category.cid],
+							count: true,
+						});
+						unreadCount = (unreadData.counts && unreadData.counts['']) || 0;
+					} catch (err) {
+						console.error(`Error getting unread count for category ${category.cid}:`, err.message);
+					}
+				}
 
 				return {
 					...category,
-					unreadCount: unreadCount || 0,
+					unreadCount: unreadCount,
 				};
 			})
 		);
