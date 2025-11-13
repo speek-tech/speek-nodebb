@@ -656,6 +656,12 @@ body.template-topic {
 		outline: none;
 		resize: vertical;
 		
+		&:focus {
+			outline: none;
+			border: none;
+			box-shadow: none;
+		}
+		
 		&::placeholder {
 			color: $color-text-muted;
 		}
