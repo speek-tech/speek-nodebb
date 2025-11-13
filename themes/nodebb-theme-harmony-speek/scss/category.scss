@@ -272,14 +272,16 @@
 // Category Landing Page (Individual Category View in iframe)
 // =====================================
 
-// Design tokens
-$speek-primary: #355e66;
-$speek-secondary-text: #525252;
-$speek-card-bg: #fdfdfc;
-$speek-accent: #b6d3da;
-$speek-accent-fg: #192c30;
-$speek-border: #d4d4d4;
-$speek-border-light: #f3f1e9;
+// Design tokens - Figma pixel-perfect specs
+$speek-primary: #111827;                     // Primary text color
+$speek-secondary-text: #6B7280;              // Secondary text  
+$speek-card-bg: #FFFFFF;                     // Card background
+$speek-accent: #E6FF00;                      // Lime green - primary button
+$speek-accent-fg: #27454B;                   // Dark teal - text on accent
+$speek-border: #d4d4d4;                      // Standard border
+$speek-border-light: #f3f1e9;                // Light border
+$speek-ghost-bg: rgba(230, 226, 210, 0.9);  // Ghost button bg
+$speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 // Hide breadcrumbs completely in iframe
 .page-category .breadcrumb {
@@ -368,21 +370,23 @@ $speek-border-light: #f3f1e9;
 		// Style category pills (watch, sort dropdowns)
 		.category-pill {
 			.category-pill__trigger {
-				background: rgba(255, 255, 255, 0.7);
+				background: $speek-ghost-bg;  // Figma: rgba(230, 226, 210, 0.9)
 				backdrop-filter: blur(12px);
 				color: $speek-primary;
 				border: 1px solid transparent;
 				border-radius: 9999px;
-				padding: 8px 24px;
+				padding: 8px 32px;  // Figma spec: 8px 32px
 				height: 44px;
+				font-family: "DM Sans", var(--bs-body-font-family);
 				font-weight: 700;
 				font-size: 14px;
+				line-height: 1.4285714285714286em;
 				display: inline-flex;
 				align-items: center;
 				gap: 8px;
 
 				&:hover {
-					background: rgba(255, 255, 255, 0.9);
+					background: rgba(230, 226, 210, 1);
 					color: $speek-primary;
 				}
 
@@ -437,18 +441,20 @@ $speek-border-light: #f3f1e9;
 		.btn-ghost,
 		.dropdown > button,
 		.btn-group > button {
-			background: rgba(255, 255, 255, 0.7);
+			background: $speek-ghost-bg;  // Figma: rgba(230, 226, 210, 0.9)
 			backdrop-filter: blur(12px);
 			color: $speek-primary;
 			border: 1px solid transparent;
 			border-radius: 9999px;
-			padding: 8px 24px;
+			padding: 8px 32px;  // Figma spec: 8px 32px
 			height: 44px;
+			font-family: "DM Sans", var(--bs-body-font-family);
 			font-weight: 700;
 			font-size: 14px;
+			line-height: 1.4285714285714286em;
 
 			&:hover {
-				background: rgba(255, 255, 255, 0.9);
+				background: rgba(230, 226, 210, 1);
 				color: $speek-primary;
 			}
 
@@ -467,21 +473,24 @@ $speek-border-light: #f3f1e9;
 			}
 		}
 
-		// Style New Topic button as primary
+		// Style New Topic button as primary (Figma: lime green #E6FF00)
 		.btn-primary {
-			background: $speek-accent !important;
-			color: $speek-accent-fg !important;
+			background: $speek-accent !important;  // #E6FF00
+			color: $speek-accent-fg !important;    // #27454B
 			border: none !important;
 			border-radius: 9999px;
-			padding: 8px 32px;
+			padding: 8px 32px;  // Figma spec
 			height: 44px;
+			font-family: "DM Sans", var(--bs-body-font-family);
 			font-weight: 700;
 			font-size: 14px;
+			line-height: 1.4285714285714286em;
 			box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
 				0px 10px 15px -3px rgba(0, 0, 0, 0.05);
 
 			&:hover {
 				background: darken($speek-accent, 5%) !important;
+				color: $speek-accent-fg !important;
 				transform: translateY(-1px);
 				box-shadow: 0px 6px 10px -4px rgba(0, 0, 0, 0.1),
 					0px 12px 20px -3px rgba(0, 0, 0, 0.1);
@@ -512,15 +521,17 @@ $speek-border-light: #f3f1e9;
 			display: none !important;
 		}
 
-		// Ensure proper alignment: left items pushed left, right items pushed right
+		// Figma layout: space-between with 16px gap between buttons
 		[component="category/controls"] {
 			flex: 1;
 			justify-content: flex-start;
+			gap: 16px !important;  // Figma spec: 16px gap between left buttons
 		}
 		
 		// Right side container should align to the right
 		> div > .d-flex.gap-1.align-items-center:last-child {
 			margin-left: auto;
+			gap: 16px !important;  // Figma spec
 		}
 	}
 }
