@@ -28,7 +28,7 @@
 				<span class="category-watch__state-label">[[category:ignoring]]</span>
 			</span>
 		</span>
-		<span class="category-pill__caret" aria-hidden="true">{buildLucideIcon("chevron-down", 16, "category-pill__caret-icon")}</span>
+		<span class="category-pill__caret" aria-hidden="true">{buildLucideIcon("chevron-down", 20, "category-pill__caret-icon")}</span>
 	</button>
 
 	<ul class="dropdown-menu category-pill__menu {{{ if template.account/categories }}}dropdown-menu-end{{{ end }}} category-watch__menu" role="menu">

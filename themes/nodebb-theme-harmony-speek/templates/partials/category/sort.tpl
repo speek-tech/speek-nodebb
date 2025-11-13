@@ -12,7 +12,7 @@
 		</span>
 		<span class="category-pill__label">{sortOptionLabel}</span>
 		<span class="category-pill__caret" aria-hidden="true">
-			{buildLucideIcon("chevron-down", 16, "category-pill__caret-icon")}
+			{buildLucideIcon("chevron-down", 20, "category-pill__caret-icon")}
 		</span>
 	</button>
 
