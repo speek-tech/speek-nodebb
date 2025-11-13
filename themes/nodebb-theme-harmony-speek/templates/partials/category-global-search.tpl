@@ -1,10 +1,5 @@
 <!-- Global search section for categories page -->
 <section class="category-inline-search" id="category-inline-search" aria-label="Global search">
-	<div class="category-inline-search-header">
-		<h2 class="category-inline-search-title">[[global:search]]</h2>
-		<p class="category-inline-search-subtitle">Find topics and comments across the community</p>
-	</div>
-
 	<div class="category-inline-search-input">
 		<div class="category-inline-input-wrapper">
 			<input
@@ -20,7 +15,7 @@
 		</div>
 	</div>
 
-	<div class="category-inline-search-results">
+	<div class="category-inline-search-results" style="display:none;">
 		<div class="category-search-loading" style="display: none;">
 			<i class="fa fa-spinner fa-spin"></i>
 			<span>[[global:searching]]</span>

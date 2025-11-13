@@ -23,9 +23,12 @@
 		const resultsContainer = container.find('.category-inline-search-results');
 		const resultsList = $('#category-inline-search-results');
 
+		resultsContainer.hide();
+
 		function resetResults() {
 			resultsList.empty();
 			hideFeedback();
+			resultsContainer.hide();
 		}
 
 		function hideFeedback() {
@@ -34,12 +37,14 @@
 		}
 
 		function showLoading() {
+			resultsContainer.show();
 			loadingEl.show();
 			noResultsEl.hide();
 			resultsList.empty();
 		}
 
 		function showNoResults() {
+			resultsContainer.show();
 			loadingEl.hide();
 			noResultsEl.show();
 			resultsList.empty();
@@ -67,10 +72,12 @@
 			$.getJSON(config.relative_path + '/api/search', searchData)
 				.done(function (result) {
 					hideFeedback();
+					resultsContainer.show();
 					renderResults(result, query);
 				})
 				.fail(function (jqXHR) {
 					hideFeedback();
+					resultsContainer.hide();
 					const message = (jqXHR.responseJSON && jqXHR.responseJSON.message) || jqXHR.statusText || 'Search failed';
 					console.error('Search error:', message, jqXHR);
 					app.alertError(message);
@@ -103,6 +110,7 @@
 
 			resultsList.append(fragments.join(''));
 			resultsContainer.scrollTop(0);
+			resultsContainer.show();
 
 			resultsList.find('.category-search-result-item').on('click', function (e) {
 				e.preventDefault();
