@@ -1,4 +1,206 @@
 // Categories page styling based on Figma design
+.category-pill {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+}
+
+.category-pill__trigger {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 2rem;
+	min-height: 44px;
+	border-radius: 9999px;
+	border: 1px solid transparent;
+	background-color: rgba(230, 226, 210, 0.9);
+	color: var(--speek-fg, #355e66);
+	font-family: "DM Sans", var(--bs-body-font-family);
+	font-size: 0.875rem;
+	font-weight: 600;
+	line-height: 1.4;
+	box-shadow: 0 2px 4px -2px rgba(31, 45, 50, 0.15);
+	transition: background-color 0.2s ease, box-shadow 0.2s ease, color 0.2s ease;
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+}
+
+.category-pill__trigger:hover,
+.category-pill__trigger:focus {
+	color: var(--speek-fg, #355e66);
+	background-color: rgba(224, 220, 204, 0.95);
+	box-shadow: 0 4px 12px -6px rgba(31, 45, 50, 0.25);
+}
+
+.category-pill__trigger:focus {
+	outline: none;
+	box-shadow: 0 0 0 3px rgba(53, 94, 102, 0.15), 0 4px 12px -6px rgba(31, 45, 50, 0.25);
+}
+
+.category-pill__trigger::after {
+	display: none;
+}
+
+.category-pill__icon,
+.category-pill__caret {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	color: inherit;
+}
+
+.category-pill__icon i,
+.category-pill__caret i {
+	font-size: 0.95rem;
+}
+
+.category-pill__label {
+	white-space: nowrap;
+}
+
+.category-pill__menu {
+	margin-top: 0.5rem;
+	padding: 0.25rem;
+	min-width: 220px;
+	border-radius: 18px;
+	border: 1px solid rgba(53, 94, 102, 0.1);
+	box-shadow: 0 12px 32px -12px rgba(31, 45, 50, 0.25);
+	background-color: rgba(252, 249, 236, 0.96);
+}
+
+.category-pill__option {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.75rem;
+	padding: 0.625rem 0.75rem;
+	border-radius: 12px;
+	color: rgba(53, 94, 102, 0.85);
+	font-family: "DM Sans", var(--bs-body-font-family);
+	font-size: 0.875rem;
+	font-weight: 600;
+	transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.category-pill__option:hover,
+.category-pill__option:focus {
+	background-color: rgba(230, 226, 210, 0.85);
+	color: var(--speek-fg, #355e66);
+}
+
+.category-pill__option:focus {
+	outline: none;
+}
+
+.category-pill__option-icon {
+	margin-left: 0.25rem;
+	color: var(--speek-fg, #355e66);
+	font-size: 0.85rem;
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.category-pill__option.active,
+.category-pill__option[aria-checked="true"] {
+	color: var(--speek-fg, #355e66);
+	background-color: rgba(230, 226, 210, 0.65);
+}
+
+.category-pill__option.active .category-pill__option-icon,
+.category-pill__option[aria-checked="true"] .category-pill__option-icon {
+	opacity: 1;
+}
+
+@media (max-width: 575.98px) {
+	.category-pill__trigger {
+		padding: 0.5rem 1.25rem;
+		min-height: 40px;
+	}
+
+	.category-pill__label {
+		font-size: 0.8125rem;
+	}
+
+	.category-pill__menu {
+		min-width: 200px;
+	}
+}
+
+.category-watch {
+	display: inline-flex;
+}
+
+.category-watch__current {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.category-watch__state {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.category-watch__state .category-pill__icon {
+	color: inherit;
+}
+
+.category-watch__state-label {
+	font-size: 0.875rem;
+	font-weight: 600;
+	color: inherit;
+}
+
+.category-watch__state.hidden {
+	display: none !important;
+}
+
+.category-watch__option {
+	align-items: flex-start;
+}
+
+.category-watch__option-content {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.75rem;
+	flex: 1;
+}
+
+.category-watch__option-icon {
+	font-size: 1rem;
+	color: var(--speek-fg, #355e66);
+	margin-top: 0.125rem;
+}
+
+.category-watch__option-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+}
+
+.category-watch__option-title {
+	font-weight: 600;
+	color: inherit;
+}
+
+.category-watch__option-description {
+	font-size: 0.75rem;
+	color: rgba(53, 94, 102, 0.65);
+}
+
+.category-pill__option-check {
+	color: var(--speek-fg, #355e66);
+	opacity: 0;
+	transition: opacity 0.2s ease;
+}
+
+.category-pill__option.active .category-pill__option-check,
+.category-pill__option[aria-checked="true"] .category-pill__option-check,
+.category-pill__option .category-pill__option-check.fa-check {
+	opacity: 1;
+}
+
 .category-header .description p { margin: 0; }
 .page-category .breadcrumb .breadcrumb-item:last-child {
 	display: none;
