@@ -36,7 +36,7 @@
 				{{{ if (template.category || template.world) }}}
 					{{{ if privileges.topics:create }}}
 					<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary text-nowrap" data-ajaxify="false" role="button">
-						<i class="fa fa-plus"></i>
+						{buildLucideIcon("plus", 20, "speek-btn-icon")}
 						<span>New post</span>
 					</a>
 					{{{ end }}}

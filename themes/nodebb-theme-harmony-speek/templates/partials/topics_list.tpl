@@ -30,16 +30,16 @@
 			</a>
 		</div>
 
-		<div class="speek-post-card-footer">
-			<div class="speek-reaction-item">
-				<i class="fa fa-heart"></i>
-				<span class="speek-reaction-count">{./votes}</span>
-			</div>
-			<div class="speek-reaction-item">
-				<i class="fa fa-comment"></i>
-				<span class="speek-reaction-count">{./postcount}</span>
-			</div>
-		</div>
+        		<div class="speek-post-card-footer">
+        			<div class="speek-reaction-item">
+        				{buildLucideIcon("hand-heart", 24, "speek-reaction-icon")}
+        				<span class="speek-reaction-count">{./votes}</span>
+        			</div>
+        			<div class="speek-reaction-item">
+        				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
+        				<span class="speek-reaction-count">{./postcount}</span>
+        			</div>
+        		</div>
 	</li>
 	{{{end}}}
 </ul>

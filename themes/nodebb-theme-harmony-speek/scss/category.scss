@@ -500,19 +500,15 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					0px 12px 20px -3px rgba(0, 0, 0, 0.1);
 			}
 
-			// Plus icon styling
-			i.fa {
-				font-size: 16px;
-				font-family: "FontAwesome" !important;
-				font-style: normal;
-				font-weight: normal;
-				line-height: 1;
-			}
-			
 			span {
 				font-family: "DM Sans", var(--bs-body-font-family);
 				font-weight: 700;
 				font-size: 14px;
+			}
+
+			.lucide-icon.speek-btn-icon {
+				width: 20px;
+				height: 20px;
 			}
 		}
 
@@ -749,14 +745,18 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					align-items: center;
 					gap: 8px;
 					font-size: 14px;
-					color: #6B7280;
+					color: #355e66;
 
-					i {
-						font-size: 16px;
+					.lucide-icon.speek-reaction-icon {
+						width: 24px;
+						height: 24px;
 					}
 
 					.speek-reaction-count {
-						font-weight: 500;
+						font-family: "DM Sans", var(--bs-body-font-family);
+						font-size: 16px;
+						font-weight: 700;
+						line-height: 1.5;
 					}
 				}
 			}
