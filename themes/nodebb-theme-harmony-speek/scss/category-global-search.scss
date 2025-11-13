@@ -3,6 +3,8 @@
 	display: flex;
 	flex-direction: column;
 	gap: 0;
+	padding: 20px;
+	margin: 20px;
 }
 
 .category-inline-search-input {
@@ -209,6 +211,7 @@
 
 @include mobile {
 	.category-inline-search {
+		padding: 0px;
 		gap: 0;
 	}
 
