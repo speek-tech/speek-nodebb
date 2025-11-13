@@ -118,8 +118,17 @@
 
 .category-pill__option.active .category-pill__option-check,
 .category-pill__option[aria-checked="true"] .category-pill__option-check,
-.category-pill__option .category-pill__option-check.fa-check {
+.category-pill__option .category-pill__option-check.is-active {
 	opacity: 1;
+}
+
+.category-pill__icon-svg,
+.category-watch__option-icon-svg,
+.category-pill__option-check-icon,
+.category-pill__caret-icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
 }
 
 .category-watch {
