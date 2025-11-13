@@ -8,22 +8,22 @@
 		aria-expanded="false"
 	>
 		<span class="category-watch__current">
-			<span component="category/watching/menu" class="category-watch__state{{{ if !./isWatched }}} hidden{{{ end }}}}">
+			<span component="category/watching/menu" class="category-watch__state{{{ if !./isWatched }}} hidden{{{ end }}}">
 				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-bell"></i></span>
 				<span class="category-watch__state-label">[[category:watching]]</span>
 			</span>
 
-			<span component="category/tracking/menu" class="category-watch__state{{{ if !./isTracked }}} hidden{{{ end }}}}">
+			<span component="category/tracking/menu" class="category-watch__state{{{ if !./isTracked }}} hidden{{{ end }}}">
 				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-inbox"></i></span>
 				<span class="category-watch__state-label">[[category:tracking]]</span>
 			</span>
 
-			<span component="category/notwatching/menu" class="category-watch__state{{{ if !./isNotWatched }}} hidden{{{ end }}}}">
+			<span component="category/notwatching/menu" class="category-watch__state{{{ if !./isNotWatched }}} hidden{{{ end }}}">
 				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-clock-o"></i></span>
 				<span class="category-watch__state-label">[[category:not-watching]]</span>
 			</span>
 
-			<span component="category/ignoring/menu" class="category-watch__state{{{ if !./isIgnored }}} hidden{{{ end }}}}">
+			<span component="category/ignoring/menu" class="category-watch__state{{{ if !./isIgnored }}} hidden{{{ end }}}">
 				<span class="category-pill__icon" aria-hidden="true"><i class="fa fa-eye-slash"></i></span>
 				<span class="category-watch__state-label">[[category:ignoring]]</span>
 			</span>
