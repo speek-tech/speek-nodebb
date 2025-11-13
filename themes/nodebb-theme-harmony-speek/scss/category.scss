@@ -1,3 +1,39 @@
+.speek-topic-metrics {
+	display: inline-flex;
+	align-items: center;
+	gap: 8px;
+
+	.speek-badge {
+		display: inline-flex;
+		align-items: center;
+		gap: 4px;
+		padding: 2px 12px;
+		border-radius: 8px;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: 1.333;
+		letter-spacing: 0.01em;
+		text-transform: none;
+
+		&__label,
+		&__suffix {
+			color: inherit;
+		}
+	}
+}
+
+.speek-badge--posts {
+	background: rgba(255, 255, 255, 0.5);
+	border: 1px solid #f3f1e9;
+	color: #355e66;
+}
+
+.speek-badge--new {
+	background: #b6d3da;
+	border: 1px solid transparent;
+	color: #192c30;
+}
+
 // Categories page styling based on Figma design
 .category-header .description p { margin: 0; }
 .page-category .breadcrumb .breadcrumb-item:last-child {
@@ -1082,6 +1118,15 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		font-weight: 600;
 		line-height: 1.333;
 		white-space: nowrap;
+
+	&__label {
+		color: inherit;
+	}
+
+	&__suffix {
+		margin-left: 4px;
+		color: inherit;
+	}
 	}
 
 	.speek-badge-posts {

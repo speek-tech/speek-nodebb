@@ -2,12 +2,16 @@
 	<nav class="topic-list-header d-flex flex-nowrap my-2 p-0 border-0 rounded">
 		<div class="d-flex flex-row p-2 text-bg-light gap-3 border rounded w-100 align-items-center">
 			{{{ if template.category }}}
-			<div class="d-flex align-items-center gap-2 me-auto">
-				<span class="speek-badge speek-badge-posts">
-					{humanReadableNumber(totalPostCount, 0)} posts
+			<div class="speek-topic-metrics me-auto">
+				<span class="speek-badge speek-badge--posts" data-testid="category-total-posts">
+					<span class="speek-badge__label">{humanReadableNumber(totalPostCount, 0)}</span>
+					<span class="speek-badge__suffix">posts</span>
 				</span>
 				{{{ if config.loggedIn }}}
-				<span class="speek-badge speek-badge-new">{unreadCount} new</span>
+				<span class="speek-badge speek-badge--new" data-testid="category-unread-posts">
+					<span class="speek-badge__label">{unreadCount}</span>
+					<span class="speek-badge__suffix">new</span>
+				</span>
 				{{{ end }}}
 			</div>
 			{{{ end }}}
