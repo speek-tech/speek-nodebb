@@ -33,14 +33,14 @@
 			
 			<div class="posts-space-actions">
 				<div class="posts-badges">
-					{ if category }
+					{{{ if category }}}
 					<div class="post-badge post-badge-default">
 						<span class="post-badge-icon">
 							{buildLucideIcon("message-square", 12)}
 						</span>
 						<span class="post-badge-text">{category.name}</span>
 					</div>
-					{{{ end }}}
+					{ end }
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
 							{buildLucideIcon("message-square", 12)}
@@ -66,7 +66,7 @@
 						</span>
 						<span class="post-badge-text">{browsingUsers.length}</span>
 					</div>
-					{{{ end }}}
+					{ end }
 				</div>
 				
 				<div class="posts-actions">
@@ -75,12 +75,12 @@
 						<span class="btn-text">Oldest replies</span>
 						{buildLucideIcon("chevron-down", 16)}
 					</button>
-					{ if privileges.topics:reply }
+					{{{ if privileges.topics:reply }}}
 					<a href="{config.relative_path}/compose?tid={tid}" component="topic/reply" class="btn-reply-primary" title="[[topic:reply]]" data-ajaxify="false">
 						{buildLucideIcon("reply", 16)}
 						<span class="btn-text">Reply</span>
 					</a>
-					{{{ end }}}
+					{ end }
 				</div>
 			</div>
 		</div>
@@ -88,46 +88,46 @@
 		<!-- Posts Frame - Figma Design -->
 		<div class="posts-frame">
 			<!-- IMPORT partials/post_bar.tpl -->
-			{ if merger }
+			{{{ if merger }}}
 			<!-- IMPORT partials/topic/merged-message.tpl -->
-			{ end }
-			{ if forker }
+			{{{ end }}}
+			{{{ if forker }}}
 			<!-- IMPORT partials/topic/forked-message.tpl -->
-			{ end }
-			{ if !scheduled }
+			{{{ end }}}
+			{{{ if !scheduled }}}
 			<!-- IMPORT partials/topic/deleted-message.tpl -->
-			{ end }
+			{{{ end }}}
 
 			<ul component="topic" class="posts timeline list-unstyled p-0" style="min-width: 0;" data-tid="{tid}" data-cid="{cid}">
-			{ each posts }
-				<li component="post" class="{ if posts.deleted }deleted{ end } { if posts.selfPost }self-post{ end } { if posts.topicOwnerPost }topic-owner-post{ end }" <!-- IMPORT partials/data/topic.tpl -->>
+			{{{ each posts }}}
+				<li component="post" class="{{{ if posts.deleted }}}deleted{{{ end }}} {{{ if posts.selfPost }}}self-post{{{ end }}} {{{ if posts.topicOwnerPost }}}topic-owner-post{{{ end }}}" <!-- IMPORT partials/data/topic.tpl -->>
 					<a component="post/anchor" data-index="{./index}" id="{increment(./index, "1")}"></a>
 					<meta itemprop="datePublished" content="{./timestampISO}">
-					{ if ./editedISO }
+					{{{ if ./editedISO }}}
 					<meta itemprop="dateModified" content="{./editedISO}">
-					{ end }
+					{{{ end }}}
 
 					<!-- IMPORT partials/topic/post.tpl -->
 				</li>
-				{ if (config.topicPostSort != "most_votes") }
-				{ each ./events}<!-- IMPORT partials/topic/event.tpl -->{ end }
-				{ end }
-			{ end }
+				{{{ if (config.topicPostSort != "most_votes") }}}
+				{{{ each ./events}}}<!-- IMPORT partials/topic/event.tpl -->{{{ end }}}
+				{{{ end }}}
+			{{{ end }}}
 			</ul>
-			{ if browsingUsers }
+			{{{ if browsingUsers }}}
 			<div class="visible-xs">
 				<!-- IMPORT partials/topic/browsing-users.tpl -->
 				<hr/>
 			</div>
-			{ end }
-			{ if config.theme.enableQuickReply }
+			{{{ end }}}
+			{{{ if config.theme.enableQuickReply }}}
 			<!-- IMPORT partials/topic/quickreply.tpl -->
-			{ end }
+			{{{ end }}}
 		</div>
 
-		{ if config.usePagination }
+		{{{ if config.usePagination }}}
 		<!-- IMPORT partials/paginator.tpl -->
-		{ end }
+		{{{ end }}}
 	</div>
 </div>
 
