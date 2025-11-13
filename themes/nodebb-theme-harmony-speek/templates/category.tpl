@@ -133,7 +133,11 @@
 					{{{ each relatedSpaces }}}
 					<li class="speek-space-card" data-cid="{./cid}">
 						<div class="speek-space-icon-container">
+							{{{ if getCategoryIconName(./cid) }}}
+							{buildLucideIcon(getCategoryIconName(./cid), 24)}
+							{{{ else }}}
 							{buildCategoryIcon(@value, "24px", "speek-space-icon")}
+							{{{ end }}}
 						</div>
 						<div class="speek-space-content">
 							<h3 class="speek-space-title">

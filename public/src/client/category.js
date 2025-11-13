@@ -56,6 +56,9 @@ define('forum/category', [
 		// Initialize carousels
 		initCarousels();
 
+		// Initialize Lucide icons
+		initLucideIcons();
+
 		hooks.fire('action:topics.loaded', { topics: ajaxify.data.topics });
 		hooks.fire('action:category.loaded', { cid: ajaxify.data.cid });
 	};
@@ -153,6 +156,25 @@ define('forum/category', [
 			hooks.fire('action:topics.loaded', { topics: data.topics });
 			callback(data, done);
 		});
+	}
+
+	// =====================================
+	// Lucide Icons Initialization
+	// =====================================
+	function initLucideIcons() {
+		// Check if lucide is loaded and initialize icons
+		if (window.lucide && window.lucide.createIcons) {
+			window.lucide.createIcons();
+			console.log('[Category] Lucide icons initialized');
+		} else {
+			// If not loaded yet, try to load it
+			require(['lucideHelper'], function (lucideHelper) {
+				if (lucideHelper && lucideHelper.refresh) {
+					lucideHelper.refresh();
+					console.log('[Category] Lucide icons loaded and initialized via helper');
+				}
+			});
+		}
 	}
 
 	// =====================================

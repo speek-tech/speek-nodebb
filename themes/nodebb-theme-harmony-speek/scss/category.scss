@@ -413,6 +413,26 @@ $speek-border-light: #f3f1e9;
 				font-size: 16px;
 			}
 		}
+
+		// Make RSS feed visible and styled
+		.btn-ghost[href*="rss"] {
+			display: inline-flex !important;
+			padding: 8px 12px;
+			min-width: 44px;
+		}
+
+		// Style tools dropdown
+		.thread-tools {
+			.btn {
+				background: rgba(255, 255, 255, 0.7);
+				backdrop-filter: blur(12px);
+				color: $speek-primary;
+				border: 1px solid transparent;
+				border-radius: 9999px;
+				padding: 8px 12px;
+				height: 44px;
+			}
+		}
 	}
 }
 
@@ -876,11 +896,24 @@ $speek-border-light: #f3f1e9;
 		box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
 			0px 10px 15px -3px rgba(0, 0, 0, 0.05);
 
-		.speek-space-icon {
+		// Lucide SVG icons
+		svg {
+			width: 24px;
+			height: 24px;
+			color: $speek-accent-fg;
+			stroke-width: 2;
+		}
+
+		// Fallback icon styling (if using icon element)
+		.speek-space-icon, .icon {
 			width: 24px;
 			height: 24px;
 			font-size: 20px;
 			color: $speek-accent-fg;
+			
+			i {
+				color: $speek-accent-fg;
+			}
 		}
 	}
 
