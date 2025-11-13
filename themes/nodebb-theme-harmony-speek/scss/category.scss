@@ -492,24 +492,35 @@ $speek-border-light: #f3f1e9;
 			}
 		}
 
-		// Make RSS feed visible and styled
+		// Hide RSS feed
 		.btn-ghost[href*="rss"] {
-			display: inline-flex !important;
-			padding: 8px 12px;
-			min-width: 44px;
+			display: none !important;
 		}
 
-		// Style tools dropdown
+		// Hide tools dropdown
 		.thread-tools {
-			.btn {
-				background: rgba(255, 255, 255, 0.7);
-				backdrop-filter: blur(12px);
-				color: $speek-primary;
-				border: 1px solid transparent;
-				border-radius: 9999px;
-				padding: 8px 12px;
-				height: 44px;
-			}
+			display: none !important;
+		}
+
+		// Hide tags filter dropdown - more specific selectors
+		.tags-dropdown,
+		[component="tags/filter"],
+		.bottom-sheet.tags-dropdown,
+		.category-pill[data-bs-toggle="dropdown"]:has(.fa-tags),
+		button:has(> span:contains("All tags")),
+		.topic-list-header .category-pill:has([class*="tag"]) {
+			display: none !important;
+		}
+
+		// Ensure proper alignment: left items pushed left, right items pushed right
+		[component="category/controls"] {
+			flex: 1;
+			justify-content: flex-start;
+		}
+		
+		// Right side container should align to the right
+		> div > .d-flex.gap-1.align-items-center:last-child {
+			margin-left: auto;
 		}
 	}
 }
