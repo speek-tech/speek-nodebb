@@ -69,7 +69,7 @@ jobs:
               exit 1
             fi
             # Ensure the tag commit is on main
-            git fetch origin main --depth=0
+            git fetch origin main
             TAG_SHA=$(git rev-parse "refs/tags/$REF_NAME^{commit}")
             if git merge-base --is-ancestor "$TAG_SHA" origin/main; then
               echo "✅ Tag commit is on main"
