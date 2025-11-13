@@ -53,6 +53,12 @@ define('forum/category', [
 
 		new clipboard('[data-clipboard-text]');
 
+		// Initialize carousels
+		initCarousels();
+
+		// Initialize Lucide icons
+		initLucideIcons();
+
 		hooks.fire('action:topics.loaded', { topics: ajaxify.data.topics });
 		hooks.fire('action:category.loaded', { cid: ajaxify.data.cid });
 	};
@@ -78,16 +84,16 @@ define('forum/category', [
 				}
 
 				$('[component="category/watching/menu"]').toggleClass('hidden', state !== 'watching');
-				$('[component="category/watching/check"]').toggleClass('fa-check', state === 'watching');
+				$('[component="category/watching/check"]').toggleClass('is-active', state === 'watching');
 
 				$('[component="category/tracking/menu"]').toggleClass('hidden', state !== 'tracking');
-				$('[component="category/tracking/check"]').toggleClass('fa-check', state === 'tracking');
+				$('[component="category/tracking/check"]').toggleClass('is-active', state === 'tracking');
 
 				$('[component="category/notwatching/menu"]').toggleClass('hidden', state !== 'notwatching');
-				$('[component="category/notwatching/check"]').toggleClass('fa-check', state === 'notwatching');
+				$('[component="category/notwatching/check"]').toggleClass('is-active', state === 'notwatching');
 
 				$('[component="category/ignoring/menu"]').toggleClass('hidden', state !== 'ignoring');
-				$('[component="category/ignoring/check"]').toggleClass('fa-check', state === 'ignoring');
+				$('[component="category/ignoring/check"]').toggleClass('is-active', state === 'ignoring');
 
 				alerts.success('[[category:' + state + '.message]]');
 			});
@@ -150,6 +156,111 @@ define('forum/category', [
 			hooks.fire('action:topics.loaded', { topics: data.topics });
 			callback(data, done);
 		});
+	}
+
+	// =====================================
+	// Lucide Icons Initialization
+	// =====================================
+	function initLucideIcons() {
+		// Check if lucide is loaded and initialize icons
+		if (window.lucide && window.lucide.createIcons) {
+			window.lucide.createIcons();
+			console.log('[Category] Lucide icons initialized');
+		} else {
+			// If not loaded yet, try to load it
+			require(['lucideHelper'], function (lucideHelper) {
+				if (lucideHelper && lucideHelper.refresh) {
+					lucideHelper.refresh();
+					console.log('[Category] Lucide icons loaded and initialized via helper');
+				}
+			});
+		}
+	}
+
+	// =====================================
+	// Carousel Functionality
+	// =====================================
+	function initCarousels() {
+		const carouselSections = document.querySelectorAll('.speek-carousel-section');
+		carouselSections.forEach(section => {
+			initCarousel(section);
+		});
+	}
+
+	function initCarousel(section) {
+		const container = section.querySelector('.speek-carousel-container');
+		const track = section.querySelector('.speek-carousel-track');
+		const prevBtn = section.querySelector('.speek-carousel-prev');
+		const nextBtn = section.querySelector('.speek-carousel-next');
+
+		if (!track || !prevBtn || !nextBtn) {
+			return;
+		}
+
+		// Update button states based on scroll position
+		function updateButtonStates() {
+			const isAtStart = track.scrollLeft <= 0;
+			const isAtEnd = track.scrollLeft >= track.scrollWidth - track.clientWidth - 1;
+
+			prevBtn.disabled = isAtStart;
+			nextBtn.disabled = isAtEnd;
+		}
+
+		// Scroll carousel
+		function scrollCarousel(direction) {
+			const scrollAmount = track.clientWidth * 0.8; // Scroll 80% of visible width
+			const newScrollLeft = direction === 'next'
+				? track.scrollLeft + scrollAmount
+				: track.scrollLeft - scrollAmount;
+
+			track.scrollTo({
+				left: newScrollLeft,
+				behavior: 'smooth'
+			});
+		}
+
+		// Event listeners
+		prevBtn.addEventListener('click', () => scrollCarousel('prev'));
+		nextBtn.addEventListener('click', () => scrollCarousel('next'));
+		track.addEventListener('scroll', updateButtonStates);
+
+		// Initial state
+		updateButtonStates();
+
+		// Update on window resize
+		let resizeTimeout;
+		window.addEventListener('resize', () => {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(updateButtonStates, 100);
+		});
+
+		// Touch/swipe support for mobile
+		let touchStartX = 0;
+		let touchEndX = 0;
+
+		track.addEventListener('touchstart', (e) => {
+			touchStartX = e.changedTouches[0].screenX;
+		}, { passive: true });
+
+		track.addEventListener('touchend', (e) => {
+			touchEndX = e.changedTouches[0].screenX;
+			handleSwipe();
+		}, { passive: true });
+
+		function handleSwipe() {
+			const swipeThreshold = 50;
+			const diff = touchStartX - touchEndX;
+
+			if (Math.abs(diff) > swipeThreshold) {
+				if (diff > 0) {
+					// Swipe left (next)
+					scrollCarousel('next');
+				} else {
+					// Swipe right (prev)
+					scrollCarousel('prev');
+				}
+			}
+		}
 	}
 
 	return Category;

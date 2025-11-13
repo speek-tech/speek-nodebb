@@ -1,54 +1,71 @@
-<div class="{{{ if config.theme.stickyToolbar }}}sticky-tools{{{ end }}} mb-3" style="top: {{{ if (config.theme.topMobilebar && !config.theme.autohideBottombar) }}}var(--panel-offset){{{ else }}}0{{{ end }}};">
+<div class="mb-3">
 	<nav class="topic-list-header d-flex flex-nowrap my-2 p-0 border-0 rounded">
-		<div class="d-flex flex-row p-2 text-bg-light gap-1 border rounded w-100">
-			<div component="category/controls" class="d-flex me-auto mb-0 gap-2 flex-wrap">
-				{{{ if (template.category || template.world) }}}
-				<!-- IMPORT partials/category/watch.tpl -->
-				<!-- IMPORT partials/tags/filter-dropdown-left.tpl -->
-				<!-- IMPORT partials/category/sort.tpl -->
+		<div class="d-flex flex-row p-2 text-bg-light gap-3 border rounded w-100 align-items-center">
+			{{{ if template.category }}}
+			<div class="speek-topic-metrics me-auto">
+				<span class="speek-badge speek-badge--posts" data-testid="category-total-posts">
+					<span class="speek-badge__label">{humanReadableNumber(totalPostCount, 0)}</span>
+					<span class="speek-badge__suffix">posts</span>
+				</span>
+				{{{ if config.loggedIn }}}
+				<span class="speek-badge speek-badge--new" data-testid="category-unread-posts">
+					<span class="speek-badge__label">{unreadCount}</span>
+					<span class="speek-badge__suffix">new</span>
+				</span>
 				{{{ end }}}
-				{{{ if (template.popular || template.top)}}}
-				<!-- IMPORT partials/topic-terms.tpl -->
-				{{{ end }}}
-				{{{ if (template.unread || (template.recent || (template.popular || template.top))) }}}
-				<!-- IMPORT partials/topic-filters.tpl -->
-				<!-- IMPORT partials/category/filter-dropdown-left.tpl -->
-				<!-- IMPORT partials/tags/filter-dropdown-left.tpl -->
-				{{{ end }}}
-				{{{ if template.unread }}}
-				<div class="markread btn-group {{{ if !topics.length }}}hidden{{{ end }}}">
-					<!-- IMPORT partials/category/selector-dropdown-left.tpl -->
-				</div>
-				{{{ end }}}
-				{{{ if template.tag }}}
-				<!-- IMPORT partials/category/filter-dropdown-left.tpl -->
-				<!-- IMPORT partials/tags/watch.tpl -->
-				{{{ end }}}
-				<!-- IMPORT partials/category/tools-dropdown-left.tpl -->
-
-				{{{ if (!feeds:disableRSS && rssFeedUrl) }}}
-				<a class="btn btn-ghost btn-sm d-none d-lg-flex align-items-center align-self-stretch" target="_blank" href="{rssFeedUrl}" itemprop="item" title="[[global:rss-feed]]"><i class="fa fa-rss text-primary"></i></a>
-				{{{ end }}}
-
-				<a href="{{{ if (template.category || template.world) }}}{url}{{{ else }}}{config.relative_path}/{selectedFilter.url}{querystring}{{{ end }}}" class="btn btn-secondary fw-semibold position-absolute top-100 translate-middle-x start-50 mt-1 hide" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" id="new-topics-alert">
-					<i class="fa fa-fw fa-arrow-up"></i> [[recent:load-new-posts]]
-				</a>
 			</div>
+			{{{ end }}}
 
-			<div class="d-flex gap-1 align-items-center">
-				{{{ if (template.category || template.world) }}}
-					{{{ if privileges.topics:create }}}
-					<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary btn-sm text-nowrap" data-ajaxify="false" role="button">[[category:new-topic-button]]</a>
+			<div class="d-flex align-items-center gap-3 ms-auto">
+				<div component="category/controls" class="d-flex mb-0 gap-2 flex-wrap justify-content-end">
+					{{{ if (template.category || template.world) }}}
+					<!-- IMPORT partials/category/watch.tpl -->
+					<!-- Tags filter hidden for Speek design -->
+					<!-- IMPORT partials/category/sort.tpl -->
 					{{{ end }}}
-				{{{ else }}}
-					{{{ if canPost }}}
-					<!-- IMPORT partials/buttons/newTopic.tpl -->
+					{{{ if (template.popular || template.top)}}}
+					<!-- IMPORT partials/topic-terms.tpl -->
 					{{{ end }}}
-				{{{ end }}}
-				<!-- only show login button if not logged in and doesn't have any posting privilege -->
-				{{{ if (!loggedIn && (!privileges.topics:create && !canPost))}}}
-				<a component="category/post/guest" href="{config.relative_path}/login" class="btn btn-sm btn-primary">[[category:guest-login-post]]</a>
-				{{{ end }}}
+					{{{ if (template.unread || (template.recent || (template.popular || template.top))) }}}
+					<!-- IMPORT partials/topic-filters.tpl -->
+					<!-- IMPORT partials/category/filter-dropdown-left.tpl -->
+					<!-- Tags filter hidden for Speek design -->
+					{{{ end }}}
+					{{{ if template.unread }}}
+					<div class="markread btn-group {{{ if !topics.length }}}hidden{{{ end }}}">
+						<!-- IMPORT partials/category/selector-dropdown-left.tpl -->
+					</div>
+					{{{ end }}}
+					{{{ if template.tag }}}
+					<!-- IMPORT partials/category/filter-dropdown-left.tpl -->
+					<!-- IMPORT partials/tags/watch.tpl -->
+					{{{ end }}}
+					<!-- Tools dropdown hidden for Speek design -->
+					<!-- RSS feed hidden for Speek design -->
+
+					<a href="{{{ if (template.category || template.world) }}}{url}{{{ else }}}{config.relative_path}/{selectedFilter.url}{querystring}{{{ end }}}" class="btn btn-secondary fw-semibold position-absolute top-100 translate-middle-x start-50 mt-1 hide" style="--bs-btn-padding-y: .25rem; --bs-btn-padding-x: .5rem; --bs-btn-font-size: .75rem;" id="new-topics-alert">
+						<i class="fa fa-fw fa-arrow-up"></i> [[recent:load-new-posts]]
+					</a>
+				</div>
+
+				<div class="d-flex gap-1 align-items-center">
+					{{{ if (template.category || template.world) }}}
+						{{{ if privileges.topics:create }}}
+						<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary text-nowrap" data-ajaxify="false" role="button">
+							{buildLucideIcon("plus", 20, "speek-btn-icon")}
+							<span>New post</span>
+						</a>
+						{{{ end }}}
+					{{{ else }}}
+						{{{ if canPost }}}
+						<!-- IMPORT partials/buttons/newTopic.tpl -->
+						{{{ end }}}
+					{{{ end }}}
+					<!-- only show login button if not logged in and doesn't have any posting privilege -->
+					{{{ if (!loggedIn && (!privileges.topics:create && !canPost))}}}
+					<a component="category/post/guest" href="{config.relative_path}/login" class="btn btn-sm btn-primary">[[category:guest-login-post]]</a>
+					{{{ end }}}
+				</div>
 			</div>
 		</div>
 	</nav>
