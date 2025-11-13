@@ -374,7 +374,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				backdrop-filter: blur(12px);
 				color: $speek-primary;
 				border: 1px solid transparent;
-				border-radius: 9999px;
+				border-radius: 9999px !important;  // Fully rounded pill shape
 				padding: 8px 32px;  // Figma spec: 8px 32px
 				height: 44px;
 				font-family: "DM Sans", var(--bs-body-font-family);
@@ -445,7 +445,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 			backdrop-filter: blur(12px);
 			color: $speek-primary;
 			border: 1px solid transparent;
-			border-radius: 9999px;
+			border-radius: 9999px !important;  // Fully rounded pill shape
 			padding: 8px 32px;  // Figma spec: 8px 32px
 			height: 44px;
 			font-family: "DM Sans", var(--bs-body-font-family);
@@ -473,20 +473,24 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 			}
 		}
 
-		// Style New Topic button as primary (Figma: lime green #E6FF00)
+		// Style New Post button as primary (Figma: lime green #E6FF00)
 		.btn-primary {
 			background: $speek-accent !important;  // #E6FF00
 			color: $speek-accent-fg !important;    // #27454B
 			border: none !important;
-			border-radius: 9999px;
-			padding: 8px 32px;  // Figma spec
-			height: 44px;
-			font-family: "DM Sans", var(--bs-body-font-family);
-			font-weight: 700;
-			font-size: 14px;
-			line-height: 1.4285714285714286em;
+			border-radius: 9999px !important;  // Fully rounded pill shape
+			padding: 8px 32px !important;  // Figma spec: 8px 32px
+			height: 44px !important;  // Figma spec: Size=lg
+			font-family: "DM Sans", var(--bs-body-font-family) !important;
+			font-weight: 700 !important;
+			font-size: 14px !important;
+			line-height: 1.4285714285714286em !important;
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 8px !important;  // Gap between icon and text
 			box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05),
-				0px 10px 15px -3px rgba(0, 0, 0, 0.05);
+				0px 10px 15px -3px rgba(0, 0, 0, 0.05) !important;
 
 			&:hover {
 				background: darken($speek-accent, 5%) !important;
@@ -496,8 +500,19 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					0px 12px 20px -3px rgba(0, 0, 0, 0.1);
 			}
 
-			i {
+			// Plus icon styling
+			i.fa {
 				font-size: 16px;
+				font-family: "FontAwesome" !important;
+				font-style: normal;
+				font-weight: normal;
+				line-height: 1;
+			}
+			
+			span {
+				font-family: "DM Sans", var(--bs-body-font-family);
+				font-weight: 700;
+				font-size: 14px;
 			}
 		}
 

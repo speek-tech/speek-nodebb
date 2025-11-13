@@ -35,7 +35,10 @@
 			<div class="d-flex gap-1 align-items-center">
 				{{{ if (template.category || template.world) }}}
 					{{{ if privileges.topics:create }}}
-					<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary btn-sm text-nowrap" data-ajaxify="false" role="button">[[category:new-topic-button]]</a>
+					<a href="{config.relative_path}/compose?cid={cid}" component="category/post" id="new_topic" class="btn btn-primary text-nowrap" data-ajaxify="false" role="button">
+						<i class="fa fa-plus"></i>
+						<span>New post</span>
+					</a>
 					{{{ end }}}
 				{{{ else }}}
 					{{{ if canPost }}}
