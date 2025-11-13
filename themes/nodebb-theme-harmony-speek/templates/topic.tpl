@@ -25,12 +25,10 @@
 		<!-- Heading Area - Figma Design -->
 		<div class="posts-heading-area">
 			<div class="posts-title-section">
-				<div class="posts-title-wrapper">
-					<button class="btn-back" onclick="history.back()" aria-label="Go back">
-						{buildLucideIcon("chevron-left", 20)}
-					</button>
-					<h1 component="post/header" class="posts-title" component="topic/title">{title}</h1>
-				</div>
+				<button class="btn-back" onclick="history.back()" aria-label="Go back">
+					{{{buildLucideIcon("chevron-left", 20)}}}
+				</button>
+				<h1 component="post/header" class="posts-title" component="topic/title">{title}</h1>
 			</div>
 			
 			<div class="posts-space-actions">
@@ -38,33 +36,33 @@
 					{{{ if category }}}
 					<div class="post-badge post-badge-default">
 						<span class="post-badge-icon">
-							{buildLucideIcon("message-square", 12)}
+							{{{buildLucideIcon("message-square", 12)}}}
 						</span>
 						<span class="post-badge-text">{category.name}</span>
 					</div>
 					{{{ end }}}
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
-							{buildLucideIcon("message-square", 12)}
+							{{{buildLucideIcon("message-square", 12)}}}
 						</span>
 						<span class="post-badge-text" component="topic/post-count">{postcount}</span>
 					</div>
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
-							{buildLucideIcon("users", 12)}
+							{{{buildLucideIcon("users", 12)}}}
 						</span>
 						<span class="post-badge-text">{postercount}</span>
 					</div>
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
-							{buildLucideIcon("eye", 12)}
+							{{{buildLucideIcon("eye", 12)}}}
 						</span>
 						<span class="post-badge-text" title="{viewcount}">{viewcount}</span>
 					</div>
 					{{{ if browsingUsers && browsingUsers.length }}}
 					<div class="post-badge post-badge-outline">
 						<span class="post-badge-icon">
-							{buildLucideIcon("eye", 12)}
+							{{{buildLucideIcon("eye", 12)}}}
 						</span>
 						<span class="post-badge-text">{browsingUsers.length}</span>
 					</div>
@@ -73,13 +71,13 @@
 				
 				<div class="posts-actions">
 					<button class="btn-filter" data-action="filter" title="Filter replies">
-						{buildLucideIcon("filter", 16)}
+						{{{buildLucideIcon("filter", 16)}}}
 						<span class="btn-text">Oldest replies</span>
-						{buildLucideIcon("chevron-down", 16)}
+						{{{buildLucideIcon("chevron-down", 16)}}}
 					</button>
 					{{{ if privileges.topics:reply }}}
 					<a href="{config.relative_path}/compose?tid={tid}" component="topic/reply" class="btn-reply-primary" title="[[topic:reply]]" data-ajaxify="false">
-						{buildLucideIcon("reply", 16)}
+						{{{buildLucideIcon("reply", 16)}}}
 						<span class="btn-text">Reply</span>
 					</a>
 					{{{ end }}}

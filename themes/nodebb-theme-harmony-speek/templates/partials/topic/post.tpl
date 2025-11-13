@@ -93,13 +93,13 @@
 			<div class="post-reactions">
 				{{{ if !reputation:disabled && (posts.upvotes || posts.votes) }}}
 				<div class="reaction-item reaction-likes">
-					{buildLucideIcon("heart", 24)}
+					{{{buildLucideIcon("heart", 24)}}}
 					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.upvotes || posts.votes || 0}</span>
 				</div>
 				{{{ end }}}
 				{{{ if ../postcount }}}
 				<div class="reaction-item reaction-replies">
-					{buildLucideIcon("message-square", 24)}
+					{{{buildLucideIcon("message-square", 24)}}}
 					<span class="reaction-count">{../postcount}</span>
 				</div>
 				{{{ end }}}

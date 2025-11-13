@@ -43,6 +43,7 @@ body.template-topic {
 		
 		@media (min-width: 1280px) {
 			gap: 24px;
+			padding: 24px 0px 48px;
 		}
 	}
 
@@ -227,13 +228,6 @@ body.template-topic {
 		gap: 16px;
 	}
 
-	.posts-title-wrapper {
-		display: flex;
-		align-items: center;
-		align-self: stretch;
-		gap: 10px;
-	}
-
 	.btn-back {
 		display: flex;
 		align-items: center;
@@ -371,6 +365,7 @@ body.template-topic {
 			.post-container-parent {
 				gap: 12px;
 				width: 100%;
+				align-items: flex-start;
 			}
 			
 			.post-container {
@@ -381,19 +376,32 @@ body.template-topic {
 				gap: 12px;
 				width: 100%;
 				flex: 1;
+				display: flex;
+				flex-direction: column;
 			}
 			
 			.post-container > .post-header {
 				padding-top: 4px;
+				margin-bottom: 0;
+			}
+			
+			[component="post/content"] {
+				margin-top: 0;
+			}
+			
+			// Hide reactions and footer actions for comments
+			.post-footer {
+				display: none;
 			}
 		}
 		
-		// Latest comment should have white background
-		&:not(:first-child).latest-comment,
-		&:not(:first-child):last-child {
-			.post-container {
-				background-color: $color-bg-primary;
-				border: none;
+		// Latest comment should have white background (last comment for oldest-to-newest sort)
+		&:last-child {
+			&:not(:first-child) {
+				.post-container {
+					background-color: $color-bg-primary;
+					border: none;
+				}
 			}
 		}
 		
@@ -660,7 +668,8 @@ body.template-topic {
 		line-height: 1.333;
 		color: $color-text-light;
 		text-align: left;
-		margin-right: auto;
+		margin-top: 4px;
+		align-self: flex-start;
 	}
 
 	.btn-submit-reply {
@@ -681,7 +690,7 @@ body.template-topic {
 		color: $color-text-secondary;
 		cursor: pointer;
 		transition: all 0.2s ease;
-		margin-left: 0;
+		align-self: flex-start;
 		
 		&:hover {
 			filter: brightness(0.95);

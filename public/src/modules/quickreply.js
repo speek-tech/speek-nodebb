@@ -104,7 +104,7 @@ define('quickreply', [
 		}
 
 		// Character count functionality - Figma Design
-		const $charCount = $('[component="topic/quickreply/container"] .reply-char-count');
+		const $charCount = $('.reply-textarea-wrapper .reply-char-count');
 		const maxLength = parseInt(element.attr('maxlength') || 1000, 10);
 		
 		function updateCharCount() {
