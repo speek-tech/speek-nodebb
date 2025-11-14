@@ -2,6 +2,8 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 8px;
+	font-family: "DM Sans", var(--bs-body-font-family);
+	color: #355e66;
 
 	.speek-badge {
 		display: inline-flex;
@@ -14,10 +16,12 @@
 		line-height: 1.333;
 		letter-spacing: 0.01em;
 		text-transform: none;
+		color: inherit;
 
 		&__label,
 		&__suffix {
 			color: inherit;
+			font-family: inherit;
 		}
 	}
 }
@@ -32,6 +36,11 @@
 	background: #b6d3da;
 	border: 1px solid transparent;
 	color: #192c30;
+
+	.speek-badge__label,
+	.speek-badge__suffix {
+		color: #192c30;
+	}
 }
 
 // Categories page styling based on Figma design
@@ -360,21 +369,54 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	.speek-back-button {
 		display: inline-flex;
 		align-items: center;
-		gap: 8px;
+		justify-content: center;
+		width: 44px;
+		height: 44px;
+		border-radius: 9999px;
+		border: 1px solid $speek-border;
+		background: $speek-card-bg;
 		color: $speek-primary;
-		font-size: 14px;
-		font-weight: 600;
 		text-decoration: none;
-		transition: opacity 0.2s;
+		box-shadow: 0 2px 4px -2px rgba(17, 24, 39, 0.12),
+			0 1px 2px rgba(17, 24, 39, 0.08);
+		transition: box-shadow 0.2s ease, transform 0.2s ease,
+			color 0.2s ease, border-color 0.2s ease;
 
 		&:hover {
-			opacity: 0.7;
 			text-decoration: none;
+			transform: translateY(-1px);
+			box-shadow: 0 6px 12px -6px rgba(17, 24, 39, 0.2);
 		}
 
-		i {
-			font-size: 14px;
+		&:focus-visible {
+			outline: none;
+			border-color: $speek-primary;
+			box-shadow: 0 0 0 3px rgba($speek-primary, 0.12);
 		}
+	}
+
+	.speek-back-button__icon {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.speek-back-button__chevron {
+		width: 20px;
+		height: 20px;
+		color: currentColor;
+	}
+
+	.speek-back-button__label {
+		position: absolute;
+		width: 1px;
+		height: 1px;
+		padding: 0;
+		margin: -1px;
+		overflow: hidden;
+		clip: rect(0, 0, 0, 0);
+		border: 0;
+		white-space: nowrap;
 	}
 
 	.speek-header-main {
@@ -388,7 +430,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		font-size: 24px;
 		font-weight: 700;
 		line-height: 1.333;
-		color: $speek-primary;
+		color: #355e66;
 		margin: 0;
 	}
 
@@ -397,7 +439,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		font-size: 16px;
 		font-weight: 400;
 		line-height: 1.5;
-		color: $speek-secondary-text;
+		color: #525252;
 
 		p {
 			margin: 0;
@@ -707,8 +749,9 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		gap: 24px;
 		
 		.category-item.speek-post-card {
-			background: $speek-card-bg;
+			background: #fdfdfc;
 			border-radius: 16px;
+			border: 1px solid $speek-border-light;
 			padding: 24px;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 			transition: box-shadow 0.2s ease;
@@ -728,6 +771,20 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				.speek-user-avatar {
 					flex-shrink: 0;
 					text-decoration: none;
+
+					.avatar {
+						width: 48px;
+						height: 48px;
+						border-radius: 9999px !important;
+						background: #f6ffa3 !important;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						font-family: "DM Sans", var(--bs-body-font-family);
+						font-size: 14px !important;
+						font-weight: 700;
+						color: #27454b !important;
+					}
 				}
 
 				.speek-user-info {
@@ -736,9 +793,11 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					gap: 4px;
 
 					.speek-user-name {
-						font-size: 14px;
-						font-weight: 600;
-						color: $speek-primary;
+							font-family: "DM Sans", var(--bs-body-font-family);
+							font-size: 16px;
+							font-weight: 700;
+							line-height: 1.5;
+							color: #122023;
 						text-decoration: none;
 
 						&:hover {
@@ -747,8 +806,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					}
 
 					.speek-post-timestamp {
-						font-size: 12px;
-						color: #6B7280;
+							font-family: "DM Sans", var(--bs-body-font-family);
+							font-size: 14px;
+							line-height: 1.4286;
+							color: #6b7280;
 					}
 				}
 			}
@@ -762,23 +823,25 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					color: inherit;
 
 					&:hover .speek-post-title {
-						color: $speek-primary;
+						color: #355e66;
 					}
 				}
 
 				.speek-post-title {
+					font-family: "DM Sans", var(--bs-body-font-family);
 					font-size: 18px;
 					font-weight: 700;
-					line-height: 1.4;
+					line-height: 1.556;
 					margin: 0 0 8px 0;
-					color: #111827;
+					color: #355e66;
 					transition: color 0.2s ease;
 				}
 
 				.speek-post-preview {
+					font-family: "DM Sans", var(--bs-body-font-family);
 					font-size: 14px;
 					line-height: 1.6;
-					color: #6B7280;
+					color: #525252;
 					margin: 0;
 					
 					// Truncate to 2 lines
@@ -799,12 +862,16 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 					display: flex;
 					align-items: center;
 					gap: 8px;
+					font-family: "DM Sans", var(--bs-body-font-family);
 					font-size: 14px;
 					color: #355e66;
 
 					.lucide-icon.speek-reaction-icon {
 						width: 24px;
 						height: 24px;
+						color: currentColor;
+						stroke: currentColor;
+						stroke-width: 2;
 					}
 
 					.speek-reaction-count {
@@ -812,6 +879,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 						font-size: 16px;
 						font-weight: 700;
 						line-height: 1.5;
+						color: #355e66;
 					}
 				}
 			}
@@ -848,6 +916,20 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		img {
 			border-radius: 50%;
 		}
+
+		.avatar-letter {
+			background: #f6ffa3 !important;
+			color: #27454b !important;
+			font-family: "DM Sans", var(--bs-body-font-family);
+			font-weight: 700;
+			font-size: 14px;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			width: 48px;
+			height: 48px;
+			border-radius: 9999px !important;
+		}
 	}
 
 	.speek-user-info {
@@ -859,9 +941,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 
 	.speek-user-name {
+		font-family: "DM Sans", var(--bs-body-font-family);
 		font-size: 16px;
 		font-weight: 700;
-		color: $speek-primary;
+		color: #122023;
 		text-decoration: none;
 
 		&:hover {
@@ -870,8 +953,9 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 
 	.speek-post-timestamp {
+		font-family: "DM Sans", var(--bs-body-font-family);
 		font-size: 14px;
-		color: $speek-secondary-text;
+		color: #6b7280;
 	}
 }
 
@@ -881,23 +965,25 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		color: inherit;
 
 		&:hover .speek-post-title {
-			color: darken($speek-primary, 10%);
+			color: #355e66;
 		}
 	}
 
 	.speek-post-title {
+		font-family: "DM Sans", var(--bs-body-font-family);
 		font-size: 18px;
 		font-weight: 700;
 		line-height: 1.556;
-		color: $speek-primary;
+		color: #355e66;
 		margin: 0 0 8px 0;
 		transition: color 0.2s;
 	}
 
 	.speek-post-preview {
+		font-family: "DM Sans", var(--bs-body-font-family);
 		font-size: 14px;
-		line-height: 1.429;
-		color: $speek-secondary-text;
+		line-height: 1.6;
+		color: #525252;
 		margin: 0;
 		display: -webkit-box;
 		-webkit-line-clamp: 3;
@@ -918,13 +1004,14 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 		i {
 			font-size: 16px;
-			color: $speek-primary;
+			color: #355e66;
 		}
 
 		.speek-reaction-count {
+			font-family: "DM Sans", var(--bs-body-font-family);
 			font-size: 16px;
 			font-weight: 700;
-			color: $speek-primary;
+			color: #355e66;
 		}
 	}
 }
