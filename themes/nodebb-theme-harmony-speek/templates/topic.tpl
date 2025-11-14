@@ -1,7 +1,4 @@
 <!-- IMPORT partials/breadcrumbs-json-ld.tpl -->
-{{{ if config.theme.enableBreadcrumbs }}}
-<!-- IMPORT partials/breadcrumbs.tpl -->
-{{{ end }}}
 {{{ if widgets.header.length }}}
 <div data-widget-area="header">
 {{{each widgets.header}}}
@@ -21,36 +18,121 @@
 		{{{ if author.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{author.userslug}">{{{ end }}}
 	</div>
 
-	<div class="d-flex flex-column gap-3">
-		<div class="d-flex gap-2 flex-wrap">
-			<div class="d-flex flex-column gap-3 flex-1">
-				<h1 component="post/header" class="tracking-tight fw-semibold fs-3 mb-0 text-break {{{ if config.theme.centerHeaderElements }}}text-center{{{ end }}}">
-					<span class="topic-title" component="topic/title">{title}</span>
-				</h1>
-
-				<div class="topic-info d-flex gap-2 align-items-center flex-wrap {{{ if config.theme.centerHeaderElements }}}justify-content-center{{{ end }}}">
-					<span component="topic/labels" class="d-flex gap-2 {{{ if (!scheduled && (!pinned && (!locked && (!icons.length && (!oldCid || (oldCid == "-1")))))) }}}hidden{{{ end }}}">
-						<span component="topic/scheduled" class="badge badge border border-gray-300 text-body {{{ if !scheduled }}}hidden{{{ end }}}">
-							<i class="fa fa-clock-o"></i> [[topic:scheduled]]
-						</span>
-						<span component="topic/pinned" class="badge badge border border-gray-300 text-body {{{ if (scheduled || !pinned) }}}hidden{{{ end }}}">
-							<i class="fa fa-thumb-tack"></i> {{{ if !pinExpiry }}}[[topic:pinned]]{{{ else }}}[[topic:pinned-with-expiry, {isoTimeToLocaleString(./pinExpiryISO, config.userLang)}]]{{{ end }}}
-						</span>
-						<span component="topic/locked" class="badge badge border border-gray-300 text-body {{{ if !locked }}}hidden{{{ end }}}">
-							<i class="fa fa-lock"></i> [[topic:locked]]
-						</span>
-						<a component="topic/moved" href="{config.relative_path}/category/{oldCid}" class="badge badge border border-gray-300 text-body text-decoration-none {{{ if (!oldCid || (oldCid == "-1")) }}}hidden{{{ end }}}">
-							<i class="fa fa-arrow-circle-right"></i> {{{ if privileges.isAdminOrMod }}}[[topic:moved-from, {oldCategory.name}]]{{{ else }}}[[topic:moved]]{{{ end }}}
-						</a>
-						{{{each icons}}}<span class="lh-1">{@value}</span>{{{end}}}
-					</span>
-					{buildCategoryLabel(category, "a", "border")}
-					<div data-tid="{./tid}" component="topic/tags" class="lh-1 tags tag-list d-flex flex-wrap hidden-xs hidden-empty gap-2"><!-- IMPORT partials/topic/tags.tpl --></div>
-					<div class="d-flex gap-2"><!-- IMPORT partials/topic/stats.tpl --></div>
-				</div>
-			</div>
-			<div class="d-flex flex-wrap gap-2 align-items-start mt-2 hidden-empty" component="topic/thumb/list"><!-- IMPORT partials/topic/thumbs.tpl --></div>
+	<div class="topic-header-container d-flex flex-column" style="gap: 16px;">
+		<div class="topic-header-buttons d-flex align-items-center gap-2">
+			<a href="{{{ if category.slug }}}{config.relative_path}/category/{category.slug}{{{ else }}}{config.relative_path}/{{{ end }}}" class="speek-back-button" aria-label="[[global:back]]" title="[[global:back]]">
+				<span class="speek-back-button__icon">
+					{buildLucideIcon("chevron-left", 20, "speek-back-button__chevron")}
+				</span>
+				<span class="speek-back-button__label">[[global:back]]</span>
+			</a>
 		</div>
+		<div class="topic-header-title">
+			<h1 component="post/header" class="topic-title-main">
+				<span class="topic-title" component="topic/title">{title}</span>
+			</h1>
+		</div>
+		<div class="topic-space-actions d-flex justify-content-between align-items-center" style="gap: 10px;">
+			<div class="topic-badges d-flex align-items-center" style="gap: 8px;">
+				{{{ if category }}}
+				<a href="{config.relative_path}/category/{category.slug}" class="speek-topic-badge speek-topic-badge--category">
+					<span class="speek-topic-badge__icon">
+						{buildLucideIcon("message-square-heart", 12, "speek-topic-badge__icon-svg")}
+					</span>
+					<span class="speek-topic-badge__text">{category.name}</span>
+				</a>
+				{{{ end }}}
+				<span class="speek-topic-badge speek-topic-badge--outline">
+					<span class="speek-topic-badge__icon">
+						{buildLucideIcon("message-square", 12, "speek-topic-badge__icon-svg")}
+					</span>
+					<span class="speek-topic-badge__text" component="topic/post-count">{humanReadableNumber(postcount)}</span>
+				</span>
+				<span class="speek-topic-badge speek-topic-badge--outline">
+					<span class="speek-topic-badge__icon">
+						{buildLucideIcon("users", 12, "speek-topic-badge__icon-svg")}
+					</span>
+					<span class="speek-topic-badge__text">{humanReadableNumber(postercount)}</span>
+				</span>
+				<span class="speek-topic-badge speek-topic-badge--outline">
+					<span class="speek-topic-badge__icon">
+						{buildLucideIcon("eye", 12, "speek-topic-badge__icon-svg")}
+					</span>
+					<span class="speek-topic-badge__text">{humanReadableNumber(viewcount)}</span>
+				</span>
+				{{{ if ./followercount }}}
+				<span class="speek-topic-badge speek-topic-badge--outline">
+					<span class="speek-topic-badge__icon">
+						{buildLucideIcon("glasses", 12, "speek-topic-badge__icon-svg")}
+					</span>
+					<span class="speek-topic-badge__text">{humanReadableNumber(followercount)}</span>
+				</span>
+				{{{ end }}}
+			</div>
+			<div class="topic-actions d-flex align-items-center" style="gap: 16px;">
+				<div class="btn-group bottom-sheet" component="thread/sort">
+					<button class="speek-btn speek-btn--ghost speek-btn--lg d-flex align-items-center gap-2 dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" aria-label="[[aria:post-sort-option, {sortOptionLabel}]]">
+						<span class="speek-btn__icon">
+							{buildLucideIcon("list-filter", 16, "speek-btn__icon-svg")}
+						</span>
+						<span class="speek-btn__text">{sortOptionLabel}</span>
+						<span class="speek-btn__icon">
+							{buildLucideIcon("chevron-down", 16, "speek-btn__icon-svg")}
+						</span>
+					</button>
+					<ul class="dropdown-menu p-1 text-sm" role="menu">
+						<li>
+							<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" href="#" class="oldest_to_newest" data-sort="oldest_to_newest" role="menuitem">
+								<span class="flex-grow-1">[[topic:oldest-to-newest]]</span>
+								<i class="flex-shrink-0 fa fa-fw text-secondary"></i>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" href="#" class="newest_to_oldest" data-sort="newest_to_oldest" role="menuitem">
+								<span class="flex-grow-1">[[topic:newest-to-oldest]]</span>
+								<i class="flex-shrink-0 fa fa-fw text-secondary"></i>
+							</a>
+						</li>
+						<li>
+							<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" href="#" class="most_votes" data-sort="most_votes" role="menuitem">
+								<span class="flex-grow-1">[[topic:most-votes]]</span>
+								<i class="flex-shrink-0 fa fa-fw text-secondary"></i>
+							</a>
+						</li>
+					</ul>
+				</div>
+				{{{ if privileges.topics:reply }}}
+				<a href="{config.relative_path}/compose?tid={tid}" class="speek-btn speek-btn--primary speek-btn--lg d-flex align-items-center gap-2" component="topic/reply" data-ajaxify="false" role="button">
+					<span class="speek-btn__icon">
+						{buildLucideIcon("reply", 16, "speek-btn__icon-svg")}
+					</span>
+					<span class="speek-btn__text">[[topic:reply]]</span>
+				</a>
+				{{{ else }}}
+				{{{ if loggedIn }}}
+				<a href="#" component="topic/reply/locked" class="speek-btn speek-btn--primary speek-btn--lg d-flex align-items-center gap-2 disabled {{{ if !locked }}}hidden{{{ end }}}" disabled>
+					<span class="speek-btn__icon">
+						{buildLucideIcon("lock", 16, "speek-btn__icon-svg")}
+					</span>
+					<span class="speek-btn__text">[[topic:locked]]</span>
+				</a>
+				{{{ else }}}
+				<a component="topic/reply/guest" href="{config.relative_path}/login" class="speek-btn speek-btn--primary speek-btn--lg d-flex align-items-center gap-2">
+					<span class="speek-btn__icon">
+						{buildLucideIcon("log-in", 16, "speek-btn__icon-svg")}
+					</span>
+					<span class="speek-btn__text">[[topic:guest-login-reply]]</span>
+				</a>
+				{{{ end }}}
+				{{{ end }}}
+			</div>
+		</div>
+		{{{ if thumbs.length }}}
+		<div class="d-flex flex-wrap gap-2 align-items-start hidden-empty" component="topic/thumb/list"><!-- IMPORT partials/topic/thumbs.tpl --></div>
+		{{{ end }}}
+	</div>
+
+	<div class="d-flex flex-column gap-3">
 
 		<div class="row mb-4 mb-lg-0">
 			<div class="topic {{{ if widgets.sidebar.length }}}col-lg-9 col-sm-12{{{ else }}}col-lg-12{{{ end }}}">
@@ -65,57 +147,32 @@
 				<!-- IMPORT partials/topic/deleted-message.tpl -->
 				{{{ end }}}
 
-				<div class="d-flex gap-0 gap-lg-5">
-					<div class="posts-container" style="min-width: 0;">
-						<ul component="topic" class="posts timeline list-unstyled p-0 py-3" style="min-width: 0;" data-tid="{tid}" data-cid="{cid}">
-						{{{ each posts }}}
-							<li component="post" class="{{{ if (./index != 0) }}}pt-4{{{ end }}} {{{ if posts.deleted }}}deleted{{{ end }}} {{{ if posts.selfPost }}}self-post{{{ end }}} {{{ if posts.topicOwnerPost }}}topic-owner-post{{{ end }}}" <!-- IMPORT partials/data/topic.tpl -->>
-								<a component="post/anchor" data-index="{./index}" id="{increment(./index, "1")}"></a>
-								<meta itemprop="datePublished" content="{./timestampISO}">
-								{{{ if ./editedISO }}}
-								<meta itemprop="dateModified" content="{./editedISO}">
-								{{{ end }}}
-
-								<!-- IMPORT partials/topic/post.tpl -->
-							</li>
-							{{{ if (config.topicPostSort != "most_votes") }}}
-							{{{ each ./events}}}<!-- IMPORT partials/topic/event.tpl -->{{{ end }}}
-							{{{ end }}}
-						{{{ end }}}
-						</ul>
-						{{{ if browsingUsers }}}
-						<div class="visible-xs">
-							<!-- IMPORT partials/topic/browsing-users.tpl -->
-							<hr/>
-						</div>
-						{{{ end }}}
-						{{{ if config.theme.enableQuickReply }}}
-						<!-- IMPORT partials/topic/quickreply.tpl -->
-						{{{ end }}}
+				<div class="posts-container" style="min-width: 0; width: 100%;">
+					<ul component="topic" class="posts timeline list-unstyled p-0 py-3" style="min-width: 0;" data-tid="{tid}" data-cid="{cid}">
+					{{{ each posts }}}
+					<li component="post" class="{{{ if (./index != 0) }}}pt-4{{{ end }}} {{{ if posts.deleted }}}deleted{{{ end }}} {{{ if posts.selfPost }}}self-post{{{ end }}} {{{ if posts.topicOwnerPost }}}topic-owner-post{{{ end }}}" <!-- IMPORT partials/data/topic.tpl -->>
+					<a component="post/anchor" data-index="{./index}" id="{increment(./index, "1")}"></a>
+					<meta itemprop="datePublished" content="{./timestampISO}">
+					{{{ if ./editedISO }}}
+					<meta itemprop="dateModified" content="{./editedISO}">
+					{{{ end }}}
+					
+					<!-- IMPORT partials/topic/post.tpl -->
+					</li>
+					{{{ if (config.topicPostSort != "most_votes") }}}
+					{{{ each ./events}}}<!-- IMPORT partials/topic/event.tpl -->{{{ end }}}
+					{{{ end }}}
+					</ul>
+					{{{ if browsingUsers }}}
+					<div class="visible-xs">
+					<!-- IMPORT partials/topic/browsing-users.tpl -->
+					<hr/>
 					</div>
-					<div class="d-flex d-none d-lg-block flex-grow-1 mt-2">
-						<div class="sticky-top" style="{{{ if config.theme.topicSidebarTools }}}top:2rem;{{{ else }}}top:6rem; {{{ end }}} z-index:1;">
-							<div class="d-flex flex-column gap-3 align-items-end">
-								{{{ if config.theme.topicSidebarTools }}}
-								<div class="d-flex flex-column gap-2" style="width: 170px;">
-									<!-- IMPORT partials/topic/reply-button.tpl -->
-									<!-- IMPORT partials/topic/mark-unread.tpl -->
-									<!-- IMPORT partials/topic/watch.tpl -->
-									<!-- IMPORT partials/topic/sort.tpl -->
-									<!-- IMPORT partials/topic/tools.tpl -->
-								</div>
-								{{{ end }}}
-								{{{ if config.theme.topicSidebarTools }}}<hr class="my-0" style="min-width: 170px;"/>{{{ end }}}
-								<!-- IMPORT partials/topic/navigator.tpl -->
-								{{{ if config.theme.topicSidebarTools }}}<hr class="my-0" style="min-width: 170px;" />{{{ end }}}
-								{{{ if browsingUsers }}}
-								<div class="d-flex flex-column ps-2 hidden-xs" style="min-width: 170px;">
-								<!-- IMPORT partials/topic/browsing-users.tpl -->
-								</div>
-								{{{ end }}}
-							</div>
-						</div>
-					</div>
+					{{{ end }}}
+					{{{ if config.theme.enableQuickReply }}}
+					<!-- IMPORT partials/topic/quickreply.tpl -->
+					{{{ end }}}
+					
 				</div>
 
 				{{{ if config.usePagination }}}

@@ -24,6 +24,25 @@ define('quickreply', [
 			},
 		};
 
+		// Initialize character count
+		QuickReply.updateCharCount = function () {
+			const charCountEl = components.get('topic/quickreply/char-count');
+			const charCurrentEl = components.get('topic/quickreply/char-current');
+			if (charCountEl.length && charCurrentEl.length) {
+				const currentLength = element.val().length;
+				const maxLength = 1000;
+				charCurrentEl.text(currentLength);
+			}
+		};
+
+		// Update character count on input
+		element.on('input keyup paste', function () {
+			QuickReply.updateCharCount();
+		});
+
+		// Initial character count update
+		QuickReply.updateCharCount();
+
 		destroyAutoComplete();
 		$(window).one('action:ajaxify.start', () => {
 			destroyAutoComplete();
@@ -39,7 +58,7 @@ define('quickreply', [
 
 		uploadHelpers.init({
 			uploadBtnEl: $('[component="topic/quickreply/upload/button"]'),
-			dragDropAreaEl: $('[component="topic/quickreply/container"] .quickreply-message'),
+			dragDropAreaEl: $('[component="topic/quickreply/container"] .speek-quick-reply-textarea-wrapper'),
 			pasteEl: element,
 			uploadFormEl: $('[component="topic/quickreply/upload"]'),
 			inputEl: element,
@@ -50,6 +69,7 @@ define('quickreply', [
 					text = text + (text ? '\n' : '') + (upload.isImage ? '!' : '') + `[${upload.filename}](${upload.url})`;
 				});
 				element.val(text);
+				QuickReply.updateCharCount();
 			},
 		});
 
@@ -92,6 +112,7 @@ define('quickreply', [
 				}
 
 				components.get('topic/quickreply/text').val('');
+				QuickReply.updateCharCount();
 				storage.removeItem(qrDraftId);
 				QuickReply._autocomplete.hide();
 				hooks.fire('action:quickreply.success', { data });
@@ -101,6 +122,7 @@ define('quickreply', [
 		const draft = storage.getItem(qrDraftId);
 		if (draft) {
 			element.val(draft);
+			QuickReply.updateCharCount();
 		}
 
 		element.on('keyup', utils.debounce(function () {
@@ -110,6 +132,7 @@ define('quickreply', [
 			} else {
 				storage.removeItem(qrDraftId);
 			}
+			QuickReply.updateCharCount();
 		}, 1000));
 
 		components.get('topic/quickreply/expand').on('click', (e) => {
@@ -122,6 +145,7 @@ define('quickreply', [
 				body: textEl.val(),
 			});
 			textEl.val('');
+			QuickReply.updateCharCount();
 		});
 	};
 
