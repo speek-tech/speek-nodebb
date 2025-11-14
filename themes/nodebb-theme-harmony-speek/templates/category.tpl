@@ -4,18 +4,22 @@
 <!-- Category Header with Back Button -->
 <div class="speek-category-header">
 	<div class="speek-header-content">
-		{{{ if ./parentCid }}}
-		<a href="{config.relative_path}/category/{./parentCid}" class="speek-back-button">
-			<i class="fa fa-arrow-left"></i>
-			<span>Back</span>
-		</a>
-		{{{ else }}}
-		<a href="{config.relative_path}/categories" class="speek-back-button">
-			<i class="fa fa-arrow-left"></i>
-			<span>Back</span>
-		</a>
-		{{{ end }}}
-		
+		<div class="speek-header-bar">
+			<div class="speek-header-bar-left">
+				{{{ if ./parentCid }}}
+				<a href="{config.relative_path}/category/{./parentCid}" class="speek-back-button" aria-label="Back" title="Back">
+					{buildLucideIcon("chevron-left", 20, "speek-back-button__icon")}
+					<span class="visually-hidden">Back</span>
+				</a>
+				{{{ else }}}
+				<a href="{config.relative_path}/categories" class="speek-back-button" aria-label="Back to categories" title="Back to categories">
+					{buildLucideIcon("chevron-left", 20, "speek-back-button__icon")}
+					<span class="visually-hidden">Back to categories</span>
+				</a>
+				{{{ end }}}
+			</div>
+		</div>
+
 		<div class="speek-header-main">
 			<h1 class="speek-category-title">{./name}</h1>
 			{{{ if ./descriptionParsed }}}
