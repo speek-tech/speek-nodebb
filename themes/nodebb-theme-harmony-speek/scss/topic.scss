@@ -47,7 +47,7 @@ body.template-topic {
 		}
 	}
 
-	// Posts Frame - Figma Design
+	// Posts Frame - Figma Design (Centered and Responsive)
 	.posts-frame {
 		display: flex;
 		flex-direction: column;
@@ -55,6 +55,28 @@ body.template-topic {
 		gap: 24px;
 		width: 100%;
 		max-width: 960px;
+		margin: 0 auto; // Center the content
+		
+		// Responsive max-width
+		@media (max-width: 767px) {
+			max-width: 100%;
+			padding: 0 16px;
+		}
+		
+		@media (min-width: 768px) and (max-width: 1023px) {
+			max-width: 100%;
+			padding: 0 16px;
+		}
+		
+		@media (min-width: 1024px) and (max-width: 1279px) {
+			max-width: 960px;
+			padding: 0 24px;
+		}
+		
+		@media (min-width: 1280px) {
+			max-width: 960px;
+			padding: 0 24px;
+		}
 		
 		> *:not(.posts) {
 			width: 100%;
@@ -75,6 +97,13 @@ body.template-topic {
 			margin: 0;
 			padding: 0;
 			list-style: none;
+		}
+		
+		// Ensure quickreply is visible and centered
+		[component="topic/quickreply/container"] {
+			width: 100%;
+			display: block !important;
+			margin-top: 24px;
 		}
 	}
 
@@ -211,7 +240,7 @@ body.template-topic {
 	$color-badge-default: #B6D3DA;
 	$color-badge-outline: rgba(255, 255, 255, 0.5);
 
-	// Heading area styling - Figma Design
+	// Heading area styling - Figma Design (Centered and Responsive)
 	.posts-heading-area {
 		display: flex;
 		flex-direction: column;
@@ -219,6 +248,24 @@ body.template-topic {
 		gap: 16px;
 		width: 100%;
 		max-width: 960px;
+		margin: 0 auto; // Center the heading
+		
+		// Responsive padding
+		@media (max-width: 767px) {
+			padding: 0 16px;
+		}
+		
+		@media (min-width: 768px) and (max-width: 1023px) {
+			padding: 0 16px;
+		}
+		
+		@media (min-width: 1024px) and (max-width: 1279px) {
+			padding: 0 24px;
+		}
+		
+		@media (min-width: 1280px) {
+			padding: 0 24px;
+		}
 	}
 
 	.posts-title-section {
@@ -334,7 +381,7 @@ body.template-topic {
 		}
 	}
 
-	// Post card styling - Figma Design
+	// Post card styling - Figma Design (Responsive)
 	.post-container-parent {
 		gap: 12px;
 		align-items: flex-start;
@@ -351,6 +398,16 @@ body.template-topic {
 		gap: 16px;
 		width: 100%;
 		flex: 1;
+		
+		// Responsive padding
+		@media (max-width: 767px) {
+			padding: 16px;
+			border-radius: 12px;
+		}
+		
+		@media (min-width: 768px) and (max-width: 1023px) {
+			padding: 20px;
+		}
 	}
 
 	// Comment/reply styling (non-first posts) - Figma Design
