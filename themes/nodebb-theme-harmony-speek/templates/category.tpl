@@ -39,7 +39,7 @@
 </div>
 {{{ end }}}
 
-<div class="row flex-fill mt-3">
+<div class="row flex-fill">
 	<div class="category d-flex flex-column col-12">
 		{{{ if (topics.length || privileges.topics:create) }}}
 		<!-- IMPORT partials/topic-list-bar.tpl -->
