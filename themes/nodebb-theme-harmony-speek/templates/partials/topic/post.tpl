@@ -9,7 +9,6 @@
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
 <div class="d-flex align-items-start post-container-parent {{{ if ./index }}}comment-post{{{ if (./index === ../postcount) }}} latest-comment{{{ end }}}{{{ end }}}">
-	{{{ if ./index }}}
 	<div class="bg-body d-none d-sm-block rounded-circle" style="outline: 2px solid var(--bs-body-bg);">
 		<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
 			{buildAvatar(posts.user, "48px", true, "", "user/picture")}
@@ -23,52 +22,7 @@
 			{{{ end }}}
 		</a>
 	</div>
-	{{{ end }}}
 	<div class="post-container d-flex flex-grow-1 flex-column w-100" style="min-width:0;">
-		{{{ if (!./index) }}}
-		<!-- Main Post - Using posts_list_item.tpl design pattern -->
-		<div itemprop="author" itemscope itemtype="https://schema.org/Person">
-			<meta itemprop="name" content="{./user.displayname}">
-			{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
-			
-			<!-- Topic Title -->
-			<a class="topic-title fw-semibold fs-5 mb-2 text-reset text-break d-block" href="{config.relative_path}/topic/{../slug}">
-				<i class="fa fa-book text-muted" title="[[topic:topic]]"></i> {../title}
-			</a>
-
-			<!-- Post Body -->
-			<div class="post-body d-flex flex-column gap-1 mb-2">
-				<div class="d-flex gap-2 post-info text-sm align-items-center">
-					<div class="post-author d-flex align-items-center gap-1">
-						<a class="lh-1 text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(./user, "16px", true, "not-responsive")}</a>
-						<a class="lh-1 fw-semibold" href="{config.relative_path}/user/{./user.userslug}">{./user.displayname}</a>
-					</div>
-					<span class="timeago text-muted lh-1" title="{./timestampISO}"></span>
-					<i component="post/edit-indicator" class="fa fa-edit text-muted{{{ if privileges.posts:history }}} pointer{{{ end }}} edit-icon {{{ if !posts.editor.username }}}hidden{{{ end }}}" title="[[global:edited-timestamp, {isoTimeToLocaleString(./editedISO, config.userLang)}]]"></i>
-					<span data-editor="{posts.editor.userslug}" component="post/editor" class="visually-hidden">[[global:last-edited-by, {posts.editor.username}]] <span class="timeago" title="{isoTimeToLocaleString(posts.editedISO, config.userLang)}"></span></span>
-				</div>
-
-				<div component="post/content" class="content text-sm text-break" itemprop="text">
-					{posts.content}
-				</div>
-			</div>
-			
-			<!-- Category and Tags -->
-			<div class="mb-3 d-flex flex-wrap gap-1 w-100">
-				{{{ if ../category }}}
-				{{{buildCategoryLabel(../category, "a", "border")}}}
-				{{{ end }}}
-				{{{ if ../tags }}}
-				<span data-tid="{../tid}" component="topic/tags" class="lh-1 tag-list d-flex flex-wrap gap-1 {{{ if !../tags.length }}}hidden{{{ end }}}">
-					{{{ each ../tags }}}
-					<a href="{config.relative_path}/tags/{./valueEncoded}"><span class="badge border border-gray-300 fw-normal tag tag-class-{./class}" data-tag="{./value}">{./valueEscaped}</span></a>
-					{{{ end }}}
-				</span>
-				{{{ end }}}
-			</div>
-		</div>
-		{{{ else }}}
-		<!-- Comment header - simplified -->
 		<div class="d-flex align-items-start justify-content-between gap-1 flex-nowrap w-100 post-header" itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<div class="d-flex gap-1 flex-wrap align-items-center text-truncate">
 				<meta itemprop="name" content="{./user.displayname}">
@@ -125,32 +79,23 @@
 				<a href="{config.relative_path}/post/{encodeURIComponent(./pid)}" class="post-index text-muted d-none d-md-inline">#{increment(./index, "1")}</a>
 			</div>
 		</div>
-		{{{ end }}}
 
-		{{{ if ./index }}}
 		<div class="content text-break" component="post/content" itemprop="text">
+			{ if (!./index) }
+			<h2 class="post-title-main">{../title}</h2>
+			{{{ end }}}
 			{posts.content}
 		</div>
-		{{{ end }}}
 
 		<div component="post/footer" class="post-footer">
-			{{{ if (!./index) }}}
+			{ if (!./index) }
 			<!-- Main post reactions - Figma Design -->
 			<div class="post-reactions">
-				{{{ if !reputation:disabled }}}
-				{{{ if posts.upvotes }}}
+				{ if !reputation:disabled && (posts.upvotes || posts.votes) }
 				<div class="reaction-item reaction-likes">
 					{buildLucideIcon("heart", 24)}
-					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.upvotes}</span>
+					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{{{posts.upvotes || posts.votes || 0}}}</span>
 				</div>
-				{{{ else }}}
-				{{{ if posts.votes }}}
-				<div class="reaction-item reaction-likes">
-					{buildLucideIcon("heart", 24)}
-					<span class="reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.votes}</span>
-				</div>
-				{{{ end }}}
-				{{{ end }}}
 				{{{ end }}}
 				{{{ if ../postcount }}}
 				<div class="reaction-item reaction-replies">
@@ -159,7 +104,7 @@
 				</div>
 				{{{ end }}}
 			</div>
-			{{{ end }}}
+			{ end }
 			{{{ if posts.user.signature }}}
 			<div component="post/signature" data-uid="{posts.user.uid}" class="text-xs text-muted mt-2">{posts.user.signature}</div>
 			{{{ end }}}
@@ -191,7 +136,7 @@
 					<a component="post/announce-count" href="#" class="btn btn-ghost btn-sm d-flex gap-2 align-items-center" title="[[topic:announcers]]"><i class="fa fa-share-alt text-primary"></i> {./announces}</a>
 					{{{ end }}}
 
-					{{{ if !reputation:disabled && ./index }}}
+					{ if !reputation:disabled && ./index }
 					<div class="d-flex votes align-items-center">
 						<a component="post/upvote" href="#" class="btn btn-ghost btn-sm{{{ if posts.upvoted }}} upvoted{{{ end }}}" title="[[topic:upvote-post]]">
 							<i class="fa fa-fw fa-chevron-up text-primary"></i>
@@ -205,9 +150,9 @@
 						<a component="post/downvote" href="#" class="btn btn-ghost btn-sm{{{ if posts.downvoted }}} downvoted{{{ end }}}" title="[[topic:downvote-post]]">
 							<i class="fa fa-fw fa-chevron-down text-primary"></i>
 						</a>
-						{{{ end }}}
+						{ end }
 					</div>
-					{{{ end }}}
+					{ end }
 
 					<!-- IMPORT partials/topic/post-menu.tpl -->
 				</div>
