@@ -26,40 +26,45 @@
 	{{{ end }}}
 	<div class="post-container d-flex flex-grow-1 flex-column w-100" style="min-width:0;">
 		{{{ if (!./index) }}}
-		<!-- User Info Section - Figma Design (Avatar inside container) -->
-		<div class="post-user-info" itemprop="author" itemscope itemtype="https://schema.org/Person">
+		<!-- Main Post - Using posts_list_item.tpl design pattern -->
+		<div itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<meta itemprop="name" content="{./user.displayname}">
 			{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
-			<div class="bg-body rounded-circle post-avatar-inline">
-				<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
-					{buildAvatar(posts.user, "48px", true, "", "user/picture")}
-					{{{ if ./user.isLocal }}}
-					<span component="user/status" class="position-absolute top-100 start-100 border border-white border-2 rounded-circle status {posts.user.status}"><span class="visually-hidden">[[global:{posts.user.status}]]</span></span>
-					{{{ else }}}
-					<span component="user/locality" class="position-absolute top-100 start-100 lh-1 border border-white border-2 rounded-circle small" title="[[global:remote-user]]">
-						<span class="visually-hidden">[[global:remote-user]]</span>
-						<i class="fa fa-globe"></i>
-					</span>
-					{{{ end }}}
-				</a>
-			</div>
-			<div class="post-user-data">
-				<div class="post-user-name-wrapper">
-					<a class="post-user-name fw-bold text-nowrap text-truncate" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" data-username="{posts.user.username}" data-uid="{posts.user.uid}">{posts.user.displayname}</a>
-					{{{ each posts.user.selectedGroups }}}
-					{{{ if posts.user.selectedGroups.slug }}}
-					<!-- IMPORT partials/groups/badge.tpl -->
-					{{{ end }}}
-					{{{ end }}}
-					{{{ if posts.user.banned }}}
-					<span class="badge bg-danger rounded-1">[[user:banned]]</span>
-					{{{ end }}}
-				</div>
-				<div class="post-user-timestamp">
-					<span class="text-muted">{generateWrote(@value, config.timeagoCutoff)}</span>
+			
+			<!-- Topic Title -->
+			<a class="topic-title fw-semibold fs-5 mb-2 text-reset text-break d-block" href="{config.relative_path}/topic/{../slug}">
+				<i class="fa fa-book text-muted" title="[[topic:topic]]"></i> {../title}
+			</a>
+
+			<!-- Post Body -->
+			<div class="post-body d-flex flex-column gap-1 mb-2">
+				<div class="d-flex gap-2 post-info text-sm align-items-center">
+					<div class="post-author d-flex align-items-center gap-1">
+						<a class="lh-1 text-decoration-none" href="{config.relative_path}/user/{./user.userslug}">{buildAvatar(./user, "16px", true, "not-responsive")}</a>
+						<a class="lh-1 fw-semibold" href="{config.relative_path}/user/{./user.userslug}">{./user.displayname}</a>
+					</div>
+					<span class="timeago text-muted lh-1" title="{./timestampISO}"></span>
 					<i component="post/edit-indicator" class="fa fa-edit text-muted{{{ if privileges.posts:history }}} pointer{{{ end }}} edit-icon {{{ if !posts.editor.username }}}hidden{{{ end }}}" title="[[global:edited-timestamp, {isoTimeToLocaleString(./editedISO, config.userLang)}]]"></i>
 					<span data-editor="{posts.editor.userslug}" component="post/editor" class="visually-hidden">[[global:last-edited-by, {posts.editor.username}]] <span class="timeago" title="{isoTimeToLocaleString(posts.editedISO, config.userLang)}"></span></span>
 				</div>
+
+				<div component="post/content" class="content text-sm text-break" itemprop="text">
+					{posts.content}
+				</div>
+			</div>
+			
+			<!-- Category and Tags -->
+			<div class="mb-3 d-flex flex-wrap gap-1 w-100">
+				{{{ if ../category }}}
+				{{{buildCategoryLabel(../category, "a", "border")}}}
+				{{{ end }}}
+				{{{ if ../tags }}}
+				<span data-tid="{../tid}" component="topic/tags" class="lh-1 tag-list d-flex flex-wrap gap-1 {{{ if !../tags.length }}}hidden{{{ end }}}">
+					{{{ each ../tags }}}
+					<a href="{config.relative_path}/tags/{./valueEncoded}"><span class="badge border border-gray-300 fw-normal tag tag-class-{./class}" data-tag="{./value}">{./valueEscaped}</span></a>
+					{{{ end }}}
+				</span>
+				{{{ end }}}
 			</div>
 		</div>
 		{{{ else }}}
@@ -122,17 +127,7 @@
 		</div>
 		{{{ end }}}
 
-		{{{ if (!./index) }}}
-		<!-- Content Container - Figma Design -->
-		<div class="post-content-container">
-			<div class="post-title-description">
-				<h2 class="post-title-main">{../title}</h2>
-				<div class="post-content-text text-break" component="post/content" itemprop="text">
-					{posts.content}
-				</div>
-			</div>
-		</div>
-		{{{ else }}}
+		{{{ if ./index }}}
 		<div class="content text-break" component="post/content" itemprop="text">
 			{posts.content}
 		</div>

@@ -78,6 +78,13 @@ body.template-topic {
 			padding: 0;
 			list-style: none;
 		}
+		
+		// Ensure quickreply is visible
+		[component="topic/quickreply/container"] {
+			width: 100%;
+			display: block !important;
+			margin-top: 24px;
+		}
 	}
 
 	.topic {
