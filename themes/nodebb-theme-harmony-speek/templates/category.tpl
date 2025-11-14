@@ -41,7 +41,9 @@
 
 <div class="row flex-fill">
 	<div class="category d-flex flex-column col-12">
-		<!-- IMPORT partials/topic-list-bar.tpl -->
+		{{{ if (topics.length || privileges.topics:create) }}}
+		  <!-- IMPORT partials/topic-list-bar.tpl -->
+		{{{ end }}}
 
 		{{{ if topics.length }}}
 		<!-- IMPORT partials/topics_list.tpl -->
