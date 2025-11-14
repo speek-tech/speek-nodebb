@@ -9,6 +9,7 @@
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
 <div class="d-flex align-items-start post-container-parent {{{ if ./index }}}comment-post{{{ if (./index === ../postcount) }}} latest-comment{{{ end }}}{{{ end }}}">
+	{{{ if ./index }}}
 	<div class="bg-body d-none d-sm-block rounded-circle" style="outline: 2px solid var(--bs-body-bg);">
 		<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
 			{buildAvatar(posts.user, "48px", true, "", "user/picture")}
@@ -22,12 +23,26 @@
 			{{{ end }}}
 		</a>
 	</div>
+	{{{ end }}}
 	<div class="post-container d-flex flex-grow-1 flex-column w-100" style="min-width:0;">
 		{{{ if (!./index) }}}
-		<!-- User Info Section - Figma Design -->
+		<!-- User Info Section - Figma Design (Avatar inside container) -->
 		<div class="post-user-info" itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<meta itemprop="name" content="{./user.displayname}">
 			{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
+			<div class="bg-body rounded-circle post-avatar-inline">
+				<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
+					{buildAvatar(posts.user, "48px", true, "", "user/picture")}
+					{{{ if ./user.isLocal }}}
+					<span component="user/status" class="position-absolute top-100 start-100 border border-white border-2 rounded-circle status {posts.user.status}"><span class="visually-hidden">[[global:{posts.user.status}]]</span></span>
+					{{{ else }}}
+					<span component="user/locality" class="position-absolute top-100 start-100 lh-1 border border-white border-2 rounded-circle small" title="[[global:remote-user]]">
+						<span class="visually-hidden">[[global:remote-user]]</span>
+						<i class="fa fa-globe"></i>
+					</span>
+					{{{ end }}}
+				</a>
+			</div>
 			<div class="post-user-data">
 				<div class="post-user-name-wrapper">
 					<a class="post-user-name fw-bold text-nowrap text-truncate" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" data-username="{posts.user.username}" data-uid="{posts.user.uid}">{posts.user.displayname}</a>

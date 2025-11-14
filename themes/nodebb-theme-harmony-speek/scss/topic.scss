@@ -363,7 +363,7 @@ body.template-topic {
 			background-color: transparent;
 			border: none;
 			padding: 0;
-			gap: 12px; // Gap between avatar and content
+			gap: 0; // No gap - avatar is inside container now
 		}
 		
 		.post-container {
@@ -415,8 +415,8 @@ body.template-topic {
 				gap: 0;
 			}
 			
-			// Hide reactions and footer actions for comments
-			.post-footer {
+			// Hide only reactions for comments, but keep footer actions
+			.post-reactions {
 				display: none;
 			}
 		}
@@ -457,6 +457,12 @@ body.template-topic {
 			align-self: stretch;
 			gap: 12px;
 			margin-bottom: 0;
+		}
+		
+		.post-avatar-inline {
+			flex-shrink: 0;
+			width: 48px;
+			height: 48px;
 		}
 		
 		.post-user-data {
