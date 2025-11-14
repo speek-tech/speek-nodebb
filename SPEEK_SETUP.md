@@ -69,6 +69,14 @@ Or directly: `/admin/plugins/session-sharing`
 | ☑ Automatically join groups if present in payload | **Checked** | ✅ Enables admin privileges via `isAdmin` field |
 | ☑ Automatically leave groups if not present | **Checked** | ✅ Syncs group membership changes |
 
+### **Payload Keys:**
+
+| Field | Value | Notes |
+|-------|-------|-------|
+| **Unique ID** | `id` | Matches `id` claim in Speek JWT |
+| **Email** | `email` | Required for user matching |
+| **Trust the email provided** | Unchecked | Leave off; Speek handles email verification |
+
 ### **Click:** **"Save changes"** button
 
 ---
