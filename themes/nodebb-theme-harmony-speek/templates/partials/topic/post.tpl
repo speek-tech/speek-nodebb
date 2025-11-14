@@ -23,6 +23,32 @@
 		</a>
 	</div>
 	<div class="post-container d-flex flex-grow-1 flex-column w-100" style="min-width:0;">
+		{{{ if (!./index) }}}
+		<!-- User Info Section - Figma Design -->
+		<div class="post-user-info" itemprop="author" itemscope itemtype="https://schema.org/Person">
+			<meta itemprop="name" content="{./user.displayname}">
+			{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
+			<div class="post-user-data">
+				<div class="post-user-name-wrapper">
+					<a class="post-user-name fw-bold text-nowrap text-truncate" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" data-username="{posts.user.username}" data-uid="{posts.user.uid}">{posts.user.displayname}</a>
+					{{{ each posts.user.selectedGroups }}}
+					{{{ if posts.user.selectedGroups.slug }}}
+					<!-- IMPORT partials/groups/badge.tpl -->
+					{{{ end }}}
+					{{{ end }}}
+					{{{ if posts.user.banned }}}
+					<span class="badge bg-danger rounded-1">[[user:banned]]</span>
+					{{{ end }}}
+				</div>
+				<div class="post-user-timestamp">
+					<span class="text-muted">{generateWrote(@value, config.timeagoCutoff)}</span>
+					<i component="post/edit-indicator" class="fa fa-edit text-muted{{{ if privileges.posts:history }}} pointer{{{ end }}} edit-icon {{{ if !posts.editor.username }}}hidden{{{ end }}}" title="[[global:edited-timestamp, {isoTimeToLocaleString(./editedISO, config.userLang)}]]"></i>
+					<span data-editor="{posts.editor.userslug}" component="post/editor" class="visually-hidden">[[global:last-edited-by, {posts.editor.username}]] <span class="timeago" title="{isoTimeToLocaleString(posts.editedISO, config.userLang)}"></span></span>
+				</div>
+			</div>
+		</div>
+		{{{ else }}}
+		<!-- Comment header - simplified -->
 		<div class="d-flex align-items-start justify-content-between gap-1 flex-nowrap w-100 post-header" itemprop="author" itemscope itemtype="https://schema.org/Person">
 			<div class="d-flex gap-1 flex-wrap align-items-center text-truncate">
 				<meta itemprop="name" content="{./user.displayname}">
@@ -79,13 +105,23 @@
 				<a href="{config.relative_path}/post/{encodeURIComponent(./pid)}" class="post-index text-muted d-none d-md-inline">#{increment(./index, "1")}</a>
 			</div>
 		</div>
+		{{{ end }}}
 
+		{{{ if (!./index) }}}
+		<!-- Content Container - Figma Design -->
+		<div class="post-content-container">
+			<div class="post-title-description">
+				<h2 class="post-title-main">{../title}</h2>
+				<div class="post-content-text text-break" component="post/content" itemprop="text">
+					{posts.content}
+				</div>
+			</div>
+		</div>
+		{{{ else }}}
 		<div class="content text-break" component="post/content" itemprop="text">
-			{{{ if (!./index) }}}
-			<h2 class="post-title-main">{../title}</h2>
-			{{{ end }}}
 			{posts.content}
 		</div>
+		{{{ end }}}
 
 		<div component="post/footer" class="post-footer">
 			{{{ if (!./index) }}}
