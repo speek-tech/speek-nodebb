@@ -10,11 +10,11 @@
 
 		<!-- Simplified Card Design - Only Figma Elements -->
 		<div class="speek-post-card-header">
-			<a class="speek-user-avatar" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}">
+			<div class="speek-user-avatar" aria-hidden="true">
 				{buildAvatar(./user, "48px", true)}
-			</a>
-			<div class="speek-user-info">
-				<a href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" class="speek-user-name">{./user.displayname}</a>
+			</div>
+			<div class="speek-user-info" aria-label="{./user.displayname}">
+				<div class="speek-user-name">{./user.displayname}</div>
 				<div class="speek-post-timestamp">
 					<span class="timeago" title="{./timestampISO}"></span>
 				</div>

@@ -5,14 +5,18 @@
 <div class="speek-category-header">
 	<div class="speek-header-content">
 		{{{ if ./parentCid }}}
-		<a href="{config.relative_path}/category/{./parentCid}" class="speek-back-button">
-			<i class="fa fa-arrow-left"></i>
-			<span>Back</span>
+		<a href="{config.relative_path}/category/{./parentCid}" class="speek-back-button" aria-label="Back">
+			<span class="speek-back-button__icon">
+				{buildLucideIcon("chevron-left", 20, "speek-back-button__chevron")}
+			</span>
+			<span class="speek-back-button__label">Back</span>
 		</a>
 		{{{ else }}}
-		<a href="{config.relative_path}/categories" class="speek-back-button">
-			<i class="fa fa-arrow-left"></i>
-			<span>Back</span>
+		<a href="{config.relative_path}/categories" class="speek-back-button" aria-label="Back">
+			<span class="speek-back-button__icon">
+				{buildLucideIcon("chevron-left", 20, "speek-back-button__chevron")}
+			</span>
+			<span class="speek-back-button__label">Back</span>
 		</a>
 		{{{ end }}}
 		
@@ -35,7 +39,7 @@
 </div>
 {{{ end }}}
 
-<div class="row flex-fill mt-3">
+<div class="row flex-fill">
 	<div class="category d-flex flex-column col-12">
 		{{{ if (topics.length || privileges.topics:create) }}}
 		<!-- IMPORT partials/topic-list-bar.tpl -->

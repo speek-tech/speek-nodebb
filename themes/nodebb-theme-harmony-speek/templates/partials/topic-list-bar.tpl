@@ -4,7 +4,19 @@
 			{{{ if template.category }}}
 			<div class="speek-topic-metrics me-auto">
 				<span class="speek-badge speek-badge--posts" data-testid="category-total-posts">
-					<span class="speek-badge__label">{humanReadableNumber(totalPostCount, 0)}</span>
+					{{{ if totalTopicCount }}}
+						<span class="speek-badge__label">{humanReadableNumber(totalTopicCount, 0)}</span>
+					{{{ else }}}
+						{{{ if topic_count }}}
+							<span class="speek-badge__label">{humanReadableNumber(topic_count, 0)}</span>
+						{{{ else }}}
+							{{{ if topicCount }}}
+								<span class="speek-badge__label">{humanReadableNumber(topicCount, 0)}</span>
+							{{{ else }}}
+								<span class="speek-badge__label">{humanReadableNumber(topics.length, 0)}</span>
+							{{{ end }}}
+						{{{ end }}}
+					{{{ end }}}
 					<span class="speek-badge__suffix">posts</span>
 				</span>
 				{{{ if config.loggedIn }}}
