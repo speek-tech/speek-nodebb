@@ -1,3 +1,5 @@
+<!-- IMPORT partials/category-global-search.tpl -->
+
 <div data-widget-area="header">
 	{{{ each widgets.header }}}
 	{{widgets.header.html}}
