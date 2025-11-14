@@ -841,6 +841,11 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 						width: 24px;
 						height: 24px;
 						color: inherit;
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						stroke: currentColor;
+						fill: none;
 					}
 
 					.speek-reaction-count {
@@ -924,10 +929,13 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		font-size: 16px;
 		font-weight: 700;
 		color: $speek-primary;
-		text-decoration: none;
+		text-decoration: none !important;
+		cursor: default;
 
-		&:hover {
-			text-decoration: underline;
+		&:hover,
+		&:focus,
+		&:active {
+			text-decoration: none !important;
 		}
 	}
 
@@ -979,9 +987,17 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		align-items: center;
 		gap: 8px;
 
-		i {
+		i,
+		.lucide-icon {
+			width: 24px;
+			height: 24px;
 			font-size: 16px;
 			color: $speek-primary;
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			stroke: currentColor;
+			fill: none;
 		}
 
 		.speek-reaction-count {
