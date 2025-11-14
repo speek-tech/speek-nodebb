@@ -122,7 +122,6 @@
 				<hr/>
 			</div>
 			{{{ end }}}
-			{{{ if config.theme.enableQuickReply }}}
 			<!-- IMPORT partials/topic/quickreply.tpl -->
 			{{{ end }}}
 		</div>
