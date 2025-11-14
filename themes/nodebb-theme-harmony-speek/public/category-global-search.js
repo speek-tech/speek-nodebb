@@ -527,17 +527,7 @@
 			return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 		}
 
-		// Create and append search trigger button
-		const triggerBtn = $(`
-			<button class="category-search-trigger" title="Search in this category" aria-label="Open search">
-				<i class="fa fa-search"></i>
-			</button>
-		`);
-
-		triggerBtn.on('click', openSearchModal);
-		$('body').append(triggerBtn);
-
-		// Also allow Ctrl+K or Cmd+K to open search
+		// Allow Ctrl+K or Cmd+K to open search
 		$(document).on('keydown', function (e) {
 			if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
 				e.preventDefault();
@@ -554,8 +544,6 @@
 	// Re-initialize on ajaxify
 	$(window).on('action:ajaxify.end', function (ev, data) {
 		if (data.url && (data.url === 'categories' || data.url === '')) {
-			// Remove old trigger button if it exists
-			$('.category-search-trigger').remove();
 			initCategoryGlobalSearch();
 		}
 	});
