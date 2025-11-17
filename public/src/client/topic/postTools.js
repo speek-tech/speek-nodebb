@@ -29,7 +29,50 @@ define('forum/topic/postTools', [
 		votes.addVoteHandler();
 
 		PostTools.updatePostCount(ajaxify.data.postcount);
+
+		// Count replies from DOM (temporary FE solution)
+		updateReplyCountsFromDOM();
+
+		// Prevent clicks on avatar badges
+		preventBadgeClicks();
 	};
+
+	// Prevent avatar badge clicks
+	function preventBadgeClicks() {
+		$(document).on('click', '[component="user/status"], [component="user/locality"]', function (e) {
+			e.preventDefault();
+			e.stopPropagation();
+			return false;
+		});
+	}
+
+	// Temporary FE solution: Count replies from DOM
+	function updateReplyCountsFromDOM() {
+		$('[component="post"]').each(function () {
+			const $post = $(this);
+			const pid = $post.attr('data-pid');
+			const $replyCountEl = $post.find('[component="post/reply-count/text"]');
+			
+			if ($replyCountEl.length) {
+				// Count actual reply elements in the DOM
+				const $repliesContainer = $post.find('[component="post/replies/container"]');
+				let count = 0;
+				
+				if ($repliesContainer.length) {
+					// Count all post elements that are replies (have parent attribute or are in replies container)
+					const $replies = $repliesContainer.find('[component="post"]');
+					count = $replies.length;
+				}
+				
+				// Update the count display
+				$replyCountEl.attr('data-replies', count);
+				$replyCountEl.text(count);
+			}
+		});
+	}
+
+	// Expose function to be called when replies are loaded
+	PostTools.updateReplyCountsFromDOM = updateReplyCountsFromDOM;
 
 	function renderMenu() {
 		const container = document.querySelector('[component="topic"]');
@@ -111,12 +154,27 @@ define('forum/topic/postTools', [
 			onReplyClicked($(this), tid);
 		});
 
-		$('.topic').on('click', '[component="topic/reply"]', function (e) {
+		// Handle topic reply button (can be in header, outside .topic container)
+		$(document.body).on('click', '[component="topic/reply"]', function (e) {
 			e.preventDefault();
-			onReplyClicked($(this), tid);
+			// Focus the quick reply textarea instead of opening composer
+			const quickReplyTextarea = components.get('topic/quickreply/text');
+			if (quickReplyTextarea.length) {
+				quickReplyTextarea.focus();
+				// Scroll to quick reply section smoothly
+				const quickReplyContainer = components.get('topic/quickreply/container');
+				if (quickReplyContainer.length) {
+					$('html, body').animate({
+						scrollTop: quickReplyContainer.offset().top - 100
+					}, 300);
+				}
+			} else {
+				// Fallback to composer if quick reply is not available
+				onReplyClicked($(this), tid);
+			}
 		});
 
-		$('.topic').on('click', '[component="topic/reply-as-topic"]', function () {
+		$(document.body).on('click', '[component="topic/reply-as-topic"]', function () {
 			translator.translate(`[[topic:link-back, ${ajaxify.data.titleRaw}, ${config.relative_path}/topic/${ajaxify.data.slug}]]`, function (body) {
 				hooks.fire('action:composer.topic.new', {
 					cid: ajaxify.data.cid,
