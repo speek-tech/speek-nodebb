@@ -319,8 +319,9 @@ Emailer.sendToEmail = async (template, email, language, params) => {
 	email = result.email;
 	params = result.params;
 
-	const [html, subject] = await Promise.all([
-		Emailer.renderAndTranslate(template, params, result.language),
+	// Generate plain text email directly instead of HTML
+	const [plaintext, subject] = await Promise.all([
+		Emailer.renderPlainText(template, params, result.language),
 		translator.translate(params.subject, result.language),
 	]);
 
@@ -330,10 +331,7 @@ Emailer.sendToEmail = async (template, email, language, params) => {
 		from: meta.config['email:from'] || `no-reply@${getHostname()}`,
 		from_name: meta.config['email:from_name'] || 'NodeBB',
 		subject: `[${meta.config.title}] ${_.unescape(subject)}`,
-		html: html,
-		plaintext: htmlToText(html, {
-			tags: { img: { format: 'skip' } },
-		}),
+		plaintext: plaintext,
 		template: template,
 		uid: params.uid,
 		pid: params.pid,
@@ -363,6 +361,7 @@ Emailer.sendViaFallback = async (data) => {
 	// Some minor alterations to the data to conform to nodemailer standard
 	data.text = data.plaintext;
 	delete data.plaintext;
+	delete data.html; // Remove HTML from email - send plain text only
 
 	// use an address object https://nodemailer.com/message/addresses/
 	data.from = {
@@ -376,6 +375,21 @@ Emailer.sendViaFallback = async (data) => {
 Emailer.renderAndTranslate = async (template, params, lang) => {
 	const html = await app.renderAsync(`emails/${template}`, params);
 	return await translator.translate(html, lang);
+};
+
+Emailer.renderPlainText = async (template, params, lang) => {
+	// Render plain text email template
+	const html = await app.renderAsync(`emails/${template}`, params);
+	const translated = await translator.translate(html, lang);
+	// Convert HTML to plain text
+	return htmlToText(translated, {
+		wordwrap: 80,
+		tags: { 
+			img: { format: 'skip' },
+			a: { options: { ignoreHref: false } }
+		},
+		preserveNewlines: true,
+	});
 };
 
 require('./promisify')(Emailer, ['transports']);
