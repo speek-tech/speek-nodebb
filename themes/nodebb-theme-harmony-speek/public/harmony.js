@@ -10,6 +10,7 @@ $(document).ready(function () {
 	setupNavTooltips();
 	fixPlaceholders();
 	fixSidebarOverflow();
+	disableSystemAlerts();
 
 	function setupSkinSwitcher() {
 		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
@@ -294,5 +295,26 @@ $(document).ready(function () {
 		}
 		mainNavEl.on('shown.bs.dropdown', toggleOverflow)
 			.on('hidden.bs.dropdown', toggleOverflow);
+	}
+
+	function disableSystemAlerts() {
+		require(['alerts', 'hooks'], function (alerts, hooks) {
+			// Remove any alerts that may already be visible
+			if (alerts && alerts.list && typeof alerts.list === 'object') {
+				Object.keys(alerts.list).forEach(function (alertId) {
+					alerts.remove(alertId);
+				});
+			}
+
+			// Prevent future alerts from rendering
+			hooks.on('action:alerts.push', function (data) {
+				if (data && data.alert_id) {
+					alerts.remove(data.alert_id);
+				}
+
+				// Returning false stops NodeBB from rendering the alert
+				return false;
+			});
+		});
 	}
 });

@@ -19,12 +19,6 @@
 					{{{ end }}}
 					<span class="speek-badge__suffix">posts</span>
 				</span>
-				{{{ if config.loggedIn }}}
-				<span class="speek-badge speek-badge--new" data-testid="category-unread-posts">
-					<span class="speek-badge__label">{unreadCount}</span>
-					<span class="speek-badge__suffix">new</span>
-				</span>
-				{{{ end }}}
 			</div>
 			{{{ end }}}
 
