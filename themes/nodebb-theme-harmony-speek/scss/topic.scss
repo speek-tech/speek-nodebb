@@ -297,6 +297,21 @@ body.template-topic {
 				background-color: #FDFDFC !important;
 			}
 
+			// Override for reply cards
+			&.speek-reply-card {
+				background: #E6E2D2 !important;
+				border: 1px solid #E0DBC7 !important;
+				padding: 16px;
+				gap: 12px;
+				margin-bottom: 12px;
+
+				.content,
+				[component="post/content"],
+				.speek-post-description {
+					background-color: #E6E2D2 !important;
+				}
+			}
+
 			&.deleted {
 				opacity: 0.65;
 			}
@@ -316,12 +331,29 @@ body.template-topic {
 					justify-content: center;
 					border-radius: 9999px;
 					overflow: hidden;
+					cursor: default !important;
+					pointer-events: none !important;
 
 					img {
 						width: 100%;
 						height: 100%;
 						object-fit: cover;
+						pointer-events: none !important;
 					}
+
+					// Make avatar badges non-clickable
+					[component="user/status"],
+					[component="user/locality"],
+					.status,
+					.small {
+						pointer-events: none !important;
+						cursor: default !important;
+					}
+				}
+
+				.speek-user-name {
+					cursor: default !important;
+					pointer-events: none !important;
 				}
 
 				.speek-user-info {
@@ -705,6 +737,222 @@ body.template-topic {
 					border-bottom: none !important;
 				}
 			}
+		}
+
+		// Apply reply card styles to all posts inside replies container
+		.speek-topic-post-card {
+			background: #E6E2D2 !important;
+			border: 1px solid #E0DBC7 !important;
+			border-radius: 16px;
+			padding: 16px;
+			gap: 12px;
+			margin-bottom: 12px;
+
+			// Hide footer for all replies in replies container
+			.speek-post-card-footer {
+				display: none !important;
+			}
+
+			.speek-post-card-header {
+				gap: 12px;
+				padding: 4px 0 0 0;
+
+				.speek-user-info {
+					gap: 0;
+
+					.speek-user-name {
+						a {
+							font-size: 16px;
+							font-weight: 700;
+							line-height: 1.5em;
+							color: #122023;
+						}
+					}
+
+					.speek-post-timestamp {
+						font-size: 14px;
+						font-weight: 400;
+						line-height: 1.4285714285714286em;
+						color: #525252;
+					}
+				}
+			}
+
+			.speek-post-card-content {
+				gap: 0;
+				padding: 0;
+
+				.speek-post-content-wrapper {
+					gap: 0;
+				}
+
+				.speek-post-description {
+					font-size: 16px;
+					font-weight: 400;
+					line-height: 1.5em;
+					color: #122023;
+					background-color: #E6E2D2 !important;
+				}
+			}
+
+			.speek-post-card-footer {
+				display: none;
+			}
+
+			.content,
+			[component="post/content"] {
+				background-color: #E6E2D2 !important;
+			}
+		}
+	}
+
+	// Nested Reply/Comment Styles (Figma Design) - Most specific selector
+	.speek-topic-post-card.speek-reply-card,
+	[component="post"].speek-reply-card .speek-topic-post-card,
+	.speek-post-replies-container .speek-topic-post-card {
+		background: #E6E2D2 !important;
+		border: 1px solid #E0DBC7 !important;
+		border-radius: 16px !important;
+		padding: 16px !important;
+		display: flex !important;
+		flex-direction: column !important;
+		gap: 12px !important;
+		margin-bottom: 12px !important;
+
+		// Hide footer for reply cards
+		.speek-post-card-footer {
+			display: none !important;
+		}
+
+		// Ensure all nested components have the correct background
+		.speek-post-card-header {
+			background-color: #E6E2D2 !important;
+			background: #E6E2D2 !important;
+			display: flex !important;
+			flex-direction: row !important;
+			align-items: center !important;
+			gap: 12px !important;
+			padding: 4px 0 0 0 !important;
+			width: 100% !important;
+			align-self: stretch !important;
+
+			.speek-user-avatar {
+				width: 48px !important;
+				height: 48px !important;
+				flex-shrink: 0 !important;
+				background-color: transparent !important;
+				background: transparent !important;
+				cursor: default !important;
+				pointer-events: none !important;
+
+				img {
+					pointer-events: none !important;
+				}
+
+				// Make avatar badges non-clickable
+				[component="user/status"],
+				[component="user/locality"],
+				.status,
+				.small {
+					pointer-events: none !important;
+					cursor: default !important;
+				}
+			}
+
+			.speek-user-info {
+				background-color: #E6E2D2 !important;
+				background: #E6E2D2 !important;
+				display: flex !important;
+				flex-direction: column !important;
+				gap: 0 !important;
+				flex: 1 !important;
+				min-width: 0 !important;
+
+				.speek-user-name {
+					background-color: #E6E2D2 !important;
+					background: #E6E2D2 !important;
+					font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+					font-size: 16px !important;
+					font-weight: 700 !important;
+					line-height: 1.5em !important;
+					color: #122023 !important;
+					cursor: default !important;
+					pointer-events: none !important;
+				}
+
+				.speek-post-timestamp {
+					background-color: #E6E2D2 !important;
+					background: #E6E2D2 !important;
+					font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+					font-size: 14px !important;
+					font-weight: 400 !important;
+					line-height: 1.4285714285714286em !important;
+					color: #525252 !important;
+
+					.timeago {
+						color: #525252 !important;
+						background-color: #E6E2D2 !important;
+						background: #E6E2D2 !important;
+					}
+				}
+			}
+		}
+
+		.speek-post-card-content {
+			background-color: #E6E2D2 !important;
+			background: #E6E2D2 !important;
+			display: flex !important;
+			flex-direction: column !important;
+			gap: 16px !important;
+			padding: 0 !important;
+			width: 100% !important;
+
+			.speek-post-content-wrapper {
+				background-color: #E6E2D2 !important;
+				background: #E6E2D2 !important;
+				display: flex !important;
+				flex-direction: column !important;
+				gap: 0 !important;
+			}
+
+			.speek-post-description {
+				font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+				font-size: 16px !important;
+				font-weight: 400 !important;
+				line-height: 1.5em !important;
+				color: #122023 !important;
+				background-color: #E6E2D2 !important;
+				background: #E6E2D2 !important;
+			}
+		}
+
+		// Ensure all content inside has correct background
+		.content,
+		[component="post/content"],
+		.speek-post-signature,
+		p,
+		div:not(.speek-user-avatar):not(.speek-user-avatar *),
+		span:not(.speek-user-avatar *):not(.speek-user-avatar span) {
+			background-color: #E6E2D2 !important;
+			background: #E6E2D2 !important;
+			color: #122023 !important;
+		}
+
+		// Ensure links have the background
+		a:not(.speek-user-avatar a):not(.speek-user-avatar *) {
+			background-color: #E6E2D2 !important;
+			background: #E6E2D2 !important;
+		}
+
+		// Preserve avatar background (should remain as is)
+		.speek-user-avatar,
+		.speek-user-avatar a,
+		.speek-user-avatar *,
+		.speek-user-avatar img,
+		.speek-user-avatar span,
+		.speek-user-avatar i {
+			background-color: transparent !important;
+			background: transparent !important;
 		}
 	}
 

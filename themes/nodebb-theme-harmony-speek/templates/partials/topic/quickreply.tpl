@@ -1,7 +1,7 @@
 {{{ if privileges.topics:reply }}}
 <div component="topic/quickreply/container" class="speek-quick-reply d-flex flex-column mb-4" style="gap: 8px;">
 	<label class="speek-quick-reply-label" for="quickreply-textarea">
-		[[topic:composer.replying-to, {title}]]
+		[[topic:composer.replying-to, "{title}"]]
 	</label>
 	<form class="d-flex flex-column" method="post" action="{config.relative_path}/compose" style="gap: 16px;">
 		<input type="hidden" name="tid" value="{tid}" />

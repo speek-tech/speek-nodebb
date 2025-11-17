@@ -8,28 +8,26 @@
 {{{ if (./parent && !hideParent) }}}
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
-<div class="speek-post-card speek-topic-post-card" component="post" data-pid="{./pid}" data-uid="{./uid}" itemprop="author" itemscope itemtype="https://schema.org/Person">
+<div class="speek-post-card speek-topic-post-card{{{ if ./parent }}} speek-reply-card{{{ end }}}" component="post" data-pid="{./pid}" data-uid="{./uid}" itemprop="author" itemscope itemtype="https://schema.org/Person">
 	<meta itemprop="name" content="{./user.displayname}">
 	{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
 	
 	<!-- User Info Section -->
 	<div class="speek-post-card-header">
-		<div class="speek-user-avatar">
-			<a class="d-inline-block position-relative text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" aria-label="[[aria:profile-page-for, {./user.displayname}]]">
-				{buildAvatar(posts.user, "48px", true, "", "user/picture")}
-				{{{ if ./user.isLocal }}}
-				<span component="user/status" class="position-absolute top-100 start-100 border border-white border-2 rounded-circle status {posts.user.status}"><span class="visually-hidden">[[global:{posts.user.status}]]</span></span>
-				{{{ else }}}
-				<span component="user/locality" class="position-absolute top-100 start-100 lh-1 border border-white border-2 rounded-circle small" title="[[global:remote-user]]">
-					<span class="visually-hidden">[[global:remote-user]]</span>
-					<i class="fa fa-globe"></i>
-				</span>
-				{{{ end }}}
-			</a>
+		<div class="speek-user-avatar position-relative" aria-hidden="true">
+			{buildAvatar(posts.user, "48px", true, "", "user/picture")}
+			{{{ if ./user.isLocal }}}
+			<span component="user/status" class="position-absolute top-100 start-100 border border-white border-2 rounded-circle status {posts.user.status}"><span class="visually-hidden">[[global:{posts.user.status}]]</span></span>
+			{{{ else }}}
+			<span component="user/locality" class="position-absolute top-100 start-100 lh-1 border border-white border-2 rounded-circle small" title="[[global:remote-user]]">
+				<span class="visually-hidden">[[global:remote-user]]</span>
+				<i class="fa fa-globe"></i>
+			</span>
+			{{{ end }}}
 		</div>
-		<div class="speek-user-info">
+		<div class="speek-user-info" aria-label="{posts.user.displayname}">
 			<div class="speek-user-name">
-				<a class="text-decoration-none" href="{{{ if ./user.userslug }}}{config.relative_path}/user/{./user.userslug}{{{ else }}}#{{{ end }}}" data-username="{posts.user.username}" data-uid="{posts.user.uid}">{posts.user.displayname}</a>
+				{posts.user.displayname}
 				{{{ each posts.user.selectedGroups }}}
 				{{{ if posts.user.selectedGroups.slug }}}
 				<!-- IMPORT partials/groups/badge.tpl -->
@@ -63,22 +61,24 @@
 		</div>
 	</div>
 
-	<!-- Reaction Container -->
+	<!-- Reaction Container - Only show for primary/main post, not replies -->
+	{{{ if !./parent }}}
+	{{{ if !./index }}}
 	<div class="speek-post-card-footer">
 		{{{ if !reputation:disabled }}}
 		<div class="speek-reaction-item" component="post/likes">
 			<a component="post/upvote" href="#" class="speek-reaction-link{{{ if posts.upvoted }}} active{{{ end }}}" title="[[topic:upvote-post]]">
 				{buildLucideIcon("hand-heart", 24, "speek-reaction-icon")}
-				<span class="speek-reaction-count" component="post/vote-count" data-votes="{posts.votes}">{posts.votes || 0}</span>
+				<span class="speek-reaction-count" component="post/vote-count" data-votes="{posts.votes}">{{{ if posts.votes }}}{posts.votes}{{{ else }}}0{{{ end }}}</span>
 			</a>
 			<meta itemprop="upvoteCount" content="{posts.upvotes}">
 		</div>
 		{{{ end }}}
 		<div class="speek-reaction-item" component="post/comments">
 			{{{ if !hideReplies }}}
-			<a component="post/reply-count" data-target-component="post/replies/container" href="#" class="speek-reaction-link{{{ if (!./replies || shouldHideReplyContainer(@value)) }}} hidden{{{ end }}}" title="[[topic:replies]]">
+			<a component="post/reply-count" data-target-component="post/replies/container" href="#" class="speek-reaction-link" title="[[topic:replies]]">
 				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
-				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{posts.replies.count}">{posts.replies.count || 0}</span>
+				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
 			</a>
 			{{{ else }}}
 			<span class="speek-reaction-link">
@@ -88,6 +88,8 @@
 			{{{ end }}}
 		</div>
 	</div>
+	{{{ end }}}
+	{{{ end }}}
 
 	<!-- Hidden action buttons for functionality -->
 	<div component="post/actions" class="speek-post-actions-hidden d-none">

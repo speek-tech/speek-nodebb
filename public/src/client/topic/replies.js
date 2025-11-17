@@ -50,6 +50,13 @@ define('forum/topic/replies', ['forum/topic/posts', 'hooks', 'alerts', 'api'], f
 					repliesEl.slideDown('fast');
 					await posts.onNewPostsAddedToDom(html);
 					hooks.fire('action:posts.loaded', { posts: postData });
+					
+					// Update reply counts from DOM (temporary FE solution)
+					require(['forum/topic/postTools'], function (postTools) {
+						if (postTools.updateReplyCountsFromDOM) {
+							postTools.updateReplyCountsFromDOM();
+						}
+					});
 				});
 			});
 		} else if (open.attr('loaded') === '1') {
@@ -59,6 +66,12 @@ define('forum/topic/replies', ['forum/topic/posts', 'hooks', 'alerts', 'api'], f
 				.addClass('fa-chevron-down');
 			post.find('[component="post/replies"]').slideUp('fast', function () {
 				$(this).remove();
+				// Update reply counts from DOM after collapsing (temporary FE solution)
+				require(['forum/topic/postTools'], function (postTools) {
+					if (postTools.updateReplyCountsFromDOM) {
+						postTools.updateReplyCountsFromDOM();
+					}
+				});
 			});
 		}
 	};
@@ -79,6 +92,13 @@ define('forum/topic/replies', ['forum/topic/posts', 'hooks', 'alerts', 'api'], f
 					replies.append(html);
 				}
 				await posts.onNewPostsAddedToDom(html);
+				
+				// Update reply counts from DOM (temporary FE solution)
+				require(['forum/topic/postTools'], function (postTools) {
+					if (postTools.updateReplyCountsFromDOM) {
+						postTools.updateReplyCountsFromDOM();
+					}
+				});
 			}
 		});
 	};
