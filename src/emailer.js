@@ -175,6 +175,7 @@ Emailer.registerApp = (expressApp) => {
 
 	Emailer._defaultPayload = {
 		url: nconf.get('url'),
+		app_url: meta.config['email:appUrl'] || nconf.get('app_url') || nconf.get('url'),
 		site_title: meta.config.title || 'NodeBB',
 		logo: {
 			src: logo,
@@ -223,7 +224,7 @@ Emailer.send = async (template, uid, params) => {
 		throw Error('[emailer] App not ready!');
 	}
 
-	let userData = await User.getUserFields(uid, ['email', 'username', 'email:confirmed', 'banned']);
+	let userData = await User.getUserFields(uid, ['email', 'username', 'email:confirmed', 'banned', 'fullname', 'firstname']);
 
 	// 'welcome' and 'verify-email' explicitly used passed-in email address
 	if (['welcome', 'verify-email'].includes(template)) {
@@ -266,6 +267,7 @@ Emailer.send = async (template, uid, params) => {
 	params.uid = uid;
 	params.username = userData.username;
 	params.displayname = userData.displayname;
+	params.firstname = userData.firstname || userData.fullname || userData.username;
 	params.rtl = await translator.translate('[[language:dir]]', userSettings.userLang) === 'rtl';
 
 	const result = await Plugins.hooks.fire('filter:email.cancel', {
@@ -378,35 +380,35 @@ Emailer.renderAndTranslate = async (template, params, lang) => {
 };
 
 Emailer.renderPlainText = async (template, params, lang) => {
-	// Render plain text email template
-	const html = await app.renderAsync(`emails/${template}`, params);
-	const translated = await translator.translate(html, lang);
-	// Convert HTML to plain text with better formatting
-	return htmlToText(translated, {
-		wordwrap: 100,
-		selectors: [
-			// Remove images completely
-			{ selector: 'img', format: 'skip' },
-			// Format links nicely
-			{ selector: 'a', options: { ignoreHref: false, noAnchorUrl: false } },
-			// Clean up table formatting
-			{ selector: 'table', format: 'block' },
-			{ selector: 'tr', format: 'block' },
-			{ selector: 'td', format: 'inline' },
-			// Headers with better spacing
-			{ selector: 'h1', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
-			{ selector: 'h2', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
-			{ selector: 'h3', options: { uppercase: false, leadingLineBreaks: 1, trailingLineBreaks: 1 } },
-		],
-		// Better whitespace handling
-		whitespaceCharacters: ' \t\r\n\f\u200b',
-		preserveNewlines: false,
-		decodeEntities: true,
-		baseElements: {
-			selectors: ['body'],
-			returnDomByDefault: true,
-		},
-	});
+	// Check if a dedicated plain text template exists
+	const plaintextTemplate = `${template}_plaintext`;
+	let plaintext;
+	
+	try {
+		// Try to render plain text template first
+		plaintext = await app.renderAsync(`emails/${plaintextTemplate}`, params);
+		plaintext = await translator.translate(plaintext, lang);
+	} catch (err) {
+		// Fall back to HTML template and convert to plain text
+		const html = await app.renderAsync(`emails/${template}`, params);
+		const translated = await translator.translate(html, lang);
+		plaintext = htmlToText(translated, {
+			wordwrap: 100,
+			selectors: [
+				{ selector: 'img', format: 'skip' },
+				{ selector: 'a', options: { ignoreHref: false, noAnchorUrl: false } },
+				{ selector: 'table', format: 'block' },
+				{ selector: 'tr', format: 'block' },
+				{ selector: 'td', format: 'inline' },
+				{ selector: 'h1', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
+				{ selector: 'h2', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
+			],
+			whitespaceCharacters: ' \t\r\n\f\u200b',
+			preserveNewlines: false,
+		});
+	}
+	
+	return plaintext;
 };
 
 require('./promisify')(Emailer, ['transports']);
