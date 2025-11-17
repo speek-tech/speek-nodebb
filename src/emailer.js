@@ -381,14 +381,31 @@ Emailer.renderPlainText = async (template, params, lang) => {
 	// Render plain text email template
 	const html = await app.renderAsync(`emails/${template}`, params);
 	const translated = await translator.translate(html, lang);
-	// Convert HTML to plain text
+	// Convert HTML to plain text with better formatting
 	return htmlToText(translated, {
-		wordwrap: 80,
-		tags: { 
-			img: { format: 'skip' },
-			a: { options: { ignoreHref: false } }
+		wordwrap: 100,
+		selectors: [
+			// Remove images completely
+			{ selector: 'img', format: 'skip' },
+			// Format links nicely
+			{ selector: 'a', options: { ignoreHref: false, noAnchorUrl: false } },
+			// Clean up table formatting
+			{ selector: 'table', format: 'block' },
+			{ selector: 'tr', format: 'block' },
+			{ selector: 'td', format: 'inline' },
+			// Headers with better spacing
+			{ selector: 'h1', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
+			{ selector: 'h2', options: { uppercase: false, leadingLineBreaks: 2, trailingLineBreaks: 1 } },
+			{ selector: 'h3', options: { uppercase: false, leadingLineBreaks: 1, trailingLineBreaks: 1 } },
+		],
+		// Better whitespace handling
+		whitespaceCharacters: ' \t\r\n\f\u200b',
+		preserveNewlines: false,
+		decodeEntities: true,
+		baseElements: {
+			selectors: ['body'],
+			returnDomByDefault: true,
 		},
-		preserveNewlines: true,
 	});
 };
 
