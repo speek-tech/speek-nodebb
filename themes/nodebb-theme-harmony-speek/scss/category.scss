@@ -727,8 +727,8 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 			// Mobile: Icon-only buttons - adjust padding for icons only
 			.category-pill .category-pill__trigger {
-				padding: 8px !important;  // Smaller padding for icon-only buttons
-				min-width: 44px !important;  // Minimum width for touch target
+				padding: 10px 20px !important;  // Increased padding for icon-only buttons
+				min-width: 48px !important;  // Increased minimum width for better touch target
 				width: auto !important;  // Auto width
 				justify-content: center !important;  // Center icons
 			}
@@ -766,13 +766,9 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				visibility: hidden !important;
 			}
 
-			// Ensure visible watch state labels are visible
+			// Hide watch state labels even when state is visible (mobile icon-only)
 			.category-watch__state:not(.hidden) .category-watch__state-label {
-				display: inline !important;
-				visibility: visible !important;
-				opacity: 1 !important;
-				white-space: nowrap !important;
-				font-size: 14px !important;
+				display: none !important;  // Hide text labels on mobile, show icons only
 			}
 
 			// Ensure category watch current container is visible
@@ -794,10 +790,11 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				visibility: visible !important;
 			}
 
-			// Mobile: New post button - keep in same row, not full width
+			// Mobile: New post button - keep in same row, but wider
 			.btn-primary {
 				width: auto !important;  // Auto width, not full width
-				padding: 8px 16px !important;  // Mobile: 8px 16px
+				min-width: 120px !important;  // Minimum width for better visibility
+				padding: 8px 24px !important;  // Increased padding for wider button
 				flex-shrink: 0 !important;  // Don't shrink
 			}
 		}
