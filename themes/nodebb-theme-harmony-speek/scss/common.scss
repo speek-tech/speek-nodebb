@@ -170,3 +170,17 @@ body:not(.page-user) {
 		text-decoration: none;
 	}
 }
+
+// Hide built-in NodeBB alert/notification toasts (forum updated, connection lost, etc.)
+#alerts,
+#alerts .alert {
+	display: none !important;
+}
+
+// Safety net: hide any stray Bootstrap alert toasts NodeBB might append elsewhere
+.alert.alert-info,
+.alert.alert-warning,
+.alert.alert-success,
+.alert.alert-danger {
+	display: none !important;
+}
