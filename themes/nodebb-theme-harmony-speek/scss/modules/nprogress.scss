@@ -1,5 +1,6 @@
 #nprogress {
 	pointer-events: none;
+	display: none !important;	// Hide blue loading line during page transitions
 }
 
 $nprogress-color: $primary;
