@@ -147,6 +147,7 @@
 	margin: 0 !important;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
+	margin-top: 24px !important;
 	padding: 0 !important;
 	padding-left: 0 !important;
 	padding-right: 0 !important;
@@ -156,6 +157,31 @@
 	gap: 0;
 	width: 100% !important;
 	box-sizing: border-box;
+}
+
+// Breakpoint-specific margin-top values for categories page
+@include desktop {
+	.categories-page {
+		margin-top: 32px !important;
+	}
+}
+
+@include desktop-xl {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include tablet {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include mobile {
+	.categories-page {
+		margin-top: 24px !important;
+	}
 }
 
 .categories-grid {

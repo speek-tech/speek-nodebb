@@ -274,6 +274,7 @@ ul.categories-list.list-unstyled,
   flex-direction: column !important;
   align-items: center !important;
   gap: 24px !important;
+  margin-top: 24px !important;
   max-width: 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -477,6 +478,7 @@ ul.categories-list.list-unstyled,
     padding: 0 !important;
     padding-left: 0 !important;
     padding-right: 0 !important;
+    margin-top: 24px !important;
 
     .categories-grid {
       grid-template-columns: 1fr !important;
@@ -492,6 +494,25 @@ ul.categories-list.list-unstyled,
         top: -20px !important;
       }
     }
+  }
+}
+
+// Breakpoint-specific margin overrides
+@include desktop {
+  .categories-page {
+    margin-top: 32px !important;
+  }
+}
+
+@include desktop-xl {
+  .categories-page {
+    margin-top: 24px !important;
+  }
+}
+
+@include tablet {
+  .categories-page {
+    margin-top: 24px !important;
   }
 }
 

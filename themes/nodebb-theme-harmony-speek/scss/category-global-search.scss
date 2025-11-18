@@ -7,8 +7,6 @@
 	padding-bottom: 20px;
 	padding-left: 0 !important;
 	padding-right: 0 !important;
-	margin-top: 20px;
-	margin-bottom: 20px;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
 }
@@ -25,9 +23,8 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	border-radius: 16px 16px 0 0;
+	border-radius: 8px;
 	background: #ffffff;
-	box-shadow: 0 12px 40px rgba(17, 24, 39, 0.12);
 	padding: 0;
 	transition: box-shadow 0.2s, transform 0.2s;
 

@@ -34,6 +34,6 @@
 
 		<main id="panel" class="d-flex flex-column gap-3 flex-grow-1" style="min-width: 0;">
 			<!-- IMPORT partials/header/brand.tpl -->
-			<div class="container-lg d-flex flex-column gap-3 h-100" id="content">
+			<div class="container-lg d-flex flex-column h-100" id="content">
 			<!-- IMPORT partials/noscript/warning.tpl -->
 			<!-- IMPORT partials/noscript/message.tpl -->
