@@ -356,7 +356,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Category Header Section
 // =====================================
 .speek-category-header {
-	padding: 24px;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	background: transparent;
 
 	.speek-header-content {
@@ -480,7 +483,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		.d-flex.flex-row.p-2 {
 			background: transparent !important;
 			border: none !important;
-			padding: 16px 24px !important;
+			padding-top: 16px !important;
+			padding-bottom: 16px !important;
+			padding-left: 0 !important;
+			padding-right: 0 !important;
 		}
 
 		[component="category/controls"] {
@@ -812,7 +818,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				justify-content: space-between !important;  // Figma: space-between
 				gap: 10px !important;  // Figma: 10px gap
 				align-items: center !important;
-				padding: 16px 20px !important;  // Reduced padding to prevent overflow
+				padding-top: 16px !important;
+				padding-bottom: 16px !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
 				flex-wrap: nowrap !important;  // Keep everything in one horizontal line
 				min-width: 0 !important;  // Allow container to shrink
 				max-width: 100% !important;  // Ensure it doesn't exceed container width
@@ -965,7 +974,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 .speek-category-main {
 	width: 100%;
-	padding: 0 24px;
+	padding: 0 !important;
 }
 
 // =====================================
@@ -1518,7 +1527,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Mobile
 @media (max-width: 767px) {
 	.speek-category-header {
-		padding: 16px;
+		padding-top: 16px;
+		padding-bottom: 16px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 		
 		.speek-header-bar {
 			flex-direction: column;
@@ -1541,7 +1553,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 
 	.speek-category-main {
-		padding: 0 16px;
+		padding: 0 !important;
 	}
 	
 	// Post cards mobile responsive

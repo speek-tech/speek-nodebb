@@ -29,11 +29,11 @@
 	<!-- IMPORT partials/mobile-header.tpl -->
 	{{{ end }}}
 
-	<div class="layout-container d-flex justify-content-between pb-4 pb-md-0">
+	<div class="layout-container d-flex justify-content-between">
 		<!-- IMPORT partials/sidebar-left.tpl -->
 
-		<main id="panel" class="d-flex flex-column gap-3 flex-grow-1 mt-3" style="min-width: 0;">
+		<main id="panel" class="d-flex flex-column gap-3 flex-grow-1" style="min-width: 0;">
 			<!-- IMPORT partials/header/brand.tpl -->
-			<div class="container-lg px-md-4 d-flex flex-column gap-3 h-100 mb-5 mb-lg-0" id="content">
+			<div class="container-lg d-flex flex-column gap-3 h-100" id="content">
 			<!-- IMPORT partials/noscript/warning.tpl -->
 			<!-- IMPORT partials/noscript/message.tpl -->
