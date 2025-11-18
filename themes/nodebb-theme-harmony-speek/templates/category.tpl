@@ -39,6 +39,8 @@
 </div>
 {{{ end }}}
 
+<!-- IMPORT partials/category-specific-search.tpl -->
+
 <div class="row flex-fill">
 	<div class="category d-flex flex-column col-12">
 		{{{ if (topics.length || privileges.topics:create) }}}
