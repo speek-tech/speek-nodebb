@@ -4,6 +4,7 @@
 
 (function () {
 	let searchTimeout = null;
+	const numberFormatter = new Intl.NumberFormat(window.navigator.language || 'en-US');
 
 	function initInlineSearch() {
 		if (!ajaxify.data || !ajaxify.data.template || !ajaxify.data.template.categories) {
@@ -128,38 +129,36 @@
 			});
 		}
 
-		function buildResultItem(post, query) {
-			const isMainPost = post.isMainPost;
-			const title = isMainPost ? post.topic.title : 'RE: ' + post.topic.title;
-			const content = stripHtml(post.content || '');
-			const highlightedContent = highlightSearchTerms(content, query);
+		function buildResultItem(post) {
 			const url = config.relative_path + '/post/' + post.pid;
 
-			const timestamp = new Date(post.timestamp).toLocaleString(window.navigator.language || 'en-US', {
-				year: 'numeric',
-				month: 'short',
-				day: 'numeric',
-				hour: 'numeric',
-				minute: '2-digit',
-			});
+			const title = getTopicTitle(post);
 			const username = post.user.displayname || post.user.username;
+			const likesCount = getLikesCount(post);
+			const commentsCount = getCommentsCount(post);
+			const timeAgo = formatTimeAgo(post.timestamp);
+			const likesLabel = `${likesCount} ${likesCount === 1 ? 'like' : 'likes'}`;
+			const commentsLabel = `${commentsCount} ${commentsCount === 1 ? 'comment' : 'comments'}`;
 
 			return `
 				<div class="category-search-result-item" data-url="${url}">
 					<div class="category-search-result-header">
+						<div class="category-search-result-text">
+							<p class="category-search-result-author">${escapeHtml(username)}</p>
 						<h4 class="category-search-result-title">${escapeHtml(title)}</h4>
+						</div>
+						<span class="category-search-result-time">${timeAgo}</span>
 					</div>
 					<div class="category-search-result-meta">
-						<span class="category-search-result-author">
-							<i class="fa fa-user"></i>
-							<span>${escapeHtml(username)}</span>
+						<span class="category-search-result-metric" aria-label="${likesLabel}">
+							<i class="fa fa-heart" aria-hidden="true"></i>
+							<span>${formatCount(likesCount)}</span>
 						</span>
-						<span class="category-search-result-time">
-							<i class="fa fa-clock-o"></i>
-							<span>${timestamp}</span>
+						<span class="category-search-result-metric" aria-label="${commentsLabel}">
+							<i class="fa fa-comment" aria-hidden="true"></i>
+							<span>${formatCount(commentsCount)}</span>
 						</span>
 					</div>
-					<p class="category-search-result-content">${highlightedContent}</p>
 				</div>
 			`;
 		}
@@ -209,6 +208,73 @@
 		function scheduleSearch() {
 			clearTimeout(searchTimeout);
 			searchTimeout = setTimeout(performSearch, 400);
+		}
+
+		function formatTimeAgo(timestamp) {
+			if (!timestamp) {
+				return '';
+			}
+			const ts =
+				typeof timestamp === 'number'
+					? timestamp
+					: Date.parse(timestamp);
+			if (!Number.isFinite(ts)) {
+				return '';
+			}
+			const diffMs = Date.now() - ts;
+			const minute = 60 * 1000;
+			const hour = 60 * minute;
+			const day = 24 * hour;
+
+			if (diffMs < minute) {
+				return 'Just now';
+			}
+			if (diffMs < hour) {
+				const minutes = Math.floor(diffMs / minute);
+				return `${minutes} minute${minutes === 1 ? '' : 's'} ago`;
+			}
+			if (diffMs < day) {
+				const hours = Math.floor(diffMs / hour);
+				return `${hours} hour${hours === 1 ? '' : 's'} ago`;
+			}
+			const days = Math.floor(diffMs / day);
+			return `${days} day${days === 1 ? '' : 's'} ago`;
+		}
+
+		function getLikesCount(post) {
+			if (!post) {
+				return 0;
+			}
+			const votes = safeNumber(
+				typeof post.votes !== 'undefined' ? post.votes : post.upvotes
+			);
+			return Math.max(votes, 0);
+		}
+
+		function getCommentsCount(post) {
+			const topicPostCount =
+				post && post.topic && typeof post.topic.postcount !== 'undefined'
+					? safeNumber(post.topic.postcount)
+					: 0;
+			if (topicPostCount <= 1) {
+				return 0;
+			}
+			return Math.max(topicPostCount - 1, 0);
+		}
+
+		function getTopicTitle(post) {
+			return (post && post.topic && post.topic.title) || '';
+		}
+
+		function formatCount(value) {
+			const safeValue = safeNumber(value);
+			return numberFormatter.format(Math.max(safeValue, 0));
+		}
+
+		function safeNumber(value) {
+			const numeric =
+				typeof value === 'number' ? value : parseInt(value, 10);
+			return Number.isFinite(numeric) ? numeric : 0;
 		}
 
 		function showMeta(total) {
