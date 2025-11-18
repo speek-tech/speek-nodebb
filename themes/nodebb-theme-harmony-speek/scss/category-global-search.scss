@@ -192,14 +192,14 @@
 .category-search-result-text {
 	display: flex;
 	flex-direction: column;
-	gap: 4px;
+	gap: 8px;
 }
 
 .category-search-result-title {
 	margin: 0;
 	font-weight: 700;
-	font-size: 1.05rem;
-	color: var(--speek-fg, #355e66);
+	font-size: 16px;
+	color: #355E66;
 	overflow: hidden;
 	display: -webkit-box;
 	-webkit-line-clamp: 2;
@@ -209,38 +209,47 @@
 
 .category-search-result-author {
 	margin: 0;
-	font-size: 0.9rem;
-	font-weight: 600;
-	color: #355e66;
+	font-size: 16px;
+	font-weight: 700;
+	color: #122023;
 }
 
 .category-search-result-time {
-	font-size: 0.9rem;
-	color: #636363;
+	font-size: 14px;
+	color: #525252;
+	font-weight: 400;
 	white-space: nowrap;
 }
 
 .category-search-result-meta {
 	display: flex;
 	align-items: center;
-	gap: 1.5rem;
-	font-size: 0.9rem;
+	gap: 30px;
+	font-size: 14px;
 	color: #355e66;
 	margin-top: 0.75rem;
 	margin-bottom: 0;
+	font-weight: 700;
 }
 
 .category-search-result-metric {
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4rem;
-	font-weight: 600;
+	font-weight: 700;
 	color: inherit;
 
 	i {
-		font-size: 0.85rem;
+		font-size: 16px;
 		color: #627978;
 	}
+}
+
+.category-search-result-icon {
+	width: 18px;
+	height: 18px;
+	color: #627978;
+	stroke: currentColor;
 }
 
 .category-search-result-highlight {

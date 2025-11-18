@@ -121,6 +121,7 @@
 			resultsContainer.scrollTop(0);
 			resultsContainer.show();
 			showMeta(total);
+			refreshLucideIcons();
 
 			resultsList.find('.category-search-result-item').on('click', function (e) {
 				e.preventDefault();
@@ -151,11 +152,11 @@
 					</div>
 					<div class="category-search-result-meta">
 						<span class="category-search-result-metric" aria-label="${likesLabel}">
-							<i class="fa fa-heart" aria-hidden="true"></i>
+							<i class="lucide-icon category-search-result-icon" data-lucide="hand-heart" data-lucide-size="18" data-lucide-stroke-width="2" aria-hidden="true"></i>
 							<span>${formatCount(likesCount)}</span>
 						</span>
 						<span class="category-search-result-metric" aria-label="${commentsLabel}">
-							<i class="fa fa-comment" aria-hidden="true"></i>
+							<i class="lucide-icon category-search-result-icon" data-lucide="message-square" data-lucide-size="18" data-lucide-stroke-width="2" aria-hidden="true"></i>
 							<span>${formatCount(commentsCount)}</span>
 						</span>
 					</div>
@@ -275,6 +276,16 @@
 			const numeric =
 				typeof value === 'number' ? value : parseInt(value, 10);
 			return Number.isFinite(numeric) ? numeric : 0;
+		}
+
+		function refreshLucideIcons() {
+			if (window.lucide && window.lucide.createIcons) {
+				window.lucide.createIcons({
+					icons: window.lucide.icons,
+					nameAttr: 'data-lucide',
+					attrs: {},
+				});
+			}
 		}
 
 		function showMeta(total) {
