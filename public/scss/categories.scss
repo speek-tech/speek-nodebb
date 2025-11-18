@@ -267,7 +267,9 @@ ul.categories-list.list-unstyled,
 #ajaxify .categories-page,
 .container .categories-page,
 .categories-page {
-  padding: 48px 5% 48px !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
@@ -472,7 +474,9 @@ ul.categories-list.list-unstyled,
 // Mobile: 1 column layout with adjusted spacing
 @include mobile {
   .categories-page {
-    padding: 24px 5% !important;
+    padding: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
 
     .categories-grid {
       grid-template-columns: 1fr !important;

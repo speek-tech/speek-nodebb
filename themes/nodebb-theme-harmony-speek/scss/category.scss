@@ -66,30 +66,95 @@
 		margin: 0 !important;
 		max-width: 100% !important;
 	}
+
+	// Remove padding from widget areas
+	[data-widget-area="header"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+	// Remove padding from row container
+	.row.flex-fill {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all Bootstrap columns
+	.col-lg-9,
+	.col-lg-12,
+	.col-sm-12,
+	[class*="col-"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all container types
+	.container,
+	.container-fluid,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl,
+	.container-xxl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
 }
 
 .categories-selector-container {
 	margin-bottom: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 // Ensure parent containers don't break grid
-.row.flex-fill > div.col-lg-9,
-.row.flex-fill > div.col-lg-12 {
-	max-width: 100%;
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div[class*="col-"] {
+	max-width: 100% !important;
 	margin: 0 auto;
-	padding-left: 0;
-	padding-right: 0;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+// Remove padding from categories-page and its parent column
+// Target the column that contains categories-page
+.row.flex-fill > div.col-lg-9,
+.row.flex-fill > div.col-lg-12,
+.row.flex-fill > div.col-sm-12 {
+	&:has(.categories-page) {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Fallback for browsers that don't support :has()
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div.col-sm-12 {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 .categories-page {
-	max-width: 100%;
-	margin: 0;
-	padding: 0;
+	max-width: 100% !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 0;
-	width: 100%;
+	width: 100% !important;
 	box-sizing: border-box;
 }
 
@@ -97,8 +162,14 @@
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 40px;
-	width: 100%;
-	padding: 0;
+	width: 100% !important;
+	max-width: 100% !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 	align-self: stretch;
 	box-sizing: border-box;
 }
