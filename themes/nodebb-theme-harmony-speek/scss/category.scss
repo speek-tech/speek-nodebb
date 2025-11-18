@@ -66,39 +66,136 @@
 		margin: 0 !important;
 		max-width: 100% !important;
 	}
+
+	// Remove padding from widget areas
+	[data-widget-area="header"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+	// Remove padding from row container
+	.row.flex-fill {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all Bootstrap columns
+	.col-lg-9,
+	.col-lg-12,
+	.col-sm-12,
+	[class*="col-"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all container types
+	.container,
+	.container-fluid,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl,
+	.container-xxl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
 }
 
 .categories-selector-container {
 	margin-bottom: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 // Ensure parent containers don't break grid
-.row.flex-fill > div.col-lg-9,
-.row.flex-fill > div.col-lg-12 {
-	max-width: 100%;
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div[class*="col-"] {
+	max-width: 100% !important;
 	margin: 0 auto;
-	padding-left: 0;
-	padding-right: 0;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+// Remove padding from categories-page and its parent column
+// Target the column that contains categories-page
+.row.flex-fill > div.col-lg-9,
+.row.flex-fill > div.col-lg-12,
+.row.flex-fill > div.col-sm-12 {
+	&:has(.categories-page) {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Fallback for browsers that don't support :has()
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div.col-sm-12 {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 .categories-page {
-	max-width: 100%;
-	margin: 0;
-	padding: 0;
+	max-width: 100% !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	margin-top: 24px !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 0;
-	width: 100%;
+	width: 100% !important;
 	box-sizing: border-box;
+}
+
+// Breakpoint-specific margin-top values for categories page
+@include desktop {
+	.categories-page {
+		margin-top: 32px !important;
+	}
+}
+
+@include desktop-xl {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include tablet {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include mobile {
+	.categories-page {
+		margin-top: 24px !important;
+	}
 }
 
 .categories-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 40px;
-	width: 100%;
-	padding: 0;
+	width: 100% !important;
+	max-width: 100% !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 	align-self: stretch;
 	box-sizing: border-box;
 }
@@ -356,7 +453,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Category Header Section
 // =====================================
 .speek-category-header {
-	padding: 24px;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	background: transparent;
 
 	.speek-header-content {
@@ -480,7 +580,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		.d-flex.flex-row.p-2 {
 			background: transparent !important;
 			border: none !important;
-			padding: 16px 24px !important;
+			padding-top: 16px !important;
+			padding-bottom: 16px !important;
+			padding-left: 0 !important;
+			padding-right: 0 !important;
 		}
 
 		[component="category/controls"] {
@@ -727,7 +830,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 			// Mobile: Icon-only buttons - adjust padding for icons only
 			.category-pill .category-pill__trigger {
-				padding: 10px 30px !important;  // Increased padding for icon-only buttons
+				padding: 10px 15px !important;  // Increased padding for icon-only buttons
 				min-width: 48px !important;  // Increased minimum width for better touch target
 				width: auto !important;  // Auto width
 				justify-content: center !important;  // Center icons
@@ -812,7 +915,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				justify-content: space-between !important;  // Figma: space-between
 				gap: 10px !important;  // Figma: 10px gap
 				align-items: center !important;
-				padding: 16px 20px !important;  // Reduced padding to prevent overflow
+				padding-top: 16px !important;
+				padding-bottom: 16px !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
 				flex-wrap: nowrap !important;  // Keep everything in one horizontal line
 				min-width: 0 !important;  // Allow container to shrink
 				max-width: 100% !important;  // Ensure it doesn't exceed container width
@@ -965,7 +1071,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 .speek-category-main {
 	width: 100%;
-	padding: 0 24px;
+	padding: 0 !important;
 }
 
 // =====================================
@@ -1518,7 +1624,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Mobile
 @media (max-width: 767px) {
 	.speek-category-header {
-		padding: 16px;
+		padding-top: 16px;
+		padding-bottom: 16px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 		
 		.speek-header-bar {
 			flex-direction: column;
@@ -1541,7 +1650,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 
 	.speek-category-main {
-		padding: 0 16px;
+		padding: 0 !important;
 	}
 	
 	// Post cards mobile responsive

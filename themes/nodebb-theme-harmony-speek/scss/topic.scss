@@ -3,9 +3,22 @@ body.template-topic {
 		display: none;
 	}
 
+	// Remove padding for topic landing page to allow responsive handling
 	.topic-header-container {
 		gap: 16px;
 		margin-bottom: 1rem;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.topic {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.posts-container {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
 
 	.topic-header-buttons {

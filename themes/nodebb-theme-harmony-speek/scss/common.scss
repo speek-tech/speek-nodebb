@@ -99,6 +99,25 @@ blockquote {
 	}
 }
 
+// Remove global padding to allow responsive handling
+.layout-container {
+	padding-bottom: 0 !important;
+}
+
+#panel {
+	margin-top: 0 !important;
+}
+
+#content {
+	padding: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.container-lg {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
 body:not(.page-user) {
 	#content {
 		transition: opacity 150ms linear;
