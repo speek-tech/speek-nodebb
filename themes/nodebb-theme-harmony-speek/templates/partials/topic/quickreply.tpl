@@ -1,5 +1,5 @@
 {{{ if privileges.topics:reply }}}
-<div component="topic/quickreply/container" class="speek-quick-reply d-flex flex-column mb-4" style="gap: 8px;">
+<div component="topic/quickreply/container" class="speek-quick-reply d-flex flex-column" style="gap: 8px;">
 	<label class="speek-quick-reply-label" for="quickreply-textarea">
 		[[topic:composer.replying-to, "{title}"]]
 	</label>
