@@ -19,6 +19,10 @@
 	</div>
 
 	<div class="category-inline-search-results" style="display:none;">
+		<div class="category-search-meta" style="display:none;">
+			<p class="category-search-count"></p>
+			<p class="category-search-description">Here are the posts or comments we found for your search:</p>
+		</div>
 		<div class="category-search-loading" style="display: none;">
 			<i class="fa fa-spinner fa-spin"></i>
 			<span>[[global:searching]]</span>

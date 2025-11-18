@@ -21,6 +21,8 @@
 		const inputWrapper = container.find('.category-inline-input-wrapper');
 		const loadingEl = container.find('.category-search-loading');
 		const noResultsEl = container.find('.category-search-no-results');
+		const metaEl = container.find('.category-search-meta');
+		const countEl = container.find('.category-search-count');
 		const resultsContainer = container.find('.category-inline-search-results');
 		const resultsList = $('#category-inline-search-results');
 
@@ -30,11 +32,14 @@
 			resultsList.empty();
 			hideFeedback();
 			resultsContainer.hide();
+			metaEl.hide();
+			countEl.text('');
 		}
 
 		function hideFeedback() {
 			loadingEl.hide();
 			noResultsEl.hide();
+			metaEl.hide();
 		}
 
 		function showLoading() {
@@ -104,7 +109,9 @@
 				fragments.push(buildResultItem(post, query));
 			});
 
-			if (!fragments.length) {
+			const total = fragments.length;
+
+			if (!total) {
 				showNoResults();
 				return;
 			}
@@ -112,6 +119,7 @@
 			resultsList.append(fragments.join(''));
 			resultsContainer.scrollTop(0);
 			resultsContainer.show();
+			showMeta(total);
 
 			resultsList.find('.category-search-result-item').on('click', function (e) {
 				e.preventDefault();
@@ -201,6 +209,12 @@
 		function scheduleSearch() {
 			clearTimeout(searchTimeout);
 			searchTimeout = setTimeout(performSearch, 400);
+		}
+
+		function showMeta(total) {
+			const label = total === 1 ? 'result' : 'results';
+			countEl.text(`[${total}] ${label}`);
+			metaEl.show();
 		}
 
 		searchInput.on('input', function () {
