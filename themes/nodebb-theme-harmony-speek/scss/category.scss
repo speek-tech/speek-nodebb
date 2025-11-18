@@ -727,7 +727,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 			// Mobile: Icon-only buttons - adjust padding for icons only
 			.category-pill .category-pill__trigger {
-				padding: 10px 30px !important;  // Increased padding for icon-only buttons
+				padding: 10px 15px !important;  // Increased padding for icon-only buttons
 				min-width: 48px !important;  // Increased minimum width for better touch target
 				width: auto !important;  // Auto width
 				justify-content: center !important;  // Center icons
