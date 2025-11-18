@@ -9,8 +9,8 @@
 				placeholder="Search all conversations"
 				autocomplete="off"
 			/>
-			<button class="category-inline-clear" type="button" aria-label="[[global:clear]]" style="display:none;">
-				<i class="fa fa-times-circle"></i>
+			<button class="category-inline-clear" type="button" aria-label="[[global:clear]]">
+				<i class="fa fa-times"></i>
 			</button>
 			<span class="category-inline-search-icon" aria-hidden="true">
 				<i class="fa fa-search"></i>

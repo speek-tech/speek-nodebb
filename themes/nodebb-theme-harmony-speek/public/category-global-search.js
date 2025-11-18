@@ -18,6 +18,7 @@
 
 		const searchInput = $('#category-inline-search-input');
 		const clearBtn = container.find('.category-inline-clear');
+		const inputWrapper = container.find('.category-inline-input-wrapper');
 		const loadingEl = container.find('.category-search-loading');
 		const noResultsEl = container.find('.category-search-no-results');
 		const resultsContainer = container.find('.category-inline-search-results');
@@ -205,9 +206,9 @@
 		searchInput.on('input', function () {
 			const value = $(this).val();
 			if (value.length) {
-				clearBtn.show();
+				inputWrapper.addClass('has-value');
 			} else {
-				clearBtn.hide();
+				inputWrapper.removeClass('has-value');
 			}
 
 			if (value.trim().length < 2) {
@@ -227,7 +228,7 @@
 
 		clearBtn.on('click', function () {
 			searchInput.val('');
-			clearBtn.hide();
+			inputWrapper.removeClass('has-value');
 			resetResults();
 			searchInput.focus();
 		});
