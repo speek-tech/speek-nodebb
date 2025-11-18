@@ -6,12 +6,15 @@
 				type="text"
 				id="category-inline-search-input"
 				class="category-inline-input"
-				placeholder="[[search:type-to-search]]"
+				placeholder="Search all conversations"
 				autocomplete="off"
 			/>
 			<button class="category-inline-clear" type="button" aria-label="[[global:clear]]" style="display:none;">
 				<i class="fa fa-times-circle"></i>
 			</button>
+			<span class="category-inline-search-icon" aria-hidden="true">
+				<i class="fa fa-search"></i>
+			</span>
 		</div>
 	</div>
 

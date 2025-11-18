@@ -23,30 +23,58 @@
 	display: flex;
 	align-items: center;
 	width: 100%;
-	border-radius: 8px;
-	background: #ffffff;
+	min-height: var(--input-height, 48px);
+	border-radius: var(--input-radius, 12px);
+	border: 1px solid var(--input, #e5e7eb);
+	background: var(--background, #ffffff);
 	padding: 0;
-	transition: box-shadow 0.2s, transform 0.2s;
+	transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
 	&:focus-within {
-		box-shadow: 0 18px 48px rgba(17, 24, 39, 0.16);
-		transform: translateY(-1px);
+		border-color: var(--ring, #0ea5e9);
+		box-shadow: 0 0 0 3px
+			var(--custom-outline-light-outline-50, rgba(56, 189, 248, 0.3));
+		transform: translateY(-2px);
+	}
+}
+
+.category-inline-search-icon {
+	position: absolute;
+	right: calc(var(--input-padding-x, 1rem));
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: var(--muted-foreground, #94a3b8);
+	font-size: 1rem;
+	pointer-events: none;
+
+	.fa {
+		font-size: 1em;
 	}
 }
 
 .category-inline-input {
 	flex: 1;
+	width: 100%;
+	height: 100%;
 	border: none;
 	background: transparent;
-	padding: 1.1rem 3.5rem 1.1rem 1.75rem;
-	font-size: 1.05rem;
-	color: var(--bs-body-color, #333);
+	padding: calc(var(--spacing-xs, 0.5rem) + 0.25rem)
+		calc(var(--input-padding-x, 1rem) + 2.75rem);
+	padding-left: calc(var(--input-padding-x, 1rem));
+	font-size: 0.95rem;
+	color: var(--foreground, #111827);
 	outline: none;
+	transition: color 0.2s ease;
+
+	&::placeholder {
+		color: var(--muted-foreground, #94a3b8);
+	}
 }
 
 .category-inline-clear {
 	position: absolute;
-	right: 1.25rem;
+	right: calc(var(--input-padding-x, 1rem) + 2rem);
 	background: none;
 	border: none;
 	color: var(--bs-secondary, #6c757d);
@@ -187,7 +215,6 @@
 
 	.category-inline-input {
 		font-size: 1rem;
-		padding: 1rem 3rem 1rem 1.5rem;
 	}
 
 	.category-inline-search-results {
@@ -205,7 +232,7 @@
 	}
 
 	.category-inline-input {
-		padding: 1.1rem 3.5rem 1.1rem 1.75rem;
+		font-size: 1rem;
 	}
 
 	.category-inline-search-results {
@@ -233,7 +260,7 @@
 	}
 
 	.category-inline-input {
-		padding: 1rem 3rem 1rem 1.5rem;
+		font-size: 1rem;
 	}
 
 	.category-inline-search-results {
