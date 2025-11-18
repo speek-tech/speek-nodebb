@@ -6,7 +6,7 @@
 				type="text"
 				id="category-specific-search-input"
 				class="category-inline-input"
-				placeholder="Search conversations in [{./name}]"
+				placeholder="Search conversations in {./name}"
 				autocomplete="off"
 				data-category-name="{./name}"
 				data-category-cid="{./cid}"
@@ -23,7 +23,7 @@
 	<div class="category-inline-search-results" style="display:none;">
 		<div class="category-search-meta" style="display:none;">
 			<p class="category-search-count"></p>
-			<p class="category-search-description">Here are the posts or comments we found for your search, in the <span class="category-name-highlight">[{./name}]</span> space:</p>
+			<p class="category-search-description">Here are the posts or comments we found for your search, in the <span class="category-name-highlight">{./name}</span> space:</p>
 		</div>
 		<div class="category-search-loading" style="display: none;">
 			<i class="fa fa-spinner fa-spin"></i>
