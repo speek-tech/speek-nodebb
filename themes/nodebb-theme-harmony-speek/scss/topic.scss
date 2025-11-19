@@ -28,75 +28,62 @@ body.template-topic {
 		margin-right: 0;
 		box-sizing: border-box;
 	}
-
 	.breadcrumb .breadcrumb-item:last-child {
 		display: none;
 	}
 
-	// Remove padding for topic landing page to allow responsive handling
 	.topic-header-container {
 		gap: 16px;
 		margin-bottom: 1rem;
-		padding-left: 0px !important;
-		padding-right: 0px !important;
+		padding-left: 24px !important;
+		padding-right: 24px !important;
 		margin-top: 24px;
 		max-width: 100%;
 		width: 100%;
 		overflow-x: hidden;
+		overflow-y: visible; // Allow dropdown to overflow below
 		box-sizing: border-box;
+		// Prevent auto-scrolling when dropdown opens
+		scroll-behavior: auto;
+		
+		// Ensure dropdown menus can overflow
+		* {
+			scroll-margin: 0;
+			scroll-padding: 0;
+		}
 	}
-
-	.topic {
-		padding-left: 0px !important;
-		padding-right: 0px !important;
-		max-width: 100%;
-		width: 100%;
-		overflow-x: hidden;
-		box-sizing: border-box;
-	}
-
-	.posts-container {
-		padding-left: 0px !important;
-		padding-right: 0px !important;
-		max-width: 100%;
-		width: 100%;
-		overflow-x: hidden;
-		box-sizing: border-box;
-	}
-
-	// Responsive padding for mobile and tablet
 	@include mobile {
 		.topic-header-container {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
 		}
 
 		.topic {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
 		}
 
-		.posts-container {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
-		}
+		// .posts-container {
+		// 	padding-left: 16px !important;
+		// 	padding-right: 16px !important;
+		// }
 	}
 
 	@include tablet {
 		.topic-header-container {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
 		}
 
 		.topic {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
+			padding-left: 16px !important;
+			padding-right: 16px !important;
 		}
 
-		.posts-container {
-			padding-left: 0px !important;
-			padding-right: 0px !important;
-		}
+		// .posts-container {
+		// 	padding-left: 16px !important;
+		// 	padding-right: 16px !important;
+		// }
 	}
 
 	.topic-header-buttons {
@@ -171,14 +158,9 @@ body.template-topic {
 
 	.topic-space-actions {
 		flex-wrap: wrap;
-		max-width: 100%;
-		overflow-x: hidden;
-		box-sizing: border-box;
 
 		.topic-badges {
 			flex-wrap: wrap;
-			max-width: 100%;
-			overflow-x: hidden;
 		}
 
 		.topic-actions {
@@ -187,14 +169,26 @@ body.template-topic {
 			gap: 16px;
 			flex-wrap: nowrap; // Keep sort and reply button in same row on mobile
 			flex-shrink: 0;
-			max-width: 100%;
-			overflow-x: hidden;
 			
 			// Sort dropdown takes natural width
 			.btn-group {
 				flex-shrink: 0;
 				white-space: nowrap;
-				max-width: 100%;
+				position: relative; // Ensure dropdown positioning context
+				
+				// Dropdown menu should overflow below content, not cause scrolling
+				.dropdown-menu {
+					position: absolute !important;
+					top: 100% !important;
+					left: 0 !important;
+					right: auto !important;
+					z-index: 1050 !important; // High z-index to ensure it's above other content
+					margin-top: 4px !important;
+					overflow: visible !important;
+					// Prevent browser from auto-scrolling to keep dropdown in view
+					scroll-margin: 0 !important;
+					scroll-padding: 0 !important;
+				}
 			}
 			
 			// Reply button takes remaining space
@@ -202,7 +196,6 @@ body.template-topic {
 				flex: 1 1 auto;
 				min-width: 0;
 				white-space: nowrap;
-				max-width: 100%;
 			}
 		}
 	}
@@ -363,6 +356,8 @@ body.template-topic {
 			max-width: 100%;
 			width: 100%;
 			background: transparent;
+			max-width: 100%;
+			width: 100%;
 			overflow-x: hidden;
 			box-sizing: border-box;
 		}
@@ -370,10 +365,6 @@ body.template-topic {
 		.posts {
 			// Timeline style disabled for card-based design
 			// @include timeline-style;
-			max-width: 100%;
-			width: 100%;
-			overflow-x: hidden;
-			box-sizing: border-box;
 
 			.post-header {
 				font-size: 0.8125rem;
@@ -393,55 +384,8 @@ body.template-topic {
 			[component="post/content"] {
 				background-color: #FDFDFC !important;
 				@include fix-lists();
-				max-width: 100%;
-				overflow-x: auto;
-				overflow-wrap: break-word;
-				word-wrap: break-word;
-
-				// Prevent images from overflowing
-				img {
-					max-width: 100%;
-					height: auto;
-					display: block;
-				}
-
-				// Prevent tables from overflowing
-				table {
-					max-width: 100%;
-					width: 100%;
-					table-layout: auto;
-					overflow-x: auto;
-					display: block;
-					
-					@include media-breakpoint-up(lg) {
-						word-break: initial !important;
-					}
-				}
-
-				// Prevent code blocks from overflowing
-				pre,
-				code {
-					max-width: 100%;
-					overflow-x: auto;
-					word-wrap: break-word;
-					white-space: pre-wrap;
-				}
-
-				// Prevent other block elements from overflowing
-				div,
-				p,
-				span,
-				blockquote {
-					max-width: 100%;
-					overflow-wrap: break-word;
-					word-wrap: break-word;
-				}
 
 				> blockquote {
-					max-width: 100%;
-					overflow-wrap: break-word;
-					word-wrap: break-word;
-
 					> blockquote {
 						> *:not(.blockquote) {
 							display: none;
@@ -452,6 +396,12 @@ body.template-topic {
 						> *:not(.blockquote) {
 							display: block;
 						}
+					}
+				}
+
+				@include media-breakpoint-up(lg) {
+					table { // text-break breaks table formatting
+					 	word-break:initial!important;
 					}
 				}
 			}
@@ -609,38 +559,6 @@ body.template-topic {
 					color: #525252;
 					margin: 0;
 					margin-bottom: 0 !important;
-					width: 100%;
-					max-width: 100%;
-					overflow-x: hidden;
-					overflow-wrap: break-word;
-					word-wrap: break-word;
-					word-break: break-word;
-					box-sizing: border-box;
-					
-					// Prevent images from overflowing
-					img {
-						max-width: 100%;
-						height: auto;
-						display: block;
-					}
-
-					// Prevent tables from overflowing
-					table {
-						max-width: 100%;
-						width: 100%;
-						table-layout: auto;
-						overflow-x: auto;
-						display: block;
-					}
-
-					// Prevent code blocks from overflowing
-					pre,
-					code {
-						max-width: 100%;
-						overflow-x: auto;
-						word-wrap: break-word;
-						white-space: pre-wrap;
-					}
 					
 					// Remove margin-bottom from all child elements
 					p,
@@ -648,7 +566,6 @@ body.template-topic {
 					span,
 					* {
 						margin-bottom: 0 !important;
-						max-width: 100%;
 					}
 					
 					// Remove margin from last child
@@ -659,10 +576,6 @@ body.template-topic {
 					@include fix-lists();
 
 					> blockquote {
-						max-width: 100%;
-						overflow-wrap: break-word;
-						word-wrap: break-word;
-
 						> blockquote {
 							> *:not(.blockquote) {
 								display: none;
@@ -790,7 +703,6 @@ body.template-topic {
 	// Quick Reply Styles (Figma Design)
 	.speek-quick-reply {
 		margin-top: 24px;
-		padding-bottom: 24px;
 		
 		.speek-quick-reply-label {
 			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -1281,11 +1193,6 @@ body.template-topic {
 
 @include media-breakpoint-up(lg) {
 	body.template-topic {
-		// Restore bottom padding for desktop view so posts don't butt up against the footer
-		.topic {
-			padding-bottom: 8px !important;
-		}
-
 		.topic .posts {
 			[component="post"] {
 				[component="post/actions"] {

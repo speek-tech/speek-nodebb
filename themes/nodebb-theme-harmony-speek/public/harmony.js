@@ -12,6 +12,7 @@ $(document).ready(function () {
 	fixSidebarOverflow();
 	disableSystemAlerts();
 	setupNewPostModal();
+	initializeTopicSortDropdown();
 
 	function setupSkinSwitcher() {
 		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
@@ -319,10 +320,41 @@ $(document).ready(function () {
 		});
 	}
 
+	// Initialize Bootstrap dropdowns for topic sort
+	function initializeTopicSortDropdown() {
+		require(['bootstrap'], function (bootstrap) {
+			// Initialize dropdown when page loads
+			const initDropdown = function () {
+				const dropdownElement = document.querySelector('[component="thread/sort"] .dropdown-toggle');
+				if (dropdownElement) {
+					// Check if already initialized
+					if (!bootstrap.Dropdown.getInstance(dropdownElement)) {
+						// Initialize Bootstrap dropdown
+						new bootstrap.Dropdown(dropdownElement);
+					}
+				}
+			};
+
+			// Initialize on page load
+			initDropdown();
+
+			// Re-initialize after ajaxify (page navigation)
+			$(window).on('action:ajaxify.end', function () {
+				setTimeout(initDropdown, 100); // Small delay to ensure DOM is ready
+			});
+		});
+	}
+
 	function setupNewPostModal() {
+		console.log('setupNewPostModal function called');
 		require(['jquery', 'bootstrap', 'api'], function ($, bootstrap, api) {
+			console.log('setupNewPostModal: require callback executed, dependencies loaded');
 			const modal = $('#speek-new-post-modal');
-			if (!modal.length) return;
+			if (!modal.length) {
+				console.log('Modal element not found: #speek-new-post-modal');
+				return;
+			}
+			console.log('Modal element found, setting up event handlers');
 
 			// Hide composer interface on page load if we're using modal approach
 			// Only hide if we're not replying to a topic (tid parameter)
@@ -459,6 +491,10 @@ $(document).ready(function () {
 			$(document).on('click', '.speek-open-new-post-modal', function (e) {
 				e.preventDefault();
 				e.stopPropagation();
+				window.parent.postMessage({
+					type: 'nodebb-modal',
+					action: 'open'
+				   }, '*');
 
 				const categoryId = $(this).attr('data-cid') ? parseInt($(this).attr('data-cid'), 10) : null;
 				window.speekNewPostModal.open(categoryId);
@@ -682,15 +718,35 @@ $(document).ready(function () {
 				});
 			});
 
-			// Handle modal hide - remove backdrop immediately
-			modal.on('hide.bs.modal', function () {
-				// Remove backdrop immediately when modal starts to hide
-				$('.modal-backdrop').remove();
-				$('body').removeClass('modal-open');
-			});
-
 			// Handle modal hidden - keep composer hidden permanently
 			modal.on('hidden.bs.modal', function () {
+				console.log("hidden.bs.modal event fired (jQuery)");
+				
+				// Send postMessage to parent window when modal closes
+				try {
+					console.log("Attempting to send postMessage to parent window");
+					// Always try to send postMessage, even if parent is same window (for debugging)
+					window.parent.postMessage({
+						type: 'nodebb-modal',
+						action: 'close'
+					}, '*');
+					console.log("postMessage sent successfully to parent window");
+				} catch (e) {
+					console.error("Error sending postMessage:", e);
+					// Try alternative method if postMessage fails
+					try {
+						if (window.opener) {
+							window.opener.postMessage({
+								type: 'nodebb-modal',
+								action: 'close'
+							}, '*');
+							console.log("postMessage sent via window.opener");
+						}
+					} catch (e2) {
+						console.error("Error sending postMessage via opener:", e2);
+					}
+				}
+				
 				$('body').removeClass('speek-modal-open speek-new-post-modal-open');
 				
 				// Remove backdrop if it exists
@@ -721,6 +777,15 @@ $(document).ready(function () {
 						window.location.href = config.relative_path || '/';
 					}
 				}
+				
+				// Reset form
+				form[0].reset();
+				updateCharCount();
+				$('#speek-new-post-space').empty();
+				// Clear all errors
+				hideError('speek-new-post-space', 'speek-error-space');
+				hideError('speek-new-post-title', 'speek-error-title');
+				hideError('speek-new-post-content', 'speek-error-content');
 			});
 
 			// Validation functions
@@ -854,7 +919,9 @@ $(document).ready(function () {
 						// Close modal
 						const bsModal = bootstrap.Modal.getInstance(modal[0]);
 						if (bsModal) {
+							console.log("AAAA")
 							bsModal.hide();
+							// postMessage will be sent by the hidden.bs.modal event handler
 						}
 
 						// Reset form
@@ -903,16 +970,79 @@ $(document).ready(function () {
 				$('#speek-new-post-cid').val($(this).val());
 			});
 
-			// Reset form when modal is closed
-			modal.on('hidden.bs.modal', function () {
-				form[0].reset();
-				updateCharCount();
-				$('#speek-new-post-space').empty();
-				// Clear all errors
-				hideError('speek-new-post-space', 'speek-error-space');
-				hideError('speek-new-post-title', 'speek-error-title');
-				hideError('speek-new-post-content', 'speek-error-content');
+			// Function to send postMessage when modal closes
+			function sendModalCloseMessage(source) {
+				console.log("Sending modal close message from:", source);
+				try {
+					window.parent.postMessage({
+						type: 'nodebb-modal',
+						action: 'close'
+					}, '*');
+					console.log("postMessage sent successfully from:", source);
+				} catch (e) {
+					console.error("Error sending postMessage from " + source + ":", e);
+					// Try alternative method if postMessage fails
+					try {
+						if (window.opener) {
+							window.opener.postMessage({
+								type: 'nodebb-modal',
+								action: 'close'
+							}, '*');
+							console.log("postMessage sent via window.opener from:", source);
+						}
+					} catch (e2) {
+						console.error("Error sending postMessage via opener from " + source + ":", e2);
+					}
+				}
+			}
+
+			// Direct handlers for close buttons - intercept BEFORE Bootstrap handles it
+			$(document).on('click', '#speek-new-post-modal .btn-close', function(e) {
+				console.log("Close button (X) clicked - BEFORE Bootstrap", e);
+				setTimeout(function() {
+					console.log("Close button - AFTER timeout");
+					sendModalCloseMessage('close button (X)');
+				}, 100);
 			});
+
+			$(document).on('click', '#speek-new-post-modal [data-bs-dismiss="modal"]', function(e) {
+				console.log("Discard button clicked - BEFORE Bootstrap", e);
+				setTimeout(function() {
+					console.log("Discard button - AFTER timeout");
+					sendModalCloseMessage('discard button');
+				}, 100);
+			});
+
+			// Also listen for backdrop clicks directly
+			$(document).on('click', '.modal-backdrop', function(e) {
+				console.log("Backdrop clicked directly", e);
+				setTimeout(function() {
+					sendModalCloseMessage('backdrop click');
+				}, 100);
+			});
+
+			// Also listen for ESC key
+			$(document).on('keydown', function(e) {
+				if (e.key === 'Escape' && modal.hasClass('show')) {
+					console.log("ESC key pressed while modal is open");
+				}
+			});
+
+			// Also try native event listeners as backup
+			const modalElement = document.getElementById('speek-new-post-modal');
+			if (modalElement) {
+				console.log('Attaching native event listeners to modal element');
+				modalElement.addEventListener('hide.bs.modal', function() {
+					console.log("hide.bs.modal event fired (native)");
+				});
+				modalElement.addEventListener('hidden.bs.modal', function() {
+					console.log("hidden.bs.modal event fired (native)");
+					sendModalCloseMessage('hidden.bs.modal event (native)');
+				});
+			} else {
+				console.log('Modal element not found for native event listeners');
+			}
+
 		});
 	}
 });

@@ -6,36 +6,23 @@
 }
 
 // New Post Creation Modal (Figma Design)
-// Make backdrop transparent for new post modal and ensure it's removed
-body.speek-new-post-modal-open .modal-backdrop {
-	background-color: transparent !important;
-	opacity: 0 !important;
-}
-
-// Always hide/remove backdrop for new post modal
-#speek-new-post-modal ~ .modal-backdrop,
-.modal-backdrop:has(+ #speek-new-post-modal),
-body:has(#speek-new-post-modal) .modal-backdrop {
-	display: none !important;
-	opacity: 0 !important;
-	visibility: hidden !important;
-}
-
-// Remove backdrop after modal is closed
-body:not(.speek-new-post-modal-open) .modal-backdrop {
-	display: none !important;
-}
-
-// Target the modal dialog for the new post modal
-#speek-new-post-modal .modal-dialog {
-	box-shadow: none !important;
+// Modal dialog positioning for extra large desktops
+#speek-new-post-modal {
+	.modal-dialog.modal-dialog-centered {
+		@include desktop-xl {
+			// On extra large desktops (≥1280px), shift modal to the right to account for sidebar
+			// This makes it appear visually centered in the main content area
+			// Sidebar is 200px wide, so we offset by half of that (100px) to center in content area
+			transform: translateX(100px); // Shift right by half sidebar width to visually center
+		}
+	}
 }
 
 .speek-new-post-modal-content {
 	background: #FDFDFC;
 	border: 1px solid #F3F1E9;
 	border-radius: 10px;
-	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08), 0px 0px 40px rgba(0, 0, 0, 0.12), 0px 0px 60px rgba(0, 0, 0, 0.15) !important;
+	box-shadow: 0px 4px 6px -4px rgba(0, 0, 0, 0.05), 0px 10px 15px -3px rgba(0, 0, 0, 0.05);
 	padding: 24px;
 	max-width: 512px;
 	width: 100%;
@@ -144,11 +131,7 @@ body:not(.speek-new-post-modal-open) .modal-backdrop {
 		}
 
 		&.speek-error {
-			border-color: #DC2626 !important;
-			
-			&:focus {
-				border-color: #DC2626 !important;
-			}
+			border-color: #DC2626;
 		}
 
 		option {
@@ -204,11 +187,7 @@ body:not(.speek-new-post-modal-open) .modal-backdrop {
 		}
 
 		&.speek-error {
-			border-color: #DC2626 !important;
-			
-			&:focus {
-				border-color: #DC2626 !important;
-			}
+			border-color: #DC2626;
 		}
 	}
 }
@@ -463,7 +442,6 @@ body.speek-composer-hidden {
 		padding: 16px;
 		max-width: 100%;
 		margin: 16px;
-		
 	}
 }
 
