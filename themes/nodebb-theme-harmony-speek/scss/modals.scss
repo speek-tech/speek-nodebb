@@ -4,3 +4,452 @@
 		right: $spacer * 4;
 	}
 }
+
+// New Post Creation Modal (Figma Design)
+// Make backdrop transparent for new post modal
+body.speek-new-post-modal-open .modal-backdrop {
+	background-color: transparent !important;
+	opacity: 0 !important;
+}
+
+// Target the modal dialog for the new post modal
+#speek-new-post-modal .modal-dialog {
+	box-shadow: none !important;
+}
+
+.speek-new-post-modal-content {
+	background: #FDFDFC;
+	border: 1px solid #F3F1E9;
+	border-radius: 10px;
+	box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.08), 0px 0px 40px rgba(0, 0, 0, 0.12), 0px 0px 60px rgba(0, 0, 0, 0.15) !important;
+	padding: 24px;
+	max-width: 512px;
+	width: 100%;
+	margin: 0 auto;
+
+	.speek-new-post-modal-header {
+		border-bottom: none;
+		padding: 0 0 16px 0;
+		margin-bottom: 0;
+
+		.speek-new-post-modal-title {
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+			font-size: 18px;
+			font-weight: 600;
+			line-height: 1.5555555555555556em;
+			color: #122023;
+			margin: 0;
+		}
+
+		.btn-close {
+			opacity: 1;
+			background: transparent;
+			border: none;
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	.speek-new-post-modal-body {
+		padding: 0;
+		margin: 0;
+
+		.speek-new-post-form-content {
+			display: flex;
+			flex-direction: column;
+			gap: 16px;
+		}
+	}
+
+	.speek-new-post-modal-footer {
+		border-top: none;
+		padding: 16px 0 0 0;
+		margin-top: 0;
+		display: flex;
+		flex-direction: row;
+		justify-content: space-between;
+		align-items: center;
+		gap: 8px;
+	}
+}
+
+// Form Elements
+.speek-form-group {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+	width: 100%;
+
+	.speek-form-label {
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 16px;
+		font-weight: 400;
+		line-height: 1.5em;
+		color: #122023;
+		margin: 0;
+
+		.speek-required-asterisk {
+			color: #DC2626;
+			margin-left: 4px;
+			font-weight: 500;
+		}
+	}
+}
+
+// Select Dropdown
+.speek-select-wrapper {
+	position: relative;
+	width: 100%;
+
+	.speek-select {
+		width: 100%;
+		padding: 6px 16px;
+		background: #FDFDFC;
+		border: 1px solid #D4D4D4;
+		border-radius: 8px;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.4285714285714286em;
+		color: #122023;
+		appearance: none;
+		box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+		height: auto;
+		min-height: 36px;
+		transition: border-color 0.2s ease;
+
+		&:focus {
+			outline: none;
+			border-color: #D4D4D4;
+			box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+		}
+
+		&:focus-visible {
+			outline: none;
+		}
+
+		&.speek-error {
+			border-color: #DC2626 !important;
+			
+			&:focus {
+				border-color: #DC2626 !important;
+			}
+		}
+
+		option {
+			background: #FDFDFC;
+			color: #122023;
+		}
+	}
+
+	.speek-select-chevron {
+		position: absolute;
+		right: 16px;
+		top: 50%;
+		transform: translateY(-50%);
+		pointer-events: none;
+		width: 16px;
+		height: 16px;
+		color: #525252;
+	}
+}
+
+// Input Field
+.speek-input-wrapper {
+	width: 100%;
+
+	.speek-input {
+		width: 100%;
+		padding: 6px 16px;
+		background: #FDFDFC;
+		border: 1px solid #D4D4D4;
+		border-radius: 8px;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.4285714285714286em;
+		color: #122023;
+		box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+		height: auto;
+		min-height: 36px;
+		transition: border-color 0.2s ease;
+
+		&::placeholder {
+			color: #525252;
+		}
+
+		&:focus {
+			outline: none;
+			border-color: #D4D4D4;
+			box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+		}
+
+		&:focus-visible {
+			outline: none;
+		}
+
+		&.speek-error {
+			border-color: #DC2626 !important;
+			
+			&:focus {
+				border-color: #DC2626 !important;
+			}
+		}
+	}
+}
+
+// Textarea
+.speek-textarea-wrapper {
+	position: relative;
+	width: 100%;
+	border: 1px solid #D4D4D4;
+	border-radius: 8px;
+	box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+	padding: 8px 12px;
+	display: flex;
+	flex-direction: column;
+	gap: 4px;
+	min-height: 80px;
+	transition: border-color 0.2s ease;
+
+	&:focus-within {
+		border-color: #D4D4D4;
+		box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+	}
+
+	&.speek-error {
+		border-color: #DC2626 !important;
+		
+		&:focus-within {
+			border-color: #DC2626 !important;
+		}
+	}
+
+	.speek-textarea {
+		width: 100%;
+		min-height: 80px;
+		border: none !important;
+		background: transparent;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 14px;
+		font-weight: 400;
+		line-height: 1.4285714285714286em;
+		color: #122023;
+		resize: none;
+		padding: 0;
+		margin: 0;
+
+		&::placeholder {
+			color: #525252;
+		}
+
+		&:focus {
+			outline: none;
+			border: none !important;
+		}
+	}
+
+	.speek-char-count {
+		display: flex;
+		align-items: center;
+		justify-content: flex-start;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+		font-size: 12px;
+		font-weight: 700;
+		line-height: 1.3333333333333333em;
+		color: #D4D4D4;
+		margin-top: 4px;
+
+		#speek-char-current {
+			color: #D4D4D4;
+		}
+
+		#speek-char-max {
+			color: #D4D4D4;
+		}
+	}
+}
+
+// Formatting Toolbar
+.speek-formatting-toolbar {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+	margin-top: 4px;
+	align-items: center;
+	justify-content: flex-start;
+	flex-wrap: wrap;
+
+	.speek-format-btn {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		width: 36px;
+		height: 36px;
+		border-radius: 50%;
+		border: 1px solid #D4D4D4;
+		background: #FFFFFF;
+		box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+		cursor: pointer;
+		padding: 0;
+		margin: 0;
+		transition: all 0.2s ease;
+
+		&:hover {
+			background: #F5F5F5;
+			border-color: #355E66;
+		}
+
+		&:active {
+			transform: scale(0.95);
+		}
+
+		&:focus {
+			outline: none;
+		}
+
+		.speek-format-icon {
+			width: 20px;
+			height: 20px;
+			color: #355E66;
+			stroke-width: 1.33;
+		}
+	}
+}
+
+// Error Messages
+.speek-error-message {
+	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 400;
+	line-height: 1.4285714285714286em;
+	color: #DC2626;
+	margin-top: 4px;
+	min-height: 20px;
+	display: none;
+
+	&.show {
+		display: block;
+	}
+}
+
+// Modal Buttons
+.speek-btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 8px;
+	padding: 8px 32px;
+	border-radius: 9999px;
+	font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	font-size: 14px;
+	font-weight: 700;
+	line-height: 1.4285714285714286em;
+	text-decoration: none;
+	border: none;
+	cursor: pointer;
+	transition: all 0.2s ease;
+	height: 44px;
+	box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+
+	&--destructive {
+		background: #DC2626;
+		color: #FEF2F2;
+
+		&:hover {
+			background: #B91C1C;
+			color: #FEF2F2;
+		}
+
+		&:focus-visible {
+			outline: none;
+			box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(220, 38, 38, 0.12);
+		}
+	}
+
+	&--primary {
+		background: #E6FF00;
+		color: #27454B;
+
+		&:hover {
+			background: #D4E600;
+			color: #27454B;
+		}
+
+		&:focus-visible {
+			outline: none;
+			box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05), 0 0 0 3px rgba(230, 255, 0, 0.3);
+		}
+	}
+}
+
+// Hide compose page interface when modal is showing
+body.speek-modal-open,
+body:has(#speek-new-post-modal.show),
+body:has(#speek-new-post-modal.showing),
+body.modal-open:has(#speek-new-post-modal) {
+	.composer,
+	[component="composer"],
+	.composer-container,
+	.composer-wrapper,
+	.composer-resizer,
+	.composer-toolbar,
+	.composer-content,
+	.composer-title,
+	.composer-category,
+	.composer-tags,
+	.composer-thumb,
+	.composer-formatting,
+	.composer-help {
+		display: none !important;
+		visibility: hidden !important;
+		opacity: 0 !important;
+		height: 0 !important;
+		overflow: hidden !important;
+	}
+}
+
+// Hide entire compose page content when modal is open
+body.speek-modal-open #content > .composer,
+body.speek-modal-open .page-compose,
+body.speek-modal-open [data-template="compose"] {
+	display: none !important;
+}
+
+// Permanently hide composer on compose page when modal has been used
+body.speek-composer-hidden {
+	.composer,
+	[component="composer"],
+	.composer-container,
+	.composer-wrapper,
+	.composer-resizer,
+	.composer-toolbar,
+	.composer-content,
+	.composer-title,
+	.composer-category,
+	.composer-tags,
+	.composer-thumb,
+	.composer-formatting,
+	.composer-help,
+	#content > .composer,
+	.page-compose,
+	[data-template="compose"] {
+		display: none !important;
+		visibility: hidden !important;
+		opacity: 0 !important;
+		height: 0 !important;
+		overflow: hidden !important;
+	}
+}
+
+// Responsive styles
+@include mobile {
+	.speek-new-post-modal-content {
+		padding: 16px;
+		max-width: 100%;
+		margin: 16px;
+		
+	}
+}
+

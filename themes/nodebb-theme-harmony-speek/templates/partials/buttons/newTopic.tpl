@@ -1,5 +1,5 @@
 <noscript><div class="dropdown" component="category-selector"></noscript>
-<button component="category/post" for="category-dropdown-check" class="btn btn-primary btn-sm text-nowrap" id="new_topic" role="button">
+<button component="category/post" for="category-dropdown-check" class="btn btn-primary btn-sm text-nowrap speek-open-new-post-modal" id="new_topic" role="button">
 	[[category:new-topic-button]]
 </button>
 <noscript>
@@ -7,7 +7,7 @@
 	<ul component="category/list" class="dropdown-menu p-1 text-sm category-dropdown-menu ghost-scrollbar" role="menu">
 		{{{each categories}}}
 		<li role="presentation" class="category {{{if categories.disabledClass}}}disabled{{{end}}}">
-			<a role="menu-item" href="{config.relative_path}/compose?cid={categories.cid}">{categories.level}
+			<a role="menu-item" href="#" class="speek-open-new-post-modal" data-cid="{categories.cid}">{categories.level}
 				<span component="category-markup">
 					<div class="category-item d-inline-block">
 						{buildCategoryIcon(@value, "24px", "rounded-circle")}

@@ -30,7 +30,7 @@ define('quickreply', [
 			const charCurrentEl = components.get('topic/quickreply/char-current');
 			if (charCountEl.length && charCurrentEl.length) {
 				const currentLength = element.val().length;
-				const maxLength = 1000;
+				const maxLength = 5000;
 				charCurrentEl.text(currentLength);
 			}
 		};
