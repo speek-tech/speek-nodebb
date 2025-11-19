@@ -924,6 +924,22 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				max-width: 100% !important;  // Ensure it doesn't exceed container width
 				box-sizing: border-box !important;  // Include padding in width calculation
 			}
+			overflow: visible !important;  // Allow content to be visible
+			
+			.d-flex.flex-row.p-2 {
+				flex-direction: row !important;  // Row layout on tablet
+				justify-content: space-between !important;  // Figma: space-between
+				gap: 10px !important;  // Figma: 10px gap
+				align-items: center !important;
+				padding-top: 16px !important;
+				padding-bottom: 16px !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+				flex-wrap: nowrap !important;  // Keep everything in one horizontal line
+				min-width: 0 !important;  // Allow container to shrink
+				max-width: 100% !important;  // Ensure it doesn't exceed container width
+				box-sizing: border-box !important;  // Include padding in width calculation
+			}
 
 			// Badges container - push to left
 			.speek-topic-metrics {
@@ -975,6 +991,12 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				padding: 8px 24px !important;  // Slightly reduced padding for tablet
 				width: auto !important;  // Normal width (hug content)
 				flex-shrink: 0 !important;  // Don't shrink button itself
+			}
+		}
+		
+		.bottom-sheet {
+			.dropdown-menu {
+				top: calc(100% - 35px) !important;
 			}
 		}
 	}
