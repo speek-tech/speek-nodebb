@@ -47,11 +47,6 @@
 							<span class="badge badge-posts">
 								{humanReadableNumber(./totalTopicCount, 0)} [[global:topics]]
 							</span>
-							{{{ if ./numRecentReplies }}}
-							<span class="badge badge-new">
-								[[speek:categories.new-posts, {./numRecentReplies}]]
-							</span>
-							{{{ end }}}
 						</div>
 						{{{ end }}}
 

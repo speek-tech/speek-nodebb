@@ -66,39 +66,136 @@
 		margin: 0 !important;
 		max-width: 100% !important;
 	}
+
+	// Remove padding from widget areas
+	[data-widget-area="header"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+	}
+
+	// Remove padding from row container
+	.row.flex-fill {
+		margin-left: 0 !important;
+		margin-right: 0 !important;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all Bootstrap columns
+	.col-lg-9,
+	.col-lg-12,
+	.col-sm-12,
+	[class*="col-"] {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	// Remove padding from all container types
+	.container,
+	.container-fluid,
+	.container-lg,
+	.container-md,
+	.container-sm,
+	.container-xl,
+	.container-xxl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
 }
 
 .categories-selector-container {
 	margin-bottom: 0;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 // Ensure parent containers don't break grid
-.row.flex-fill > div.col-lg-9,
-.row.flex-fill > div.col-lg-12 {
-	max-width: 100%;
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div[class*="col-"] {
+	max-width: 100% !important;
 	margin: 0 auto;
-	padding-left: 0;
-	padding-right: 0;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
+// Remove padding from categories-page and its parent column
+// Target the column that contains categories-page
+.row.flex-fill > div.col-lg-9,
+.row.flex-fill > div.col-lg-12,
+.row.flex-fill > div.col-sm-12 {
+	&:has(.categories-page) {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Fallback for browsers that don't support :has()
+.page-categories .row.flex-fill > div.col-lg-9,
+.page-categories .row.flex-fill > div.col-lg-12,
+.page-categories .row.flex-fill > div.col-sm-12 {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 }
 
 .categories-page {
-	max-width: 100%;
-	margin: 0;
-	padding: 0;
+	max-width: 100% !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	margin-top: 24px !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	gap: 0;
-	width: 100%;
+	width: 100% !important;
 	box-sizing: border-box;
+}
+
+// Breakpoint-specific margin-top values for categories page
+@include desktop {
+	.categories-page {
+		margin-top: 32px !important;
+	}
+}
+
+@include desktop-xl {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include tablet {
+	.categories-page {
+		margin-top: 24px !important;
+	}
+}
+
+@include mobile {
+	.categories-page {
+		margin-top: 24px !important;
+	}
 }
 
 .categories-grid {
 	display: grid;
 	grid-template-columns: repeat(2, minmax(0, 1fr));
 	gap: 40px;
-	width: 100%;
-	padding: 0;
+	width: 100% !important;
+	max-width: 100% !important;
+	padding: 0 !important;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+	margin: 0 !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
 	align-self: stretch;
 	box-sizing: border-box;
 }
@@ -356,7 +453,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Category Header Section
 // =====================================
 .speek-category-header {
-	padding: 24px;
+	padding-top: 24px;
+	padding-bottom: 24px;
+	padding-left: 0 !important;
+	padding-right: 0 !important;
 	background: transparent;
 
 	.speek-header-content {
@@ -480,7 +580,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		.d-flex.flex-row.p-2 {
 			background: transparent !important;
 			border: none !important;
-			padding: 16px 24px !important;
+			padding-top: 16px !important;
+			padding-bottom: 16px !important;
+			padding-left: 0 !important;
+			padding-right: 0 !important;
 		}
 
 		[component="category/controls"] {
@@ -665,6 +768,216 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 			gap: 16px !important;  // Figma spec
 		}
 	}
+
+	// =====================================
+	// Responsive: Mobile (max-width: 767px)
+	// =====================================
+	@include mobile {
+		.topic-list-header {
+			.d-flex.flex-row.p-2 {
+				flex-direction: column !important;  // Column layout on mobile
+				gap: 12px !important;  // Figma: 12px gap between sections
+				padding: 16px !important;
+				align-items: stretch !important;
+			}
+
+			// Badges container - stays on top, side by side
+			.speek-topic-metrics {
+				display: flex !important;
+				align-items: center;
+				gap: 8px !important;  // Gap between badges
+				width: 100%;
+				margin-right: 0 !important;  // Remove me-auto on mobile
+				margin-left: 0 !important;
+				justify-content: flex-start !important;  // Align badges to left
+			}
+
+			// Controls container - row layout to keep all buttons in one line
+			.d-flex.align-items-center.gap-3.ms-auto {
+				flex-direction: row !important;  // Row layout - all buttons in one line
+				align-items: center !important;
+				gap: 16px !important;  // Gap between button groups
+				width: 100% !important;
+				margin-left: 0 !important;
+				flex-wrap: nowrap !important;  // Keep all buttons in one row
+			}
+
+			// Filter buttons row (Tracking, Recently replied) - in a row, side by side
+			[component="category/controls"] {
+				width: auto !important;
+				justify-content: flex-start !important;  // Align filter buttons to left
+				gap: 16px !important;  // 16px gap between buttons
+				flex-wrap: nowrap !important;  // Keep buttons in one row
+				display: flex !important;
+				flex-direction: row !important;
+				align-items: center !important;
+			}
+
+			// Ensure buttons can show their full content
+			.category-pill {
+				flex-shrink: 0 !important;  // Don't shrink buttons
+				min-width: auto !important;  // Allow buttons to size to content
+				width: auto !important;  // Auto width based on content
+			}
+
+			// Button group container (New post button) - keep in same row
+			.d-flex.gap-1.align-items-center {
+				width: auto !important;  // Auto width, not full width
+				gap: 16px !important;
+				display: flex !important;
+				flex-shrink: 0 !important;  // Don't shrink
+			}
+
+			// Mobile: Icon-only buttons - adjust padding for icons only
+			.category-pill .category-pill__trigger {
+				padding: 10px 15px !important;  // Increased padding for icon-only buttons
+				min-width: 48px !important;  // Increased minimum width for better touch target
+				width: auto !important;  // Auto width
+				justify-content: center !important;  // Center icons
+			}
+
+			// Mobile: Smaller button padding for other buttons
+			.btn-ghost,
+			.dropdown > button,
+			.btn-group > button {
+				padding: 8px 16px !important;  // Mobile: 8px 16px
+				min-width: auto !important;  // Allow buttons to size based on content
+				width: auto !important;  // Auto width
+				white-space: nowrap !important;  // Prevent text wrapping
+				flex-shrink: 0 !important;  // Don't shrink
+			}
+
+			// Hide text labels on mobile - show icons only
+			.category-pill__label {
+				display: none !important;  // Hide text labels on mobile
+			}
+
+			// Hide watch state labels on mobile - show icons only
+			.category-watch__state-label {
+				display: none !important;  // Hide text labels on mobile
+			}
+
+			// Category watch state - only show if not hidden
+			.category-watch__state:not(.hidden) {
+				display: inline-flex !important;
+				visibility: visible !important;
+			}
+
+			// Hide states that have the hidden class
+			.category-watch__state.hidden {
+				display: none !important;
+				visibility: hidden !important;
+			}
+
+			// Hide watch state labels even when state is visible (mobile icon-only)
+			.category-watch__state:not(.hidden) .category-watch__state-label {
+				display: none !important;  // Hide text labels on mobile, show icons only
+			}
+
+			// Ensure category watch current container is visible
+			.category-watch__current {
+				display: inline-flex !important;
+				visibility: visible !important;
+			}
+
+			// Ensure category pill trigger has proper display
+			.category-pill__trigger {
+				display: inline-flex !important;
+				align-items: center !important;
+				gap: 4px !important;  // Smaller gap between icon and caret for icon-only buttons
+			}
+
+			// Ensure caret is visible on mobile
+			.category-pill__caret {
+				display: inline-flex !important;
+				visibility: visible !important;
+			}
+
+			// Mobile: New post button - keep in same row, but wider
+			.btn-primary {
+				width: auto !important;  // Auto width, not full width
+				min-width: 120px !important;  // Minimum width for better visibility
+				padding: 8px 24px !important;  // Increased padding for wider button
+				flex-shrink: 0 !important;  // Don't shrink
+			}
+		}
+	}
+
+	// =====================================
+	// Responsive: Tablet (768px - 1023px)
+	// =====================================
+	@include tablet {
+		.topic-list-header {
+			overflow: visible !important;  // Allow content to be visible
+			
+			.d-flex.flex-row.p-2 {
+				flex-direction: row !important;  // Row layout on tablet
+				justify-content: space-between !important;  // Figma: space-between
+				gap: 10px !important;  // Figma: 10px gap
+				align-items: center !important;
+				padding-top: 16px !important;
+				padding-bottom: 16px !important;
+				padding-left: 0 !important;
+				padding-right: 0 !important;
+				flex-wrap: nowrap !important;  // Keep everything in one horizontal line
+				min-width: 0 !important;  // Allow container to shrink
+				max-width: 100% !important;  // Ensure it doesn't exceed container width
+				box-sizing: border-box !important;  // Include padding in width calculation
+			}
+
+			// Badges container - push to left
+			.speek-topic-metrics {
+				margin-right: auto !important;  // Push to left
+				margin-left: 0 !important;
+				flex-shrink: 0 !important;  // Don't shrink badges
+			}
+
+			// Controls container - ensure proper alignment in one row
+			.d-flex.align-items-center.gap-3.ms-auto {
+				flex-direction: row !important;  // All buttons in one row
+				align-items: center !important;
+				gap: 12px !important;  // Reduced gap to prevent overflow
+				margin-left: auto !important;  // Push to right
+				flex-wrap: nowrap !important;  // Prevent wrapping within button group
+				width: auto !important;  // Auto width, don't take full width
+				flex-shrink: 0 !important;  // Don't shrink button group
+			}
+
+			// Filter buttons container - override default flex: 1
+			[component="category/controls"] {
+				flex: 0 0 auto !important;  // Override default flex: 1, don't grow or shrink
+				justify-content: flex-start !important;
+				gap: 12px !important;  // Reduced gap between filter buttons
+				flex-wrap: nowrap !important;  // Keep filter buttons together
+				display: flex !important;
+				flex-direction: row !important;
+				flex-shrink: 0 !important;  // Don't shrink filter buttons
+			}
+
+			// New post button container - ensure it stays in the row
+			.d-flex.gap-1.align-items-center {
+				flex-shrink: 0 !important;  // Don't shrink
+				flex-grow: 0 !important;  // Don't grow
+				width: auto !important;  // Auto width
+				margin-left: 0 !important;  // Override any margin-left: auto from default
+			}
+
+			// Tablet: Standard button padding (8px 32px) - but allow reduction if needed
+			.category-pill .category-pill__trigger,
+			.btn-ghost,
+			.dropdown > button,
+			.btn-group > button {
+				padding: 8px 24px !important;  // Slightly reduced padding for tablet
+				flex-shrink: 0 !important;  // Don't shrink buttons themselves
+			}
+
+			.btn-primary {
+				padding: 8px 24px !important;  // Slightly reduced padding for tablet
+				width: auto !important;  // Normal width (hug content)
+				flex-shrink: 0 !important;  // Don't shrink button itself
+			}
+		}
+	}
 }
 
 // Button Styles
@@ -758,7 +1071,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 .speek-category-main {
 	width: 100%;
-	padding: 0 24px;
+	padding: 0 !important;
 }
 
 // =====================================
@@ -1311,7 +1624,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 // Mobile
 @media (max-width: 767px) {
 	.speek-category-header {
-		padding: 16px;
+		padding-top: 16px;
+		padding-bottom: 16px;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 		
 		.speek-header-bar {
 			flex-direction: column;
@@ -1334,7 +1650,7 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 
 	.speek-category-main {
-		padding: 0 16px;
+		padding: 0 !important;
 	}
 	
 	// Post cards mobile responsive

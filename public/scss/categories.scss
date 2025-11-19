@@ -267,11 +267,14 @@ ul.categories-list.list-unstyled,
 #ajaxify .categories-page,
 .container .categories-page,
 .categories-page {
-  padding: 48px 5% 48px !important;
+  padding: 0 !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
   display: flex !important;
   flex-direction: column !important;
   align-items: center !important;
   gap: 24px !important;
+  margin-top: 24px !important;
   max-width: 100% !important;
   width: 100% !important;
   box-sizing: border-box !important;
@@ -472,7 +475,10 @@ ul.categories-list.list-unstyled,
 // Mobile: 1 column layout with adjusted spacing
 @include mobile {
   .categories-page {
-    padding: 24px 5% !important;
+    padding: 0 !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-top: 24px !important;
 
     .categories-grid {
       grid-template-columns: 1fr !important;
@@ -488,6 +494,25 @@ ul.categories-list.list-unstyled,
         top: -20px !important;
       }
     }
+  }
+}
+
+// Breakpoint-specific margin overrides
+@include desktop {
+  .categories-page {
+    margin-top: 32px !important;
+  }
+}
+
+@include desktop-xl {
+  .categories-page {
+    margin-top: 24px !important;
+  }
+}
+
+@include tablet {
+  .categories-page {
+    margin-top: 24px !important;
   }
 }
 

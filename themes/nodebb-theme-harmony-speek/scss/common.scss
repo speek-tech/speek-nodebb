@@ -99,6 +99,25 @@ blockquote {
 	}
 }
 
+// Remove global padding to allow responsive handling
+.layout-container {
+	padding-bottom: 0 !important;
+}
+
+#panel {
+	margin-top: 0 !important;
+}
+
+#content {
+	padding: 0 !important;
+	margin-bottom: 0 !important;
+}
+
+.container-lg {
+	padding-left: 0 !important;
+	padding-right: 0 !important;
+}
+
 body:not(.page-user) {
 	#content {
 		transition: opacity 150ms linear;
@@ -169,4 +188,18 @@ body:not(.page-user) {
 		background-color: var(--btn-ghost-hover-color);
 		text-decoration: none;
 	}
+}
+
+// Hide built-in NodeBB alert/notification toasts (forum updated, connection lost, etc.)
+#alerts,
+#alerts .alert {
+	display: none !important;
+}
+
+// Safety net: hide any stray Bootstrap alert toasts NodeBB might append elsewhere
+.alert.alert-info,
+.alert.alert-warning,
+.alert.alert-success,
+.alert.alert-danger {
+	display: none !important;
 }

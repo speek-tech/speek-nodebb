@@ -56,6 +56,12 @@ export function error(message, timeout) {
 		return;
 	}
 
+	// Suppress emoji metadata loading errors (non-critical)
+	if (message && (message.includes('emoji metadata') || message.includes('Failed to load emoji'))) {
+		console.warn('Emoji metadata loading failed (non-critical):', message);
+		return;
+	}
+
 	alert({
 		alert_id: utils.generateUUID(),
 		title: '[[global:alert.error]]',

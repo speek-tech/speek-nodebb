@@ -52,6 +52,15 @@ define('forum/topic/posts', [
 		require(['forum/topic/replies'], function (replies) {
 			replies.onNewPost(data);
 		});
+
+		// Update reply counts from DOM after new post (temporary FE solution)
+		require(['forum/topic/postTools'], function (postTools) {
+			if (postTools.updateReplyCountsFromDOM) {
+				setTimeout(function () {
+					postTools.updateReplyCountsFromDOM();
+				}, 100);
+			}
+		});
 	};
 
 	function updateNavigatorLastPostTimestamp(post) {
