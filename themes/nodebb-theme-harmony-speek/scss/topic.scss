@@ -1280,6 +1280,11 @@ body.template-topic {
 
 @include media-breakpoint-up(lg) {
 	body.template-topic {
+		// Restore bottom padding for desktop view so posts don't butt up against the footer
+		.topic {
+			padding-bottom: 8px !important;
+		}
+
 		.topic .posts {
 			[component="post"] {
 				[component="post/actions"] {
