@@ -570,6 +570,98 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 }
 
+.speek-category-empty-state {
+	margin-top: 32px;
+	padding: 40px 32px;
+	border: 1px dashed rgba(53, 94, 102, 0.2);
+	border-radius: 24px;
+	background: rgba(253, 253, 252, 0.9);
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 24px;
+
+	&__icon {
+		width: 64px;
+		height: 64px;
+		border-radius: 50%;
+		background: rgba(182, 211, 218, 0.2);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		svg {
+			color: #355e66;
+			width: 32px;
+			height: 32px;
+			stroke-width: 1.8;
+		}
+	}
+
+	&__title {
+		font-size: 22px;
+		font-weight: 700;
+		color: #122023;
+		margin: 0;
+	}
+
+	&__subtitle {
+		font-size: 16px;
+		color: #4b5a5f;
+		margin: 0;
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		gap: 16px;
+		max-width: 520px;
+	}
+
+	&__tips {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		display: flex;
+		flex-direction: column;
+		gap: 8px;
+		font-size: 15px;
+		color: #4b5a5f;
+
+		li {
+			display: flex;
+			align-items: flex-start;
+			gap: 8px;
+
+			&::before {
+				content: "•";
+				color: #355e66;
+				font-weight: 700;
+			}
+		}
+	}
+}
+
+@include mobile {
+	.speek-category-empty-state {
+		padding: 32px 20px;
+		gap: 20px;
+
+		&__title {
+			font-size: 20px;
+		}
+
+		&__subtitle {
+			font-size: 15px;
+		}
+
+		&__tips {
+			font-size: 14px;
+		}
+	}
+}
+
 // =====================================
 // Action Bar (Styled topic-list-bar)
 // =====================================
