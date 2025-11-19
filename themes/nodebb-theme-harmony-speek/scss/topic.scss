@@ -3,9 +3,22 @@ body.template-topic {
 		display: none;
 	}
 
+	// Remove padding for topic landing page to allow responsive handling
 	.topic-header-container {
 		gap: 16px;
 		margin-bottom: 1rem;
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.topic {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+
+	.posts-container {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
 	}
 
 	.topic-header-buttons {
@@ -86,7 +99,33 @@ body.template-topic {
 		}
 
 		.topic-actions {
-			flex-wrap: wrap;
+			display: flex;
+			align-items: center;
+			gap: 16px;
+			flex-wrap: nowrap; // Keep sort and reply button in same row on mobile
+			flex-shrink: 0;
+			
+			// Sort dropdown takes natural width
+			.btn-group {
+				flex-shrink: 0;
+				white-space: nowrap;
+			}
+			
+			// Reply button takes remaining space
+			.speek-btn {
+				flex: 1 1 auto;
+				min-width: 0;
+				white-space: nowrap;
+			}
+		}
+	}
+	
+	// Hide post bar (toolbar with mark unread, watch, sort, tools, reply) on mobile and tablet
+	.topic-main-buttons,
+	[component="topic/main-buttons"],
+	.post-bar {
+		@media (max-width: 991.98px) {
+			display: none !important;
 		}
 	}
 
@@ -189,6 +228,7 @@ body.template-topic {
 			backdrop-filter: blur(12px);
 			color: #355E66;
 			box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
+			padding: 8px 16px; // Figma spec: 8px 16px for sort dropdown
 
 			&:hover {
 				background: rgba(220, 216, 200, 0.95);
@@ -281,12 +321,13 @@ body.template-topic {
 		// Topic Post Card Styles (Figma Design)
 		.speek-topic-post-card {
 			background: #FDFDFC;
+			// background-color: #FDFDFC;
 			border-radius: 16px;
-			padding: 24px;
+			padding: 16px;
 			display: flex;
 			flex-direction: column;
 			gap: 16px;
-			margin-bottom: 16px;
+			margin-bottom: 0;
 			border: none;
 			box-shadow: none;
 
@@ -300,10 +341,11 @@ body.template-topic {
 			// Override for reply cards
 			&.speek-reply-card {
 				background: #E6E2D2 !important;
+				background-color: #E6E2D2 !important;
 				border: 1px solid #E0DBC7 !important;
 				padding: 16px;
 				gap: 12px;
-				margin-bottom: 12px;
+				margin-bottom: 0;
 
 				.content,
 				[component="post/content"],
@@ -321,6 +363,7 @@ body.template-topic {
 				display: flex;
 				align-items: center;
 				gap: 12px;
+				// No background color for main post header - only for replies
 
 				.speek-user-avatar {
 					flex-shrink: 0;
@@ -426,6 +469,20 @@ body.template-topic {
 					line-height: 1.6em;
 					color: #525252;
 					margin: 0;
+					margin-bottom: 0 !important;
+					
+					// Remove margin-bottom from all child elements
+					p,
+					div,
+					span,
+					* {
+						margin-bottom: 0 !important;
+					}
+					
+					// Remove margin from last child
+					> *:last-child {
+						margin-bottom: 0 !important;
+					}
 
 					@include fix-lists();
 
@@ -556,6 +613,8 @@ body.template-topic {
 
 	// Quick Reply Styles (Figma Design)
 	.speek-quick-reply {
+		margin-top: 24px;
+		
 		.speek-quick-reply-label {
 			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 			font-size: 16px;
@@ -746,7 +805,7 @@ body.template-topic {
 			border-radius: 16px;
 			padding: 16px;
 			gap: 12px;
-			margin-bottom: 12px;
+			margin-bottom: 24px;
 
 			// Hide footer for all replies in replies container
 			.speek-post-card-footer {
@@ -792,6 +851,20 @@ body.template-topic {
 					line-height: 1.5em;
 					color: #122023;
 					background-color: #E6E2D2 !important;
+					margin-bottom: 0 !important;
+					
+					// Remove margin-bottom from all child elements
+					p,
+					div,
+					span,
+					* {
+						margin-bottom: 0 !important;
+					}
+					
+					// Remove margin from last child
+					> *:last-child {
+						margin-bottom: 0 !important;
+					}
 				}
 			}
 
@@ -809,15 +882,18 @@ body.template-topic {
 	// Nested Reply/Comment Styles (Figma Design) - Most specific selector
 	.speek-topic-post-card.speek-reply-card,
 	[component="post"].speek-reply-card .speek-topic-post-card,
-	.speek-post-replies-container .speek-topic-post-card {
+	[component="post"].speek-reply-card,
+	.speek-post-replies-container .speek-topic-post-card,
+	.speek-post-card.speek-reply-card {
 		background: #E6E2D2 !important;
+		background-color: #E6E2D2 !important;
 		border: 1px solid #E0DBC7 !important;
 		border-radius: 16px !important;
 		padding: 16px !important;
 		display: flex !important;
 		flex-direction: column !important;
 		gap: 12px !important;
-		margin-bottom: 12px !important;
+		margin-bottom: 0 !important;
 
 		// Hide footer for reply cards
 		.speek-post-card-footer {
@@ -825,6 +901,7 @@ body.template-topic {
 		}
 
 		// Ensure all nested components have the correct background
+		// Header background color only for child posts (replies)
 		.speek-post-card-header {
 			background-color: #E6E2D2 !important;
 			background: #E6E2D2 !important;
@@ -923,6 +1000,20 @@ body.template-topic {
 				color: #122023 !important;
 				background-color: #E6E2D2 !important;
 				background: #E6E2D2 !important;
+				margin-bottom: 0 !important;
+				
+				// Remove margin-bottom from all child elements
+				p,
+				div,
+				span,
+				* {
+					margin-bottom: 0 !important;
+				}
+				
+				// Remove margin from last child
+				> *:last-child {
+					margin-bottom: 0 !important;
+				}
 			}
 		}
 
@@ -959,6 +1050,55 @@ body.template-topic {
 
 	[component="topic/thumb/list"] > a{
 		height: calc($font-size-base * 4);
+	}
+	
+	// Hide progress bar and pagination
+	.navigator-mobile,
+	.pagination-block,
+	.pagination-container,
+	[component="pagination"] {
+		display: none !important;
+	}
+	
+	// Remove bottom spacing
+	.posts-container,
+	.posts.timeline {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+		margin-bottom: 0 !important;
+	}
+	
+	// Remove bottom margin from last post
+	.posts.timeline > li:last-child {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	// Remove bottom spacing from containers
+	.d-flex.flex-column.gap-3 {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	.row.mb-4 {
+		margin-bottom: 0 !important;
+	}
+	
+	// Remove bottom margin from quick reply
+	.speek-quick-reply {
+		margin-bottom: 0 !important;
+	}
+	
+	// Remove bottom spacing from topic container
+	.topic {
+		margin-bottom: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
+	// Remove footer widget area spacing
+	[data-widget-area="footer"] {
+		margin-top: 0 !important;
+		padding-top: 0 !important;
 	}
 }
 

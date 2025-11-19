@@ -13,7 +13,7 @@
 	{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
 	
 	<!-- User Info Section -->
-	<div class="speek-post-card-header">
+	<div class="speek-post-card-header" style={{backgroundColor}}>
 		<div class="speek-user-avatar position-relative" aria-hidden="true">
 			{buildAvatar(posts.user, "48px", true, "", "user/picture")}
 			{{{ if ./user.isLocal }}}
@@ -83,7 +83,7 @@
 			{{{ else }}}
 			<span class="speek-reaction-link">
 				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
-				<span class="speek-reaction-count">0</span>
+				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
 			</span>
 			{{{ end }}}
 		</div>
