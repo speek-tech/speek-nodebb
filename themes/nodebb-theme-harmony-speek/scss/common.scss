@@ -41,6 +41,20 @@ body {
 	}
 }
 
+// Disable scrolling when in iframe (detected via script adding class)
+// The parent window will resize the iframe to fit the content
+body.in-iframe {
+	overflow: hidden !important;
+	height: auto !important;
+	min-height: 100% !important;
+}
+
+// Also disable html scrolling when in iframe
+html:has(body.in-iframe) {
+	overflow: hidden !important;
+	height: auto !important;
+}
+
 @include media-breakpoint-down(lg) {
 	body:not(.page-user-chats) {
 		min-height: 100vh;
