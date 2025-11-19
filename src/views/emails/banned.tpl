@@ -13,7 +13,7 @@
 				</tr>
 				<tr>
 					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<h2 style="margin: 0 0 16px 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">[[email:banned.text1, {username}, {site_title}]]</h2>
+						<h2 style="margin: 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">[[email:banned.text1, {username}, {site_title}]]</h2>
 					</td>
 				</tr>
 				{{{ if reason }}}
@@ -22,7 +22,7 @@
 						<p style="margin: 0; color: #666666;">
 							[[email:banned.text3]]
 						</p>
-						<p style="margin: 0; padding: 6px 0px; font-size: 13px; line-height: 20px; color: #666666;">
+						<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">
 							{reason}
 						</p>
 					</td>

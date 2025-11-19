@@ -8,15 +8,20 @@
 		<td bgcolor="#ffffff">
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<tr>
-					<td style="padding: 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333333;">
-						<h1 style="margin: 0 0 10px 0; font-size: 20px; line-height: 24px; color: #000000; font-weight: normal;">[[email:welcome.text1, {site_title}]]</h1>
+					<td style="padding: 30px 30px 20px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333333;">
+						<h1 style="margin: 0; font-size: 20px; line-height: 24px; color: #000000; font-weight: normal;">[[email:welcome.text1, {site_title}]]</h1>
 						<p style="margin: 0; color: #666666;">[[email:welcome.text2]]</p>
 					</td>
 				</tr>
 				<tr>
-					<td style="padding: 24px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<p style="margin: 0; color: #666666;">Please verify your email address through the app:</p>
-						<p style="margin: 8px 0 0 0;"><a href="{app_url}" style="color: #000000; text-decoration: underline;">{app_url}</a></p>
+					<td style="padding: 0 30px 20px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; text-align: center;">
+						<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+							<tr>
+								<td class="button-td" style="border-radius: 9999px; background: #e6ff00; text-align: center;">
+									<a class="button-a" href="{app_url}" style="background: #e6ff00; border: 1px solid #e6ff00; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1; text-decoration: none; padding: 12px 24px; color: #27454b; display: inline-block; border-radius: 9999px; font-weight: bold; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.05);">Open App</a>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>

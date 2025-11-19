@@ -25,11 +25,11 @@
 							<li style="text-decoration: none; list-style-type: none; padding-bottom: 0.5em;">
 								<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 									<tr>
-										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px;">
+										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; width: 32px;">
 											{{{ if notifications.image }}}
-											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 50%" src="{notifications.image}" alt="" />
+											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #FDFDFC; box-sizing: border-box;" src="{notifications.image}" alt="" />
 											{{{ else }}}
-											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 32px; font-size: 16px; background-color: {notifications.user.icon:bgColor}; color: white; text-align: center; display: inline-block; border-radius: 50%">{notifications.user.icon:text}</div>
+											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #FDFDFC; color: #122023; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">{notifications.user.icon:text}</div>
 											{{{ end }}}
 										</td>
 										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
@@ -80,7 +80,7 @@
 									</tr>
 									<tr>
 										<td colspan="2" style="padding: 8px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; padding: 6px 0px; font-size: 13px; line-height: 20px; color: #666666;">{topTopics.teaser.content}</p>
+											<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">{topTopics.teaser.content}</p>
 										</td>
 									</tr>
 								</table>
@@ -110,7 +110,7 @@
 									</tr>
 									<tr>
 										<td colspan="2" style="padding: 8px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; padding: 6px 0px; font-size: 13px; line-height: 20px; color: #666666;">{popularTopics.teaser.content}</p>
+											<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">{popularTopics.teaser.content}</p>
 										</td>
 									</tr>
 								</table>
@@ -140,7 +140,7 @@
 									</tr>
 									<tr>
 										<td colspan="2" style="padding: 8px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; padding: 6px 0px; font-size: 13px; line-height: 20px; color: #666666;">{recent.teaser.content}</p>
+											<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">{recent.teaser.content}</p>
 										</td>
 									</tr>
 								</table>
@@ -154,9 +154,14 @@
 				</tr>
 				{{{ end }}}
 				<tr>
-					<td style="padding: 24px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<p style="margin: 0; color: #666666;">Please check the app for updates from {site_title}:</p>
-						<p style="margin: 8px 0 0 0;"><a href="{app_url}" style="color: #000000; text-decoration: underline;">{app_url}</a></p>
+					<td style="padding: 20px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; text-align: center;">
+						<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
+							<tr>
+								<td class="button-td" style="border-radius: 9999px; background: #e6ff00; text-align: center;">
+									<a class="button-a" href="{app_url}" style="background: #e6ff00; border: 1px solid #e6ff00; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1; text-decoration: none; padding: 12px 24px; color: #27454b; display: inline-block; border-radius: 9999px; font-weight: bold; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.05);">Open App</a>
+								</td>
+							</tr>
+						</table>
 					</td>
 				</tr>
 			</table>
