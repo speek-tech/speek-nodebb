@@ -6,10 +6,24 @@
 }
 
 // New Post Creation Modal (Figma Design)
-// Make backdrop transparent for new post modal
+// Make backdrop transparent for new post modal and ensure it's removed
 body.speek-new-post-modal-open .modal-backdrop {
 	background-color: transparent !important;
 	opacity: 0 !important;
+}
+
+// Always hide/remove backdrop for new post modal
+#speek-new-post-modal ~ .modal-backdrop,
+.modal-backdrop:has(+ #speek-new-post-modal),
+body:has(#speek-new-post-modal) .modal-backdrop {
+	display: none !important;
+	opacity: 0 !important;
+	visibility: hidden !important;
+}
+
+// Remove backdrop after modal is closed
+body:not(.speek-new-post-modal-open) .modal-backdrop {
+	display: none !important;
 }
 
 // Target the modal dialog for the new post modal

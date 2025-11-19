@@ -682,9 +682,20 @@ $(document).ready(function () {
 				});
 			});
 
+			// Handle modal hide - remove backdrop immediately
+			modal.on('hide.bs.modal', function () {
+				// Remove backdrop immediately when modal starts to hide
+				$('.modal-backdrop').remove();
+				$('body').removeClass('modal-open');
+			});
+
 			// Handle modal hidden - keep composer hidden permanently
 			modal.on('hidden.bs.modal', function () {
 				$('body').removeClass('speek-modal-open speek-new-post-modal-open');
+				
+				// Remove backdrop if it exists
+				$('.modal-backdrop').remove();
+				$('body').removeClass('modal-open');
 				
 				// Permanently hide composer interface after modal has been used
 				$('body').addClass('speek-composer-hidden');
