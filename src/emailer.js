@@ -175,7 +175,7 @@ Emailer.registerApp = (expressApp) => {
 
 	Emailer._defaultPayload = {
 		url: nconf.get('url'),
-		app_url: meta.config['email:appUrl'] || nconf.get('app_url') || nconf.get('url'),
+		app_url: nconf.get('APP_URL') || meta.config['email:appUrl'] || nconf.get('app_url') || nconf.get('url'),
 		site_title: meta.config.title || 'NodeBB',
 		logo: {
 			src: logo,
@@ -321,9 +321,8 @@ Emailer.sendToEmail = async (template, email, language, params) => {
 	email = result.email;
 	params = result.params;
 
-	// Generate plain text email directly instead of HTML
-	const [plaintext, subject] = await Promise.all([
-		Emailer.renderPlainText(template, params, result.language),
+	const [html, subject] = await Promise.all([
+		Emailer.renderAndTranslate(template, params, result.language),
 		translator.translate(params.subject, result.language),
 	]);
 
@@ -333,7 +332,10 @@ Emailer.sendToEmail = async (template, email, language, params) => {
 		from: meta.config['email:from'] || `no-reply@${getHostname()}`,
 		from_name: meta.config['email:from_name'] || 'NodeBB',
 		subject: `[${meta.config.title}] ${_.unescape(subject)}`,
-		plaintext: plaintext,
+		html: html,
+		plaintext: htmlToText(html, {
+			tags: { img: { format: 'skip' } },
+		}),
 		template: template,
 		uid: params.uid,
 		pid: params.pid,
@@ -363,7 +365,6 @@ Emailer.sendViaFallback = async (data) => {
 	// Some minor alterations to the data to conform to nodemailer standard
 	data.text = data.plaintext;
 	delete data.plaintext;
-	delete data.html; // Remove HTML from email - send plain text only
 
 	// use an address object https://nodemailer.com/message/addresses/
 	data.from = {
