@@ -27,9 +27,9 @@
 									<tr>
 										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; width: 32px;">
 											{{{ if notifications.image }}}
-											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #fcfbf9; box-sizing: border-box;" src="{notifications.image}" alt="" />
+											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #f6ffa3; box-sizing: border-box;" src="{notifications.image}" alt="" />
 											{{{ else }}}
-											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #fcfbf9; color: #355e66; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">{notifications.user.icon:text}</div>
+											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #f6ffa3; color: #27454b; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">{notifications.user.icon:text}</div>
 											{{{ end }}}
 										</td>
 										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">

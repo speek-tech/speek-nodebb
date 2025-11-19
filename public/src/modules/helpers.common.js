@@ -398,14 +398,14 @@ module.exports = function (utils, Benchpress, relative_path) {
 	function renderDigestAvatar(block) {
 		if (block.teaser) {
 			if (block.teaser.user.picture) {
-				return '<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #fcfbf9; box-sizing: border-box;" src="' + block.teaser.user.picture + '" title="' + block.teaser.user.username + '" />';
+				return '<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #f6ffa3; box-sizing: border-box;" src="' + block.teaser.user.picture + '" title="' + block.teaser.user.username + '" />';
 			}
-			return '<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #fcfbf9; color: #355e66; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">' + block.teaser.user['icon:text'] + '</div>';
+			return '<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #f6ffa3; color: #27454b; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">' + block.teaser.user['icon:text'] + '</div>';
 		}
 		if (block.user.picture) {
-			return '<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #fcfbf9; box-sizing: border-box;" src="' + block.user.picture + '" title="' + block.user.username + '" />';
+			return '<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #f6ffa3; box-sizing: border-box;" src="' + block.user.picture + '" title="' + block.user.username + '" />';
 		}
-		return '<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #fcfbf9; color: #355e66; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">' + block.user['icon:text'] + '</div>';
+		return '<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #f6ffa3; color: #27454b; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">' + block.user['icon:text'] + '</div>';
 	}
 
 	function userAgentIcons(data) {
