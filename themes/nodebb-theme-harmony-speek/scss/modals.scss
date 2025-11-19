@@ -13,7 +13,9 @@
 			// On extra large desktops (≥1280px), shift modal to the right to account for sidebar
 			// This makes it appear visually centered in the main content area
 			// Sidebar is 200px wide, so we offset by half of that (100px) to center in content area
-			transform: translateX(100px); // Shift right by half sidebar width to visually center
+			// transform: translateX(200px); // Shift right by half sidebar width to visually center
+			margin-left: 100px;
+			margin-right: -100px;
 		}
 	}
 }
