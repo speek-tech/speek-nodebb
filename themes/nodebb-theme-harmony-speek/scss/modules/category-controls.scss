@@ -82,7 +82,7 @@
 }
 
 .category-pill__menu {
-	margin-top: 0.5rem;
+	margin-top: 0;
 	padding: 0.25rem;
 	min-width: 220px;
 	border-radius: 18px;
@@ -242,6 +242,40 @@
 	font-size: 0.875rem;
 	line-height: 1.6;
 	color: #6b7280;
+}
+
+@include mobile {
+	.category-pill__menu {
+		min-width: 180px;
+		padding: 0.2rem 0.125rem;
+		max-height: 60vh;
+		border-radius: 16px;
+		overflow-y: auto;
+	}
+
+	.category-pill__option {
+		padding: 0.55rem 0.7rem;
+		font-size: 0.8rem;
+		line-height: 1.35;
+		gap: 0.5rem;
+	}
+
+	.category-watch__menu {
+		padding: 0.15rem 0.1rem;
+	}
+
+	.category-watch__option {
+		padding: 0.55rem 0.7rem;
+
+		.category-watch__option-title {
+			font-size: 0.85rem;
+		}
+
+		.category-watch__option-description {
+			font-size: 0.75rem;
+			line-height: 1.35;
+		}
+	}
 }
 
 @media (max-width: 575.98px) {

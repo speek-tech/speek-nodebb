@@ -41,6 +41,85 @@ body {
 	}
 }
 
+// Disable scrolling when in iframe (detected via script adding class)
+// The parent window will resize the iframe to fit the content
+body.in-iframe {
+	overflow: hidden !important;
+	height: auto !important;
+	min-height: 100% !important;
+}
+
+// Also disable html scrolling when in iframe
+html:has(body.in-iframe) {
+	overflow: hidden !important;
+	height: auto !important;
+}
+
+@mixin speek-inline-dropdown {
+	position: relative;
+
+	.dropdown-menu {
+		display: block;
+		visibility: hidden;
+		opacity: 0;
+		position: absolute !important;
+		top: calc(100% + 8px) !important;
+		left: 0 !important;
+		right: auto !important;
+		bottom: auto !important;
+		margin: 0 !important;
+		padding: 0.5rem;
+		min-width: 220px;
+		border-radius: 18px;
+		border: 1px solid rgba(53, 94, 102, 0.12);
+		background-color: rgba(252, 249, 236, 0.98);
+		box-shadow: 0 20px 40px -18px rgba(31, 45, 50, 0.25);
+		overflow: visible;
+		max-height: 75vh;
+		overflow-y: auto;
+		transform: translate3d(0, 6px, 0);
+		transition:
+			opacity 160ms ease,
+			transform 180ms ease,
+			visibility 0s linear 180ms;
+		z-index: 1000;
+		pointer-events: none;
+	}
+
+	.dropdown-menu.show {
+		opacity: 1;
+		visibility: visible;
+		transform: none;
+		pointer-events: auto;
+		transition-delay: 0s;
+	}
+}
+
+.bottom-sheet {
+	@include mobile {
+		@include speek-inline-dropdown;
+	}
+
+	@include tablet {
+		@include speek-inline-dropdown;
+	}
+}
+
+@include desktop-up {
+	.bottom-sheet {
+		position: relative;
+
+		.dropdown-menu {
+			margin-top: 0 !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			transform: translate3d(0, 8px, 0) !important;
+		}
+	}
+}
+
 @include media-breakpoint-down(lg) {
 	body:not(.page-user-chats) {
 		min-height: 100vh;
