@@ -8,18 +8,18 @@
 		<td bgcolor="#ffffff">
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<tr>
-					<td style="padding: 30px 30px 6px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333333;">
+					<td style="padding: 16px 16px 4px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333333;">
 						<h1 style="margin: 0; font-size: 20px; line-height: 24px; color: #000000; font-weight: normal;">Hello {firstname},</h1>
 					</td>
 				</tr>
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<h2 style="margin: 0 0 20px 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.title.{interval}]]</h2>
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+						<h2 style="margin: 0 0 12px 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.title.{interval}]]</h2>
 					</td>
 				</tr>
 				{{{ if notifications.length }}}
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<ul style="margin: 0; padding: 0;">
 							{{{ each notifications }}}
 							<li style="text-decoration: none; list-style-type: none; padding-bottom: 0.5em;">
@@ -27,9 +27,9 @@
 									<tr>
 										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; width: 32px;">
 											{{{ if notifications.image }}}
-											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #FDFDFC; box-sizing: border-box;" src="{notifications.image}" alt="" />
+											<img style="vertical-align: middle; width: 32px; height: 32px; border-radius: 9999px; border: 3.5px solid #FDFDFC; background: #fcfbf9; box-sizing: border-box;" src="{notifications.image}" alt="" />
 											{{{ else }}}
-											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #FDFDFC; color: #122023; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">{notifications.user.icon:text}</div>
+											<div style="vertical-align: middle; width: 32px; height: 32px; line-height: 25px; font-size: 14px; background-color: #fcfbf9; color: #355e66; text-align: center; display: inline-block; border-radius: 9999px; border: 3.5px solid #FDFDFC; font-weight: 600; box-sizing: border-box;">{notifications.user.icon:text}</div>
 											{{{ end }}}
 										</td>
 										<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
@@ -45,7 +45,7 @@
 				{{{ end }}}
 				{{{ if publicRooms.length }}}
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<h3 style="margin: 16px 0 16px 0; font-size: 15px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.unread-rooms]]</h3>
 						<ul style="margin: 0; padding: 0;">
 							{{{ each publicRooms }}}
@@ -65,7 +65,7 @@
 				{{{ end }}}
 				{{{ if topTopics.length }}}
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<h3 style="margin: 16px 0 16px 0; font-size: 15px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.top-topics, {site_title}]]</h3>
 						<ul style="margin: 0; padding: 0;">
 							{{{ each topTopics }}}
@@ -95,7 +95,7 @@
 				{{{ end }}}
 				{{{ if popularTopics.length }}}
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<h3 style="margin: 16px 0 16px 0; font-size: 15px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.popular-topics, {site_title}]]</h3>
 						<ul style="margin: 0; padding: 0;">
 							{{{ each popularTopics }}}
@@ -125,7 +125,7 @@
 				{{{ end }}}
 				{{{ if recent.length }}}
 				<tr>
-					<td style="padding: 0px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<h3 style="margin: 16px 0 16px 0; font-size: 15px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.latest-topics, {site_title}]]</h3>
 						<ul style="margin: 0; padding: 0;">
 							{{{ each recent }}}
@@ -154,7 +154,7 @@
 				</tr>
 				{{{ end }}}
 				<tr>
-					<td style="padding: 20px 30px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; text-align: center;">
+					<td style="padding: 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; text-align: center;">
 						<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
 							<tr>
 								<td class="button-td" style="border-radius: 9999px; background: #e6ff00; text-align: center;">
