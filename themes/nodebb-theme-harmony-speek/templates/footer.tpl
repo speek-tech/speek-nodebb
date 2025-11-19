@@ -21,5 +21,6 @@
 
 	<!-- IMPORT partials/footer/js.tpl -->
 	<!-- IMPORT partials/url-change-notifier.tpl -->
+	<!-- IMPORT partials/iframe-height-notifier.tpl -->
 </body>
 </html>

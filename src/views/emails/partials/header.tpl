@@ -124,8 +124,8 @@
         }
         .button-td:hover,
         .button-a:hover {
-            background: #555555 !important;
-            border-color: #555555 !important;
+            background: #f6ffa3 !important;
+            border-color: #f6ffa3 !important;
         }
 
         /* Media Queries */
@@ -156,8 +156,8 @@
 
 </head>
 
-<body width="100%" bgcolor="#f6f6f6" style="margin: 0; mso-line-height-rule: exactly;">
-    <center style="width: 100%; background: #f6f6f6; text-align: left;">
+<body width="100%" bgcolor="#ffffff" style="margin: 0; mso-line-height-rule: exactly;">
+    <center style="width: 100%; background: #ffffff; text-align: left;">
 
         <!--
             Set the email width. Defined in two places:
@@ -176,7 +176,7 @@
                 <tr>
                     <td style="padding: 20px 0; text-align: center">
                         {{{ if logo.src }}}
-                        <img src="{logo.src}" height="auto" width="{logo.width}" alt="{site_title}" border="0" style="height: auto; width: {logo.width}px; background: #f6f6f6; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; font-size: 15px; line-height: 20px; color: #333333;">
+                        <img src="{logo.src}" height="auto" width="{logo.width}" alt="{site_title}" border="0" style="height: auto; width: {logo.width}px; background: #ffffff; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 15px; line-height: 20px; color: #333333;">
                         {{{ else }}}
                         &nbsp;
                         {{{ end }}}

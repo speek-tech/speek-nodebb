@@ -8,24 +8,20 @@
 		<td bgcolor="#ffffff">
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<tr>
-					<td style="padding: 40px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; font-size: 15px; line-height: 20px; color: #555555;">
-						<h1 style="margin: 0 0 10px 0; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; font-size: 24px; line-height: 27px; color: #333333; font-weight: normal;">[[email:welcome.text1, {site_title}]]</h1>
-						<p style="margin: 0;">[[email:welcome.text2]]</p>
+					<td style="padding: 16px 16px 20px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #333333;">
+						<h1 style="margin: 0; font-size: 20px; line-height: 24px; color: #000000; font-weight: normal;">[[email:welcome.text1, {site_title}]]</h1>
+						<p style="margin: 0; color: #666666;">[[email:welcome.text2]]</p>
 					</td>
 				</tr>
 				<tr>
-					<td style="padding: 32px 40px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; font-size: 15px; line-height: 20px; color: #555555;">
-						<!-- Button : BEGIN -->
-						<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: auto;">
+					<td style="padding: 0 16px 20px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; text-align: center;">
+						<table role="presentation" cellspacing="0" cellpadding="0" border="0" align="center">
 							<tr>
-								<td style="border-radius: 3px; background: #222222; text-align: center;" class="button-td">
-									<a href="{confirm_link}" style="background: #222222; border: 15px solid #222222; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; font-size: 13px; line-height: 1.1; text-align: center; text-decoration: none; display: block; border-radius: 3px; font-weight: bold;" class="button-a">
-										<span style="color:#ffffff;" class="button-link">[[email:welcome.cta]] &rarr;</span>
-									</a>
+								<td class="button-td" style="border-radius: 9999px; background: #e6ff00; text-align: center;">
+									<a class="button-a" href="{app_url}" style="background: #e6ff00; border: 1px solid #e6ff00; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 1; text-decoration: none; padding: 12px 24px; color: #27454b; display: inline-block; border-radius: 9999px; font-weight: bold; box-shadow: 0 2px 4px -2px rgba(0,0,0,0.05), 0 4px 6px -1px rgba(0,0,0,0.05);">Open App</a>
 								</td>
 							</tr>
 						</table>
-						<!-- Button : END -->
 					</td>
 				</tr>
 			</table>
