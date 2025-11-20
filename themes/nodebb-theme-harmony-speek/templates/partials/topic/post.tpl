@@ -104,8 +104,9 @@
 	{{{ end }}}
 	{{{ end }}}
 
+	{{{ if privileges.isAdminOrMod }}}
 	<!-- Action buttons for moderators/admins -->
-	<div component="post/actions" class="speek-post-actions {{{ if !privileges.isAdminOrMod }}}d-none{{{ end }}}">
+	<div component="post/actions" class="speek-post-actions">
 		<a component="post/reply" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:reply]]"><i class="fa fa-fw fa-reply text-primary"></i></a>
 		<a component="post/quote" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:quote]]"><i class="fa fa-fw fa-quote-right text-primary"></i></a>
 		{{{ if ./announces }}}
@@ -119,6 +120,7 @@
 		<meta itemprop="downvoteCount" content="{posts.downvotes}">
 		<!-- IMPORT partials/topic/post-menu.tpl -->
 	</div>
+	{{{ end }}}
 
 	<!-- Replies container -->
 	<div component="post/replies/container" class="speek-post-replies-container my-2 hidden-empty"></div>

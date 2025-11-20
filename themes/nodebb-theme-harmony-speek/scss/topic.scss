@@ -415,7 +415,7 @@ body.template-topic {
 			padding: 16px;
 			display: flex;
 			flex-direction: column;
-			gap: 16px;
+			gap: 12px;
 			margin-bottom: 0;
 			border: none;
 			box-shadow: none;
@@ -440,9 +440,9 @@ body.template-topic {
 			// Admin delete controls in content area - show for ALL posts
 			.speek-post-admin-delete {
 				display: block !important;
-				margin-top: 12px;
-				padding-top: 12px;
-				border-top: 1px solid #F3F1E9;
+				margin-top: 6px;
+				padding-top: 0;
+				border-top: none;
 				
 				.btn-delete-admin {
 					display: inline-flex;
@@ -1132,7 +1132,7 @@ body.template-topic {
 		padding: 16px !important;
 		display: flex !important;
 		flex-direction: column !important;
-		gap: 12px !important;
+		gap: 10px !important;
 		margin-bottom: 0 !important;
 
 		// Hide footer for reply cards
