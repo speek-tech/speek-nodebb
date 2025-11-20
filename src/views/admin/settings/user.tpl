@@ -227,15 +227,15 @@
 				<input id="newbiePostDelay" type="text" class="form-control" value="0" data-field="newbiePostDelay">
 			</div>
 
-				<div class="mb-3">
-					<label class="form-label" for="initialPostDelay">[[admin/settings/user:restrictions.seconds-before-new]]</label>
-					<input id="initialPostDelay" type="text" class="form-control" value="10" data-field="initialPostDelay">
-				</div>
+			<div class="mb-3">
+				<label class="form-label" for="initialPostDelay">[[admin/settings/user:restrictions.seconds-before-new]]</label>
+				<input id="initialPostDelay" type="text" class="form-control" value="0" data-field="initialPostDelay">
+			</div>
 
-				<div class="mb-3">
-					<label class="form-label" for="newbiePostEditDuration">[[admin/settings/user:restrictions.seconds-edit-after-new]]</label>
-					<input id="newbiePostEditDuration" type="text" class="form-control" value="120" data-field="newbiePostEditDuration">
-				</div>
+			<div class="mb-3">
+				<label class="form-label" for="newbiePostEditDuration">[[admin/settings/user:restrictions.seconds-edit-after-new]]</label>
+				<input id="newbiePostEditDuration" type="text" class="form-control" value="0" data-field="newbiePostEditDuration">
+			</div>
 
 				<div class="mb-3">
 					<label class="form-label" for="newbieChatMessageDelay">[[admin/settings/user:restrictions.milliseconds-between-messages]]</label>
