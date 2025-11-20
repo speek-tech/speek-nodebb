@@ -11,6 +11,8 @@ $(document).ready(function () {
 	fixPlaceholders();
 	fixSidebarOverflow();
 	disableSystemAlerts();
+	setupNewPostModal();
+	initializeTopicSortDropdown();
 
 	function setupSkinSwitcher() {
 		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
@@ -315,6 +317,732 @@ $(document).ready(function () {
 				// Returning false stops NodeBB from rendering the alert
 				return false;
 			});
+		});
+	}
+
+	// Initialize Bootstrap dropdowns for topic sort
+	function initializeTopicSortDropdown() {
+		require(['bootstrap'], function (bootstrap) {
+			// Initialize dropdown when page loads
+			const initDropdown = function () {
+				const dropdownElement = document.querySelector('[component="thread/sort"] .dropdown-toggle');
+				if (dropdownElement) {
+					// Check if already initialized
+					if (!bootstrap.Dropdown.getInstance(dropdownElement)) {
+						// Initialize Bootstrap dropdown
+						new bootstrap.Dropdown(dropdownElement);
+					}
+				}
+			};
+
+			// Initialize on page load
+			initDropdown();
+
+			// Re-initialize after ajaxify (page navigation)
+			$(window).on('action:ajaxify.end', function () {
+				setTimeout(initDropdown, 100); // Small delay to ensure DOM is ready
+			});
+		});
+	}
+
+	function setupNewPostModal() {
+		console.log('setupNewPostModal function called');
+		require(['jquery', 'bootstrap', 'api'], function ($, bootstrap, api) {
+			console.log('setupNewPostModal: require callback executed, dependencies loaded');
+			const modal = $('#speek-new-post-modal');
+			if (!modal.length) {
+				console.log('Modal element not found: #speek-new-post-modal');
+				return;
+			}
+			console.log('Modal element found, setting up event handlers');
+
+			// Hide composer interface on page load if we're using modal approach
+			// Only hide if we're not replying to a topic (tid parameter)
+			const urlParams = new URLSearchParams(window.location.search);
+			const isReply = urlParams.has('tid');
+			const isComposePage = window.location.pathname.includes('/compose') && !isReply;
+			
+			// Always hide composer on compose page (we use modal instead)
+			if (isComposePage) {
+				$('body').addClass('speek-composer-hidden');
+				$('.composer, [component="composer"], .composer-container, .composer-wrapper, .composer-resizer, .composer-toolbar, .composer-content').hide();
+			}
+
+			// Watch for composer elements being added to DOM and hide them immediately
+			const composerObserver = new MutationObserver(function (mutations) {
+				mutations.forEach(function (mutation) {
+					mutation.addedNodes.forEach(function (node) {
+						if (node.nodeType === 1) { // Element node
+							const $node = $(node);
+							if ($node.hasClass('composer') || $node.find('.composer, [component="composer"]').length) {
+								$node.find('.composer, [component="composer"], .composer-container, .composer-wrapper').hide();
+								$node.filter('.composer, [component="composer"]').hide();
+							}
+						}
+					});
+				});
+			});
+
+			// Start observing the document body for changes
+			composerObserver.observe(document.body, {
+				childList: true,
+				subtree: true
+			});
+
+			const form = $('#speek-new-post-form');
+			const textarea = $('#speek-new-post-content');
+			const charCurrent = $('#speek-char-current');
+			const charMax = $('#speek-char-max');
+			const maxLength = parseInt(textarea.attr('maxlength')) || 5000;
+
+			// Load categories for the dropdown
+			function loadCategories() {
+				return new Promise(function (resolve, reject) {
+					api.get('/api/categories', {}, function (err, data) {
+						if (err) {
+							console.error('Error loading categories:', err);
+							reject(err);
+							return;
+						}
+						resolve(data);
+					});
+				});
+			}
+
+			// Populate category dropdown
+			function populateCategories(categories) {
+				const select = $('#speek-new-post-space');
+				select.empty();
+				
+				function addCategories(cats, level) {
+					level = level || '';
+					cats.forEach(function (category) {
+						if (category && !category.disabled) {
+							const option = $('<option></option>')
+								.attr('value', category.cid)
+								.text(level + category.name);
+							select.append(option);
+							
+							if (category.children && category.children.length > 0) {
+								addCategories(category.children, level + '  ');
+							}
+						}
+					});
+				}
+				
+				addCategories(categories);
+				
+				// Select first option by default
+				const firstOption = select.find('option:first');
+				if (firstOption.length && firstOption.val()) {
+					select.val(firstOption.val());
+					$('#speek-new-post-cid').val(firstOption.val());
+				}
+			}
+
+			// Expose open function globally first
+			window.speekNewPostModal = {
+				open: function (categoryId) {
+					const modalElement = document.getElementById('speek-new-post-modal');
+					if (modalElement) {
+						const bsModal = new bootstrap.Modal(modalElement);
+						
+						// Load categories first
+						loadCategories().then(function (data) {
+							if (data && data.categories) {
+								populateCategories(data.categories);
+								
+								if (categoryId) {
+									$('#speek-new-post-space').val(categoryId);
+									$('#speek-new-post-cid').val(categoryId);
+								}
+							}
+						}).catch(function (err) {
+							console.error('Failed to load categories:', err);
+						});
+						
+						bsModal.show();
+					}
+				}
+			};
+
+			// Intercept compose links and open modal instead
+			$(document).on('click', 'a[href*="/compose"]', function (e) {
+				// Only intercept if it's not a reply (tid parameter)
+				const href = $(this).attr('href') || '';
+				if (href.includes('tid=')) {
+					return; // Let reply links work normally
+				}
+
+				e.preventDefault();
+				e.stopPropagation();
+
+				// Get category ID from href
+				let categoryId = null;
+				const cidMatch = href.match(/[?&]cid=(\d+)/);
+				if (cidMatch) {
+					categoryId = parseInt(cidMatch[1], 10);
+				}
+
+				window.speekNewPostModal.open(categoryId);
+			});
+
+			// Handle buttons with speek-open-new-post-modal class
+			$(document).on('click', '.speek-open-new-post-modal', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				window.parent.postMessage({
+					type: 'nodebb-modal',
+					action: 'open'
+				   }, '*');
+
+				const categoryId = $(this).attr('data-cid') ? parseInt($(this).attr('data-cid'), 10) : null;
+				window.speekNewPostModal.open(categoryId);
+			});
+
+			// Update character count
+			function updateCharCount() {
+				const current = textarea.val().length;
+				charCurrent.text(current);
+			}
+
+			// Initialize character count
+			updateCharCount();
+			charMax.text(maxLength);
+
+			// Update on input
+			textarea.on('input', updateCharCount);
+
+			// Formatting toolbar functionality
+			function insertTextAtCursor(text, cursorOffset = 0) {
+				const textareaEl = textarea[0];
+				const start = textareaEl.selectionStart;
+				const end = textareaEl.selectionEnd;
+				const currentValue = textarea.val();
+				const selectedText = currentValue.substring(start, end);
+				
+				const newValue = currentValue.substring(0, start) + text + currentValue.substring(end);
+				textarea.val(newValue);
+				
+				// Set cursor position after inserted text
+				const newCursorPos = start + text.length + cursorOffset;
+				textareaEl.setSelectionRange(newCursorPos, newCursorPos);
+				textareaEl.focus();
+				
+				// Trigger input event to update character count
+				textarea.trigger('input');
+			}
+
+			function getSelectedText() {
+				const textareaEl = textarea[0];
+				const start = textareaEl.selectionStart;
+				const end = textareaEl.selectionEnd;
+				return {
+					text: textarea.val().substring(start, end),
+					start: start,
+					end: end
+				};
+			}
+
+			// Formatting functions
+			const formattingFunctions = {
+				bold: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`**${selection.text}**`);
+					} else {
+						insertTextAtCursor('****', -2);
+					}
+				},
+				italic: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`*${selection.text}*`);
+					} else {
+						insertTextAtCursor('**', -1);
+					}
+				},
+				heading: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`## ${selection.text}`);
+					} else {
+						insertTextAtCursor('## ');
+					}
+				},
+				strikethrough: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`~~${selection.text}~~`);
+					} else {
+						insertTextAtCursor('~~~~', -2);
+					}
+				},
+				list: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						const lines = selection.text.split('\n');
+						const listItems = lines.map(line => line.trim() ? `- ${line.trim()}` : '').join('\n');
+						insertTextAtCursor(listItems);
+					} else {
+						insertTextAtCursor('- ');
+					}
+				},
+				code: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor('`' + selection.text + '`');
+					} else {
+						insertTextAtCursor('``', -1);
+					}
+				},
+				link: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`[${selection.text}](url)`, -6);
+						const textareaEl = textarea[0];
+						setTimeout(() => {
+							const urlStart = textareaEl.selectionStart - 3;
+							textareaEl.setSelectionRange(urlStart, urlStart + 3);
+						}, 0);
+					} else {
+						insertTextAtCursor('[text](url)', -9);
+						const textareaEl = textarea[0];
+						setTimeout(() => {
+							const textStart = textareaEl.selectionStart - 4;
+							textareaEl.setSelectionRange(textStart, textStart + 4);
+						}, 0);
+					}
+				},
+				image: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor(`![${selection.text}](url)`, -6);
+						const textareaEl = textarea[0];
+						setTimeout(() => {
+							const urlStart = textareaEl.selectionStart - 3;
+							textareaEl.setSelectionRange(urlStart, urlStart + 3);
+						}, 0);
+					} else {
+						insertTextAtCursor('![alt text](url)', -14);
+						const textareaEl = textarea[0];
+						setTimeout(() => {
+							const altStart = textareaEl.selectionStart - 8;
+							textareaEl.setSelectionRange(altStart, altStart + 8);
+						}, 0);
+					}
+				},
+				emoji: function() {
+					insertTextAtCursor(':smile:');
+					const textareaEl = textarea[0];
+					setTimeout(() => {
+						textareaEl.setSelectionRange(textareaEl.selectionStart - 7, textareaEl.selectionStart);
+					}, 0);
+				},
+				more: function() {
+					const selection = getSelectedText();
+					if (selection.text) {
+						insertTextAtCursor('```\n' + selection.text + '\n```', -3);
+					} else {
+						insertTextAtCursor('```\n\n```', -3);
+					}
+				}
+			};
+
+			// Attach event listeners to formatting buttons
+			$(document).on('click', '.speek-format-btn', function(e) {
+				e.preventDefault();
+				const formatType = $(this).attr('data-format');
+				if (formatType && formattingFunctions[formatType]) {
+					formattingFunctions[formatType]();
+				}
+			});
+
+			// Load categories for the dropdown
+			function loadCategories() {
+				return new Promise(function (resolve, reject) {
+					api.get('/api/categories', {}, function (err, data) {
+						if (err) {
+							console.error('Error loading categories:', err);
+							reject(err);
+							return;
+						}
+						resolve(data);
+					});
+				});
+			}
+
+			// Populate category dropdown
+			function populateCategories(categories) {
+				const select = $('#speek-new-post-space');
+				select.empty();
+				
+				function addCategories(cats, level) {
+					level = level || '';
+					cats.forEach(function (category) {
+						if (category && !category.disabled) {
+							const option = $('<option></option>')
+								.attr('value', category.cid)
+								.text(level + category.name);
+							select.append(option);
+							
+							if (category.children && category.children.length > 0) {
+								addCategories(category.children, level + '  ');
+							}
+						}
+					});
+				}
+				
+				addCategories(categories);
+				
+				// Select first option by default
+				const firstOption = select.find('option:first');
+				if (firstOption.length && firstOption.val()) {
+					select.val(firstOption.val());
+					$('#speek-new-post-cid').val(firstOption.val());
+				}
+			}
+
+			// Hide composer interface when modal is shown
+			modal.on('show.bs.modal', function () {
+				// Hide composer interface
+				$('.composer, [component="composer"], .composer-container, .composer-wrapper').hide();
+				$('body').addClass('speek-modal-open speek-new-post-modal-open');
+				
+				loadCategories().then(function (data) {
+					if (data && data.categories) {
+						populateCategories(data.categories);
+					}
+				}).catch(function (err) {
+					console.error('Failed to load categories:', err);
+				});
+			});
+
+			// Handle modal hidden - keep composer hidden permanently
+			modal.on('hidden.bs.modal', function () {
+				console.log("hidden.bs.modal event fired (jQuery)");
+				
+				// Send postMessage to parent window when modal closes
+				try {
+					console.log("Attempting to send postMessage to parent window");
+					// Always try to send postMessage, even if parent is same window (for debugging)
+					window.parent.postMessage({
+						type: 'nodebb-modal',
+						action: 'close'
+					}, '*');
+					console.log("postMessage sent successfully to parent window");
+				} catch (e) {
+					console.error("Error sending postMessage:", e);
+					// Try alternative method if postMessage fails
+					try {
+						if (window.opener) {
+							window.opener.postMessage({
+								type: 'nodebb-modal',
+								action: 'close'
+							}, '*');
+							console.log("postMessage sent via window.opener");
+						}
+					} catch (e2) {
+						console.error("Error sending postMessage via opener:", e2);
+					}
+				}
+				
+				$('body').removeClass('speek-modal-open speek-new-post-modal-open');
+				
+				// Remove backdrop if it exists
+				$('.modal-backdrop').remove();
+				$('body').removeClass('modal-open');
+				
+				// Permanently hide composer interface after modal has been used
+				$('body').addClass('speek-composer-hidden');
+				$('.composer, [component="composer"], .composer-container, .composer-wrapper, .composer-resizer, .composer-toolbar, .composer-content, .composer-title, .composer-category, .composer-tags, .composer-thumb, .composer-formatting, .composer-help').hide();
+				
+				// Continuously check and hide composer (in case it gets re-rendered)
+				const hideComposerInterval = setInterval(function () {
+					$('.composer, [component="composer"], .composer-container, .composer-wrapper, .composer-resizer, .composer-toolbar, .composer-content').hide();
+				}, 100);
+				
+				// Clear interval after 5 seconds (composer shouldn't appear after that)
+				setTimeout(function () {
+					clearInterval(hideComposerInterval);
+				}, 5000);
+				
+				// If we're on the compose page, redirect away to prevent showing the old interface
+				const isComposePage = window.location.pathname.includes('/compose') && !window.location.search.includes('tid=');
+				if (isComposePage) {
+					// Redirect to home page or previous page
+					if (document.referrer && document.referrer !== window.location.href) {
+						window.location.href = document.referrer;
+					} else {
+						window.location.href = config.relative_path || '/';
+					}
+				}
+				
+				// Reset form
+				form[0].reset();
+				updateCharCount();
+				$('#speek-new-post-space').empty();
+				// Clear all errors
+				hideError('speek-new-post-space', 'speek-error-space');
+				hideError('speek-new-post-title', 'speek-error-title');
+				hideError('speek-new-post-content', 'speek-error-content');
+			});
+
+			// Validation functions
+			function showError(fieldId, errorMessageId, message) {
+				const field = $('#' + fieldId);
+				const errorEl = $('#' + errorMessageId);
+				
+				// Add error class to field
+				if (fieldId === 'speek-new-post-space') {
+					field.addClass('speek-error');
+				} else if (fieldId === 'speek-new-post-title') {
+					field.addClass('speek-error');
+				} else if (fieldId === 'speek-new-post-content') {
+					field.closest('.speek-textarea-wrapper').addClass('speek-error');
+				}
+				
+				// Show error message
+				if (errorEl.length) {
+					errorEl.text(message).addClass('show');
+				}
+			}
+
+			function hideError(fieldId, errorMessageId) {
+				const field = $('#' + fieldId);
+				const errorEl = $('#' + errorMessageId);
+				
+				// Remove error class from field
+				if (fieldId === 'speek-new-post-space') {
+					field.removeClass('speek-error');
+				} else if (fieldId === 'speek-new-post-title') {
+					field.removeClass('speek-error');
+				} else if (fieldId === 'speek-new-post-content') {
+					field.closest('.speek-textarea-wrapper').removeClass('speek-error');
+				}
+				
+				// Hide error message
+				if (errorEl.length) {
+					errorEl.removeClass('show').text('');
+				}
+			}
+
+			function validateSpace() {
+				const spaceValue = $('#speek-new-post-space').val();
+				if (!spaceValue || spaceValue === '') {
+					showError('speek-new-post-space', 'speek-error-space', 'Please select a space');
+					return false;
+				}
+				hideError('speek-new-post-space', 'speek-error-space');
+				return true;
+			}
+
+			function validateTitle() {
+				const titleValue = $('#speek-new-post-title').val().trim();
+				if (!titleValue) {
+					showError('speek-new-post-title', 'speek-error-title', 'Post title is required');
+					return false;
+				}
+				if (titleValue.length < 3) {
+					showError('speek-new-post-title', 'speek-error-title', 'Post title must be at least 3 characters');
+					return false;
+				}
+				hideError('speek-new-post-title', 'speek-error-title');
+				return true;
+			}
+
+			function validateContent() {
+				const contentValue = textarea.val().trim();
+				if (!contentValue) {
+					showError('speek-new-post-content', 'speek-error-content', 'Post content is required');
+					return false;
+				}
+				if (contentValue.length < 10) {
+					showError('speek-new-post-content', 'speek-error-content', 'Post content must be at least 10 characters');
+					return false;
+				}
+				hideError('speek-new-post-content', 'speek-error-content');
+				return true;
+			}
+
+			function validateForm() {
+				let isValid = true;
+				isValid = validateSpace() && isValid;
+				isValid = validateTitle() && isValid;
+				isValid = validateContent() && isValid;
+				return isValid;
+			}
+
+			// Clear errors when user starts typing/selecting (but don't validate)
+			$('#speek-new-post-space').on('change', function() {
+				hideError('speek-new-post-space', 'speek-error-space');
+			});
+
+			$('#speek-new-post-title').on('input', function() {
+				hideError('speek-new-post-title', 'speek-error-title');
+			});
+
+			textarea.on('input', function() {
+				hideError('speek-new-post-content', 'speek-error-content');
+			});
+
+			// Handle form submission
+			form.on('submit', function (e) {
+				e.preventDefault();
+
+				// Validate all fields
+				if (!validateForm()) {
+					// Focus on first invalid field
+					if (!$('#speek-new-post-space').val()) {
+						$('#speek-new-post-space').focus();
+					} else if (!$('#speek-new-post-title').val().trim()) {
+						$('#speek-new-post-title').focus();
+					} else if (!textarea.val().trim()) {
+						textarea.focus();
+					}
+					return;
+				}
+
+				const formData = {
+					cid: $('#speek-new-post-cid').val() || $('#speek-new-post-space').val(),
+					title: $('#speek-new-post-title').val().trim(),
+					content: textarea.val().trim(),
+					_csrf: $('input[name="_csrf"]').val()
+				};
+
+				// Submit via AJAX
+				$.ajax({
+					url: form.attr('action'),
+					method: 'POST',
+					data: formData,
+					success: function (response) {
+						// Close modal
+						const bsModal = bootstrap.Modal.getInstance(modal[0]);
+						if (bsModal) {
+							console.log("AAAA")
+							bsModal.hide();
+							// postMessage will be sent by the hidden.bs.modal event handler
+						}
+
+						// Reset form
+						form[0].reset();
+						updateCharCount();
+						// Clear all errors
+						hideError('speek-new-post-space', 'speek-error-space');
+						hideError('speek-new-post-title', 'speek-error-title');
+						hideError('speek-new-post-content', 'speek-error-content');
+
+						// Reload page or redirect
+						if (response && response.redirect) {
+							window.location.href = response.redirect;
+						} else {
+							window.location.reload();
+						}
+					},
+					error: function (xhr) {
+						console.error('Error submitting post:', xhr);
+						
+						// Handle server-side validation errors
+						if (xhr.responseJSON && xhr.responseJSON.errors) {
+							const errors = xhr.responseJSON.errors;
+							
+							if (errors.cid || errors.space) {
+								showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+							}
+							
+							if (errors.title) {
+								showError('speek-new-post-title', 'speek-error-title', errors.title);
+							}
+							
+							if (errors.content) {
+								showError('speek-new-post-content', 'speek-error-content', errors.content);
+							}
+						} else {
+							// Generic error message
+							showError('speek-new-post-content', 'speek-error-content', 'Error submitting post. Please try again.');
+						}
+					}
+				});
+			});
+
+			// Handle space/category selection
+			$('#speek-new-post-space').on('change', function () {
+				$('#speek-new-post-cid').val($(this).val());
+			});
+
+			// Function to send postMessage when modal closes
+			function sendModalCloseMessage(source) {
+				console.log("Sending modal close message from:", source);
+				try {
+					window.parent.postMessage({
+						type: 'nodebb-modal',
+						action: 'close'
+					}, '*');
+					console.log("postMessage sent successfully from:", source);
+				} catch (e) {
+					console.error("Error sending postMessage from " + source + ":", e);
+					// Try alternative method if postMessage fails
+					try {
+						if (window.opener) {
+							window.opener.postMessage({
+								type: 'nodebb-modal',
+								action: 'close'
+							}, '*');
+							console.log("postMessage sent via window.opener from:", source);
+						}
+					} catch (e2) {
+						console.error("Error sending postMessage via opener from " + source + ":", e2);
+					}
+				}
+			}
+
+			// Direct handlers for close buttons - intercept BEFORE Bootstrap handles it
+			$(document).on('click', '#speek-new-post-modal .btn-close', function(e) {
+				console.log("Close button (X) clicked - BEFORE Bootstrap", e);
+				setTimeout(function() {
+					console.log("Close button - AFTER timeout");
+					sendModalCloseMessage('close button (X)');
+				}, 100);
+			});
+
+			$(document).on('click', '#speek-new-post-modal [data-bs-dismiss="modal"]', function(e) {
+				console.log("Discard button clicked - BEFORE Bootstrap", e);
+				setTimeout(function() {
+					console.log("Discard button - AFTER timeout");
+					sendModalCloseMessage('discard button');
+				}, 100);
+			});
+
+			// Also listen for backdrop clicks directly
+			$(document).on('click', '.modal-backdrop', function(e) {
+				console.log("Backdrop clicked directly", e);
+				setTimeout(function() {
+					sendModalCloseMessage('backdrop click');
+				}, 100);
+			});
+
+			// Also listen for ESC key
+			$(document).on('keydown', function(e) {
+				if (e.key === 'Escape' && modal.hasClass('show')) {
+					console.log("ESC key pressed while modal is open");
+				}
+			});
+
+			// Also try native event listeners as backup
+			const modalElement = document.getElementById('speek-new-post-modal');
+			if (modalElement) {
+				console.log('Attaching native event listeners to modal element');
+				modalElement.addEventListener('hide.bs.modal', function() {
+					console.log("hide.bs.modal event fired (native)");
+				});
+				modalElement.addEventListener('hidden.bs.modal', function() {
+					console.log("hidden.bs.modal event fired (native)");
+					sendModalCloseMessage('hidden.bs.modal event (native)');
+				});
+			} else {
+				console.log('Modal element not found for native event listeners');
+			}
+
 		});
 	}
 });
