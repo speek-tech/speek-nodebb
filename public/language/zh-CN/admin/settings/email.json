@@ -4,10 +4,8 @@
 	"address-help": "下面的电子邮件地址代表收件人在“发件人”和“回复”中所看到的地址。",
 	"from": "发送者",
 	"from-help": "用于邮件中显示的发送者",
-
 	"confirmation-settings": "确认",
 	"confirmation.expiry": "验证邮件链接有效的小时数",
-
 	"smtp-transport": "SMTP 通信",
 	"smtp-transport.enabled": "启用 SMTP 通信",
 	"smtp-transport-help": "您可以从列表中选取一个已知的服务或自定义。",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "池式连接可防止 NodeBB 为每封邮件创建新的连接。此选项仅适用于启用SMTP传输的情况下。",
 	"smtp-transport.allow-self-signed": "允许自签名证书",
 	"smtp-transport.allow-self-signed-help": "启用此设置可允许您使用自签名或无效的 TLS 证书。",
-
 	"template": "编辑电子邮件模板",
 	"template.select": "选择电子邮件模板",
 	"template.revert": "还原为初始模板",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "默认情况下，账号有邮件地址关联的用户是已核实的用户，但有些情况下不是这样（例如，单点登录，遗留用户等等）。<strong>您自行承担启用此设置的风险</strong>——发送邮件给未核实的用户可能会违反地区性的反垃圾邮件法律。",
 	"prompt": "提示用户输入或验证他们的电子邮箱地址",
 	"prompt-help": "如果用户没有设置电子邮箱，或者他们的电子邮件未被验证，页面上将会显示警告。",
-	"sendEmailToBanned": "即使用户已被封禁也发送电子邮件"
+	"sendEmailToBanned": "即使用户已被封禁也发送电子邮件",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

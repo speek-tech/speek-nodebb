@@ -4,10 +4,8 @@
 	"address-help": "O seguinte endereço de e-mail se refere ao e-mail que o destinatário verá nos campos \"De\" e \"Responder Para\".",
 	"from": "Por Nome (From)",
 	"from-help": "O nome que será mostrado em \"De\" no e-mail.",
-
 	"confirmation-settings": "Confirmation",
 	"confirmation.expiry": "Hours to keep email confirmation link valid",
-
 	"smtp-transport": "Trasporte por SMTP",
 	"smtp-transport.enabled": "Enable SMTP Transport",
 	"smtp-transport-help": "Você pode escolher entre uma lista de serviços conhecidos ou adicionar um personalizado.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "O pool de conexões evita que o NodeBB crie uma nova conexão para cada e-mail. Esta opção se aplica apenas se o Transporte SMTP estiver habilitado.",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "Editar Modelo do E-mail",
 	"template.select": "Escolher Modelo do E-mail",
 	"template.revert": "Reverter ao Original",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "By default, users with emails associated with their account have already been verified, but there are situations where this is not the case (e.g. SSO logins, grandfathered users, etc). <strong>Enable this setting at your own risk</strong> &ndash; sending emails to unverified addresses may be a violation of regional anti-spam laws.",
 	"prompt": "Prompt users to enter or confirm their emails",
 	"prompt-help": "If a user does not have an email set, or their email is not confirmed, a warning will be shown on screen.",
-	"sendEmailToBanned": "Send emails to users even if they have been banned"
+	"sendEmailToBanned": "Send emails to users even if they have been banned",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

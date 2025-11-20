@@ -4,10 +4,8 @@
 	"address-help": "שדה אימייל זה מתייחס לכתובת שהנמען יראה בשדות \"מאת\" ו\"השב אל\".",
 	"from": "מאת",
 	"from-help": "השם 'מאת' יוצג בדוא\"ל.",
-
 	"confirmation-settings": "אישור",
 	"confirmation.expiry": "מספר שעות לשמירה על קישור אימות הדוא\"ל בתוקף",
-
 	"smtp-transport": "SMTP Transport",
 	"smtp-transport.enabled": "הפעלת SMTP Transport",
 	"smtp-transport-help": "ניתן לבחור מתוך רשימה של שירותים ידועים או להזין שירות מותאם אישית.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "איחוד חיבורים מונע מ- NodeBB ליצור חיבור חדש לכל דואר אלקטרוני. אפשרות זו חלה רק אם SMTP תחבורה מופעלת.",
 	"smtp-transport.allow-self-signed": "אפשר אישורים עם חתימה עצמית - self-signed",
 	"smtp-transport.allow-self-signed-help": "הפעלת הגדרה זו תאפשר לכם להשתמש בתעודות TLS עם חתימה עצמית או לא חוקית.",
-
 	"template": "עריכת תבנית דוא\"ל",
 	"template.select": "בחירת תבנית דוא\"ל",
 	"template.revert": "החזרה למקור",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "כברירת מחדל, משתמשים עם דוא\"ל המשויכים לחשבון שלהם כבר אומתו, אך ישנם מצבים שבהם זה לא המקרה (למשל כניסות SSO וכו'). <strong>הפעל הגדרה זו היא על אחריותכם בלבד</strong> &ndash; שליחת אימיילים לכתובות לא מאומתות עשויה להיות הפרה של חוקי אנטי-ספאם אזוריים.",
 	"prompt": "בקשו מהמשתמשים להגדיר/לאמת את כתובת הדוא\"ל שלהם",
 	"prompt-help": "הצגת אזהרה למשתמשים שהדוא\"ל שלהם לא מוגדר/לא מאומת",
-	"sendEmailToBanned": "שליחת אימיילים גם למשתמשים מורחקים"
+	"sendEmailToBanned": "שליחת אימיילים גם למשתמשים מורחקים",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

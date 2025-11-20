@@ -4,10 +4,8 @@
 	"address-help": "Følgende e-postadresse viser til e-postadressen som mottakeren vil se i \"Fra\" og \"Svar til\"-feltene. ",
 	"from": "Avsendernavn",
 	"from-help": "Avsendernavnet som skal vises i e-posten.",
-
 	"confirmation-settings": "Bekreftelsesinnstillinger",
 	"confirmation.expiry": "Antall timer lenken for e-postbekreftelse er gyldig",
-
 	"smtp-transport": "SMTP Transport",
 	"smtp-transport.enabled": "Aktiver SMTP Transport",
 	"smtp-transport-help": "Du kan velge fra en liste over kjente tjenester eller legge inn en egendefinert.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "Pooling forhindrer NodeBB fra å opprette en ny tilkobling for hver e-post. Dette gjelder bare hvis SMTP Transport er aktivert.",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "Endre e-postmal",
 	"template.select": "Velg e-postmal",
 	"template.revert": "Gjenopprett til original",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "Som standard er brukernes e-postadresser bekreftet. <strong>Aktiver denne innstillingen på egen risiko</strong> &ndash; å sende e-post til ubekreftede adresser kan bryte regionale anti-spam-regler.",
 	"prompt": "Be brukere om å legge inn eller bekrefte e-posten sin",
 	"prompt-help": "Hvis en bruker mangler e-postadresse, eller e-postadressen ikke er bekreftet, vil en advarsel vises på skjermen. ",
-	"sendEmailToBanned": "Send e-post til brukere selv om de har blitt utestengt"
+	"sendEmailToBanned": "Send e-post til brukere selv om de har blitt utestengt",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

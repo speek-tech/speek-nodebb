@@ -4,10 +4,8 @@
 	"address-help": "Die folgende E-Mail Adresse ist die E-Mail Adresse, welche dem Empfänger im \"Von\" und \"Antworten\" Bereich sehen wird.",
 	"from": "Name des Absenders",
 	"from-help": "Der Name des Absenders, welcher in der E-Mail angezeigt werden soll.",
-
 	"confirmation-settings": "Konfirmation",
 	"confirmation.expiry": "Stunden, um den E-Mail-Bestätigungslink gültig zu halten",
-
 	"smtp-transport": "SMTP Konfiguration",
 	"smtp-transport.enabled": "SMTP-Transport aktivieren",
 	"smtp-transport-help": "Du kannst aus einer Liste bekannter Email-Provider auswählen, oder einen benutzerdefinierten eingeben.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "Das Poolen von Verbindungen hindert NodeBB daran für jede neu erstellte E-Mail eine eigene Verbindung aufzubauen. Diese Option ist nur zutreffend, wenn SMTP aktiviert ist.",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "E-Mail Vorlage bearbeiten",
 	"template.select": "E-Mail Vorlage auswählen",
 	"template.revert": "Original wiederherstellen",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "Standardmäßig wurden Benutzer mit E-Mail-Adressen, die mit ihrem Konto verknüpft sind, bereits verifiziert, aber es existieren Situationen, in denen dies nicht der Fall ist (z. B. SSO-Anmeldungen, Großvater-Benutzer usw.). <strong>Aktiviere diese Einstellung auf eigenes Risiko</strong> &ndash; Das Senden von E-Mails an nicht verifizierte Adressen kann einen Verstoß gegen regionale Anti-Spam-Gesetze darstellen.",
 	"prompt": "Benutzer auffordern, ihre E-Mail-Adressen einzugeben oder zu bestätigen",
 	"prompt-help": "Wenn ein Benutzer keine E-Mail-Adresse hat oder seine E-Mail-Adresse nicht bestätigt ist, wird eine Warnung auf dem Bildschirm angezeigt.",
-	"sendEmailToBanned": "E-Mails an Benutzer senden, selbst wenn sie gesperrt wurden"
+	"sendEmailToBanned": "E-Mails an Benutzer senden, selbst wenn sie gesperrt wurden",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }
