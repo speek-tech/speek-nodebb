@@ -49,23 +49,6 @@
 
 		{{{ if topics.length }}}
 		<!-- IMPORT partials/topics_list.tpl -->
-		{{{ else }}}
-		<div class="speek-category-empty-state">
-			<div class="speek-category-empty-state__icon">
-				{buildLucideIcon("sparkles", 32, "speek-category-empty-state__sparkles")}
-			</div>
-			<div class="speek-category-empty-state__content">
-				<h2 class="speek-category-empty-state__title">No conversations yet</h2>
-				<p class="speek-category-empty-state__subtitle">
-					Be the first to start a supportive discussion in this space.
-				</p>
-				<ul class="speek-category-empty-state__tips">
-					<li>Share an experience or question related to {./name}.</li>
-					<li>Offer encouragement or helpful resources.</li>
-					<li>Remember to follow our community guidelines.</li>
-				</ul>
-			</div>
-		</div>
 		{{{ end }}}
 
 		<!-- Recent Conversations Carousel -->
