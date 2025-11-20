@@ -55,13 +55,15 @@ define('forum/topic/postTools', [
 			
 			if ($replyCountEl.length) {
 				// Count actual reply elements in the DOM
-				const $repliesContainer = $post.find('[component="post/replies/container"]');
-				let count = 0;
-				
-				if ($repliesContainer.length) {
-					// Count all post elements that are replies (have parent attribute or are in replies container)
-					const $replies = $repliesContainer.find('[component="post"]');
-					count = $replies.length;
+				const attrValue = parseInt($replyCountEl.attr('data-replies'), 10);
+				let count = !isNaN(attrValue) ? attrValue : 0;
+
+				if (isNaN(attrValue)) {
+					const $repliesContainer = $post.find('[component="post/replies/container"]');
+					if ($repliesContainer.length) {
+						const $replies = $repliesContainer.find('[component="post"]');
+						count = $replies.length;
+					}
 				}
 				
 				// Update the count display
@@ -134,10 +136,30 @@ define('forum/topic/postTools', [
 			.removeAttr('data-loaded').html('');
 	};
 
+	function setMainReplyCount(count) {
+		count = Math.max(count || 0, 0);
+		ajaxify.data.replyCount = count;
+
+		const mainPost = components.get('post', 'index', 0);
+		if (mainPost.length) {
+			const replyCountEl = mainPost.find('[component="post/reply-count/text"]').first();
+			if (replyCountEl.length) {
+				replyCountEl.attr('data-replies', count);
+				replyCountEl.text(count);
+			}
+		}
+	}
+
 	PostTools.updatePostCount = function (postCount) {
+		const replyCount = Math.max((postCount || 0) - 1, 0);
+		ajaxify.data.postcount = postCount;
 		const postCountEl = components.get('topic/post-count');
-		postCountEl.attr('title', postCount)
-			.html(helpers.humanReadableNumber(postCount));
+		postCountEl
+			.attr('data-total-posts', postCount)
+			.attr('data-reply-count', replyCount)
+			.attr('title', replyCount)
+			.html(helpers.humanReadableNumber(replyCount));
+		setMainReplyCount(replyCount);
 		navigator.setCount(postCount);
 	};
 

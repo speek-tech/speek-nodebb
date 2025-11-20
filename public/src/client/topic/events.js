@@ -194,6 +194,7 @@ define('forum/topic/events', [
 			posts.showBottomPostBar();
 		});
 		ajaxify.data.postcount -= 1;
+		ajaxify.data.replyCount = Math.max(ajaxify.data.postcount - 1, 0);
 		postTools.updatePostCount(ajaxify.data.postcount);
 		require(['forum/topic/replies'], function (replies) {
 			replies.onPostPurged(postData);

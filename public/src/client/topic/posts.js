@@ -41,6 +41,7 @@ define('forum/topic/posts', [
 		updatePostIndices(data.posts);
 
 		ajaxify.data.postcount += 1;
+		ajaxify.data.replyCount = Math.max(ajaxify.data.postcount - 1, 0);
 		postTools.updatePostCount(ajaxify.data.postcount);
 
 		if (config.usePagination) {
