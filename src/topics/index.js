@@ -147,6 +147,7 @@ Topics.getTopicsByTids = async function (tids, options) {
 				Math.max(1, topic.postcount + 2 - bookmarks[i]) :
 				Math.min(topic.postcount, bookmarks[i] + 1));
 			topic.unreplied = !topic.teaser;
+			topic.replyCount = Math.max((topic.postcount || 0) - 1, 0);
 
 			topic.icons = [];
 		}

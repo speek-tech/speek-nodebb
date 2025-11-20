@@ -41,7 +41,7 @@
         			</div>
         			<div class="speek-reaction-item">
         				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
-        				<span class="speek-reaction-count">{./postcount}</span>
+        				<span class="speek-reaction-count">{./replyCount}</span>
         			</div>
         		</div>
 	</li>
