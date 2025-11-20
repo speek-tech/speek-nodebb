@@ -51,8 +51,6 @@
 	"prompt": "Prompt users to enter or confirm their emails",
 	"prompt-help": "If a user does not have an email set, or their email is not confirmed, a warning will be shown on screen.",
 	"sendEmailToBanned": "Send emails to users even if they have been banned",
-	"watch-all-activity": "Enable watch-all notifications for all users",
-	"watch-all-activity-help": "When enabled, ALL users will receive notifications for every new post and comment in the community. This overrides individual notification preferences.",
-	"watch-all-activity-admins": "Enable watch-all notifications for administrators only",
-	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. This only applies if the above 'watch-all for all users' setting is disabled."
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

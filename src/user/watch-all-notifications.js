@@ -15,17 +15,13 @@ const WatchAllNotifications = module.exports;
 
 /**
  * Get all users who should receive watch-all notifications
- * Returns all users if admin setting is enabled, otherwise only admins if that setting is enabled
+ * Returns all administrators if the admin setting is enabled
  */
 WatchAllNotifications.getWatchAllUsers = async function () {
 	let uids = [];
 
-	// If watch-all is enabled for all users
-	if (meta.config.watchAllActivity === 1) {
-		uids = await db.getSortedSetRange('users:joindate', 0, -1);
-	} 
-	// Otherwise, if only admins should get watch-all notifications
-	else if (meta.config.watchAllActivityAdmins === 1) {
+	// Only send to admins if the setting is enabled
+	if (meta.config.watchAllActivityAdmins === 1) {
 		uids = await db.getSortedSetRange('group:administrators:members', 0, -1);
 	}
 

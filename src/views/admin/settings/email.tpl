@@ -80,39 +80,27 @@
 				<p class="form-text">[[admin/settings/email:prompt-help]]</p>
 			</div>
 
-			<div id="email-digests" class="mb-4">
-				<h5 class="fw-bold tracking-tight settings-header">[[admin/settings/email:subscriptions]]</h5>
-				<div class="form-check form-switch mb-3">
-			<input class="form-check-input" type="checkbox" id="disableEmailSubscriptions" data-field="disableEmailSubscriptions" name="disableEmailSubscriptions" />
-			<label for="disableEmailSubscriptions" class="form-check-label">[[admin/settings/email:subscriptions.disable]]</label>
-		</div>
-		<div class="form-check form-switch mb-3">
-			<input class="form-check-input" type="checkbox" id="watchAllActivity" data-field="watchAllActivity" name="watchAllActivity" />
-			<label for="watchAllActivity" class="form-check-label">[[admin/settings/email:watch-all-activity]]</label>
-			<p class="form-text">[[admin/settings/email:watch-all-activity-help]]</p>
-		</div>
-		<div class="form-check form-switch mb-3">
-			<input class="form-check-input" type="checkbox" id="watchAllActivityAdmins" data-field="watchAllActivityAdmins" name="watchAllActivityAdmins" />
-			<label for="watchAllActivityAdmins" class="form-check-label">[[admin/settings/email:watch-all-activity-admins]]</label>
-			<p class="form-text">[[admin/settings/email:watch-all-activity-admins-help]]</p>
-		</div>
-
-		<div class="mb-3">
-					<div class="mb-3 d-flex justify-content-between align-items-center">
-						<label class="form-label" for="digestHour">[[admin/settings/email:subscriptions.hour]]</label>
-						<input type="number" class="form-control input-lg" id="digestHour" data-field="digestHour" placeholder="17" min="0" max="24" style="width: 64px;"/>
-					</div>
-					<p class="form-text">
-						[[admin/settings/email:subscriptions.hour-help]]
-					</p>
-				</div>
-
-				<div class="form-check form-switch mb-3">
-					<input class="form-check-input" type="checkbox" id="watchAllActivityAdmins" data-field="watchAllActivityAdmins" name="watchAllActivityAdmins" />
-					<label for="watchAllActivityAdmins" class="form-check-label">[[admin/settings/email:watch-all-activity-admins]]</label>
-					<p class="form-text">[[admin/settings/email:watch-all-activity-admins-help]]</p>
-				</div>
+		<div id="email-digests" class="mb-4">
+			<h5 class="fw-bold tracking-tight settings-header">[[admin/settings/email:subscriptions]]</h5>
+			<div class="form-check form-switch mb-3">
+				<input class="form-check-input" type="checkbox" id="disableEmailSubscriptions" data-field="disableEmailSubscriptions" name="disableEmailSubscriptions" />
+				<label for="disableEmailSubscriptions" class="form-check-label">[[admin/settings/email:subscriptions.disable]]</label>
 			</div>
+			<div class="form-check form-switch mb-3">
+				<input class="form-check-input" type="checkbox" id="watchAllActivityAdmins" data-field="watchAllActivityAdmins" name="watchAllActivityAdmins" />
+				<label for="watchAllActivityAdmins" class="form-check-label">[[admin/settings/email:watch-all-activity-admins]]</label>
+				<p class="form-text">[[admin/settings/email:watch-all-activity-admins-help]]</p>
+			</div>
+			<div class="mb-3">
+				<div class="mb-3 d-flex justify-content-between align-items-center">
+					<label class="form-label" for="digestHour">[[admin/settings/email:subscriptions.hour]]</label>
+					<input type="number" class="form-control input-lg" id="digestHour" data-field="digestHour" placeholder="17" min="0" max="24" style="width: 64px;"/>
+				</div>
+				<p class="form-text">
+					[[admin/settings/email:subscriptions.hour-help]]
+				</p>
+			</div>
+		</div>
 
 			<hr/>
 
