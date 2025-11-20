@@ -18,6 +18,7 @@ User.notifications = require('./notifications');
 User.reset = require('./reset');
 User.digest = require('./digest');
 User.interstitials = require('./interstitials');
+User.watchAllNotifications = require('./watch-all-notifications');
 
 require('./data')(User);
 require('./auth')(User);
@@ -292,6 +293,10 @@ User.addInterstitials = function (callback) {
 	});
 
 	callback();
+};
+
+User.initWatchAllNotifications = function () {
+	User.watchAllNotifications.init();
 };
 
 require('../promisify')(User);

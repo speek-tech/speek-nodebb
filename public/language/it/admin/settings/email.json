@@ -4,10 +4,8 @@
 	"address-help": "Il seguente indirizzo email si riferisce all'email che il destinatario vedrà nei campi  \"Da\" e \"Rispondi a\".",
 	"from": "Da Nome",
 	"from-help": "Il nome da visualizzare nell'email.",
-
 	"confirmation-settings": "Conferma",
 	"confirmation.expiry": "Ore per mantenere valido il link di conferma dell'email",
-
 	"smtp-transport": "Trasporto SMTP",
 	"smtp-transport.enabled": "Abilita trasporto SMTP",
 	"smtp-transport-help": "Puoi selezionare da un elenco di servizi noti o inserirne uno personalizzato.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "Il pooling delle connessioni impedisce a NodeBB di creare una nuova connessione per ogni email. Questa opzione si applica solo se è abilitato il trasporto SMTP.",
 	"smtp-transport.allow-self-signed": "Consenti certificati autofirmati",
 	"smtp-transport.allow-self-signed-help": "L'attivazione di questa impostazione consente di utilizzare certificati TLS autofirmati o non validi.",
-
 	"template": "Modifica Modello Email",
 	"template.select": "Seleziona Modello Email",
 	"template.revert": "Torna all'originale",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "Per impostazione predefinita, gli utenti con email associate al loro account sono già stati verificati, ma ci sono situazioni in cui ciò non è vero (ad esempio accessi SSO, vecchi utenti, ecc.). <strong>Abilita questa impostazione a tuo rischio e pericolo</strong> &ndash; l'invio di email a indirizzi non verificati può essere una violazione delle leggi regionali anti-spam.",
 	"prompt": "Chiedi agli utenti di inserire o confermare le loro email",
 	"prompt-help": "Se un utente non ha impostato un'email, o la sua email non è confermata, sarà mostrato un avviso sullo schermo.",
-	"sendEmailToBanned": "Invia email agli utenti anche se sono stati bannati"
+	"sendEmailToBanned": "Invia email agli utenti anche se sono stati bannati",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

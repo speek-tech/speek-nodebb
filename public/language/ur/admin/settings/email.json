@@ -4,10 +4,8 @@
 	"address-help": "مندرجہ ذیل ای میل ایڈریس وہی ہے جو وصول کنندہ 'From' اور 'Reply-To' فیلڈز میں دیکھے گا۔",
 	"from": "'From' فیلڈ کے لیے نام",
 	"from-help": "ای میل میں دکھایا جانے والا بھیجنے والے کا نام۔",
-
 	"confirmation-settings": "تصدیق",
 	"confirmation.expiry": "تصدیقی لنک کی میعاد، گھنٹوں میں",
-
 	"smtp-transport": "SMTP ٹرانسپورٹ",
 	"smtp-transport.enabled": "SMTP ٹرانسپورٹ فعال کریں",
 	"smtp-transport-help": "آپ معروف خدمات کی فہرست سے انتخاب کر سکتے ہیں، یا دستی طور پر ایک درج کر سکتے ہیں۔",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "پولڈ کنکشنز ہر ای میل کے لیے نیا کنکشن بنانے سے روکتے ہیں۔ یہ ترتیب صرف اس وقت اثر کرتی ہے جب 'SMTP ٹرانسپورٹ' فعال ہو۔",
 	"smtp-transport.allow-self-signed": "خود دستخط شدہ سرٹیفکیٹس کی اجازت دیں",
 	"smtp-transport.allow-self-signed-help": "اس ترتیب کو فعال کرنے سے خود دستخط شدہ اور غیر درست TLS سرٹیفکیٹس استعمال کرنے کی اجازت ملے گی۔",
-
 	"template": "ای میل ٹیمپلیٹ میں ترمیم کریں",
 	"template.select": "ای میل ٹیمپلیٹ منتخب کریں",
 	"template.revert": "اصل پر واپس جائیں",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "جن صارفین کے رجسٹریشن کے ساتھ ای میل منسلک ہے، اسے تصدیق شدہ سمجھا جاتا ہے۔ لیکن کچھ حالات میں ایسا نہیں ہوتا (مثال کے طور پر جب دوسرے سسٹم سے رجسٹریشن استعمال کی جاتی ہے، لیکن دیگر صورتوں میں بھی)، <strong>اس ترتیب کو اپنے خطرے پر فعال کریں</strong> &ndash; غیر تصدیق شدہ ایڈریسز پر ای میلز بھیجنا بعض مقامی اینٹی اسپام قوانین کی خلاف ورزی کر سکتا ہے۔",
 	"prompt": "صارفین کو اپنا ای میل درج کرنے یا تصدیق کرنے کی یاد دہانی کریں",
 	"prompt-help": "اگر صارف کا ای میل سیٹ نہیں ہے، یا اگر اس کی تصدیق نہیں ہوئی، تو اس کی سکرین پر ایک تنبیہی پیغام دکھایا جائے گا۔",
-	"sendEmailToBanned": "پابندی شدہ صارفین کو بھی ای میلز بھیجیں"
+	"sendEmailToBanned": "پابندی شدہ صارفین کو بھی ای میلز بھیجیں",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }
