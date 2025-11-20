@@ -22,6 +22,7 @@
 
 	<!-- IMPORT partials/footer/js.tpl -->
 	<!-- IMPORT partials/url-change-notifier.tpl -->
+	<!-- IMPORT partials/iframe-height-notifier.tpl -->
 	
 	<!-- New Post Creation Modal -->
 	<div class="modal fade" id="speek-new-post-modal" tabindex="-1" aria-labelledby="speek-new-post-modal-label" aria-hidden="true">
