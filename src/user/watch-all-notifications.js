@@ -1,7 +1,6 @@
 'use strict';
 
 const winston = require('winston');
-const nconf = require('nconf');
 
 const db = require('../database');
 const user = require('./index');
@@ -9,7 +8,6 @@ const topics = require('../topics');
 const posts = require('../posts');
 const notifications = require('../notifications');
 const translator = require('../translator');
-const privileges = require('../privileges');
 const meta = require('../meta');
 const plugins = require('../plugins');
 
@@ -42,9 +40,31 @@ WatchAllNotifications.getWatchAllUsers = async function () {
  */
 WatchAllNotifications.notifyNewPost = async function (postData, topicData) {
 	try {
-		// Skip if user created their own post (don't notify themselves)
-		const watchAllUsers = await WatchAllNotifications.getWatchAllUsers();
-		const recipients = watchAllUsers.filter(uid => parseInt(uid, 10) !== parseInt(postData.uid, 10));
+		// IMPORTANT: Never notify the post author about their own post
+		const authorUid = parseInt(postData.uid, 10);
+		
+		// Get watch-all users
+		let watchAllUsers = await WatchAllNotifications.getWatchAllUsers();
+		
+		// Filter out the post author (don't notify themselves)
+		watchAllUsers = watchAllUsers.filter(uid => parseInt(uid, 10) !== authorUid);
+		
+		if (!watchAllUsers.length) {
+			return;
+		}
+
+		// Get topic followers to avoid duplicate notifications
+		// The existing system already notifies followers, so we exclude them
+		const followers = await topics.getFollowers(topicData.tid);
+		const followerUids = followers.map(uid => parseInt(uid, 10));
+		
+		// Filter out users who are already following this topic
+		// They'll receive notifications through the standard follow system
+		// Also double-check to exclude the author (extra safety)
+		const recipients = watchAllUsers.filter((uid) => {
+			const uidInt = parseInt(uid, 10);
+			return uidInt !== authorUid && !followerUids.includes(uidInt);
+		});
 		
 		if (!recipients.length) {
 			return;
@@ -54,9 +74,9 @@ WatchAllNotifications.notifyNewPost = async function (postData, topicData) {
 		const isMainPost = postData.isMain || (await posts.isMain(postData.pid));
 		
 		const notificationType = isMainPost ? 'new-topic' : 'new-reply';
-		const subject = isMainPost 
-			? translator.compile('notifications:user-posted-topic', postData.user.displayname, topicData.title)
-			: translator.compile('notifications:user-posted-to', postData.user.displayname, topicData.title);
+		const subject = isMainPost ?
+			translator.compile('notifications:user-posted-topic', postData.user.displayname, topicData.title) :
+			translator.compile('notifications:user-posted-to', postData.user.displayname, topicData.title);
 
 		const notifObj = await notifications.create({
 			type: notificationType,
@@ -91,9 +111,8 @@ WatchAllNotifications.init = function () {
 				return;
 			}
 
-			const postData = data.post;
-			const pid = postData.pid;
-			const tid = postData.tid;
+			const { post: postData } = data;
+			const { pid, tid } = postData;
 
 			if (!pid || !tid) {
 				return;
