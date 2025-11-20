@@ -290,7 +290,7 @@
 
 		function showMeta(total) {
 			const label = total === 1 ? 'result' : 'results';
-			countEl.text(`[${total}] ${label}`);
+			countEl.text(`${total} ${label}`);
 			metaEl.show();
 		}
 
