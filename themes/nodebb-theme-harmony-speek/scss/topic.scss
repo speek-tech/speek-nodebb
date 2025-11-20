@@ -802,19 +802,32 @@ body.template-topic {
 		.speek-quick-reply-textarea-wrapper {
 			position: relative;
 			background: #FDFDFC;
-			border: none;
+			border: 1px solid #D4D4D4;
 			border-radius: 8px;
-			box-shadow: none;
+			box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
 			padding: 8px 12px;
 			display: flex;
 			flex-direction: column;
 			gap: 4px;
 			min-height: 80px;
+			transition: border-color 0.2s ease;
+			
+			&.speek-error {
+				border-color: #DC2626 !important;
+				
+				&:focus-within {
+					border-color: #DC2626 !important;
+				}
+			}
 
 			&:focus-within {
 				outline: none;
-				border: none;
-				box-shadow: none;
+				border-color: #D4D4D4;
+				box-shadow: 0px 1px 2px 0px rgba(0, 0, 0, 0.05);
+			}
+			
+			&.speek-error:focus-within {
+				border-color: #DC2626 !important;
 			}
 
 			.speek-quick-reply-char-count {
@@ -885,6 +898,22 @@ body.template-topic {
 				&.active {
 					display: flex;
 				}
+			}
+		}
+
+		// Error message styling (similar to create new post modal)
+		.speek-error-message {
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 1.4285714285714286em;
+			color: #DC2626;
+			margin-top: 4px;
+			min-height: 20px;
+			display: none;
+
+			&.show {
+				display: block;
 			}
 		}
 

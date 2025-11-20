@@ -20,6 +20,7 @@
 			</div>
 			<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
 		</div>
+		<div class="speek-error-message" id="speek-quick-reply-error" component="topic/quickreply/error" role="alert"></div>
 		<button type="submit" component="topic/quickreply/button" class="speek-quick-reply-submit-btn">Submit reply</button>
 	</form>
 	<form class="d-none" component="topic/quickreply/upload" method="post" enctype="multipart/form-data">
