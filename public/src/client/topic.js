@@ -56,6 +56,23 @@ define('forum/topic', [
 		events.init();
 
 		sort.handleSort('topicPostSort', 'topic/' + ajaxify.data.slug);
+		
+		// Prevent auto-scrolling when sort dropdown opens
+		const sortDropdown = components.get('thread/sort');
+		if (sortDropdown.length) {
+			// Prevent browser from auto-scrolling to keep dropdown in view
+			sortDropdown.on('shown.bs.dropdown', function (e) {
+				// Store current scroll position before dropdown opens
+				const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+				// Restore scroll position after dropdown is shown to prevent auto-scroll
+				requestAnimationFrame(function () {
+					window.scrollTo({
+						top: scrollTop,
+						behavior: 'auto' // Instant scroll, no smooth animation
+					});
+				});
+			});
+		}
 
 		if (!config.usePagination) {
 			infinitescroll.init($('[component="topic"]'), posts.loadMorePosts);

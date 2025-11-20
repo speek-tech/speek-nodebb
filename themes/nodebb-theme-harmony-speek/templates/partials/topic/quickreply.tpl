@@ -14,9 +14,9 @@
 				class="speek-quick-reply-textarea form-control mousetrap" 
 				placeholder="Enter your reply here"
 				rows="4"
-				maxlength="1000"></textarea>
+				maxlength="5000"></textarea>
 			<div class="speek-quick-reply-char-count" component="topic/quickreply/char-count">
-				<span component="topic/quickreply/char-current">0</span> / <span component="topic/quickreply/char-max">1000</span>
+				<span component="topic/quickreply/char-current">0</span> / <span component="topic/quickreply/char-max">5000</span>
 			</div>
 			<div class="imagedrop"><div>[[topic:composer.drag-and-drop-images]]</div></div>
 		</div>
