@@ -222,10 +222,10 @@
 					<input id="newbieReputationThreshold" type="text" class="form-control" value="3" data-field="newbieReputationThreshold">
 				</div>
 
-				<div class="mb-3">
-					<label class="form-label" for="newbiePostDelay">[[admin/settings/user:restrictions.seconds-between-new]]</label>
-					<input id="newbiePostDelay" type="text" class="form-control" value="120" data-field="newbiePostDelay">
-				</div>
+			<div class="mb-3">
+				<label class="form-label" for="newbiePostDelay">[[admin/settings/user:restrictions.seconds-between-new]]</label>
+				<input id="newbiePostDelay" type="text" class="form-control" value="0" data-field="newbiePostDelay">
+			</div>
 
 				<div class="mb-3">
 					<label class="form-label" for="initialPostDelay">[[admin/settings/user:restrictions.seconds-before-new]]</label>

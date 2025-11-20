@@ -10,7 +10,7 @@
     "adminReloginDuration": 60,
     "postDelay": 10,
     "initialPostDelay": 10,
-    "newbiePostDelay": 120,
+    "newbiePostDelay": 0,
     "postEditDuration": 0,
     "newbiePostEditDuration": 3600,
     "postDeleteDuration": 0,
