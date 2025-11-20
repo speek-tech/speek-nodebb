@@ -35,9 +35,55 @@ define('quickreply', [
 			}
 		};
 
-		// Update character count on input
+		// Validation functions similar to create new post modal
+		function showError(message) {
+			const errorEl = components.get('topic/quickreply/error');
+			const textareaWrapper = element.closest('.speek-quick-reply-textarea-wrapper');
+			
+			if (textareaWrapper.length) {
+				textareaWrapper.addClass('speek-error');
+			}
+			
+			if (errorEl.length) {
+				errorEl.text(message).addClass('show');
+			}
+		}
+
+		function hideError() {
+			const errorEl = components.get('topic/quickreply/error');
+			const textareaWrapper = element.closest('.speek-quick-reply-textarea-wrapper');
+			
+			if (textareaWrapper.length) {
+				textareaWrapper.removeClass('speek-error');
+			}
+			
+			if (errorEl.length) {
+				errorEl.removeClass('show').text('');
+			}
+		}
+
+		function validateContent() {
+			const contentValue = element.val().trim();
+			if (!contentValue) {
+				showError('Reply content is required');
+				return false;
+			}
+			if (contentValue.length < 2) {
+				showError('Reply content must be at least 2 characters');
+				return false;
+			}
+			hideError();
+			return true;
+		}
+
+		// Update character count on input and clear errors
 		element.on('input keyup paste', function () {
 			QuickReply.updateCharCount();
+			// Clear error on input if content is valid
+			const contentValue = element.val().trim();
+			if (contentValue && contentValue.length >= 2) {
+				hideError();
+			}
 		});
 
 		// Initial character count update
@@ -80,17 +126,23 @@ define('quickreply', [
 				return;
 			}
 
-			const replyMsg = components.get('topic/quickreply/text').val();
+			// Validate content before submitting (minimum 2 characters)
+			if (!validateContent()) {
+				return;
+			}
+
+			const replyMsg = components.get('topic/quickreply/text').val().trim();
 			const replyData = {
 				tid: ajaxify.data.tid,
 				handle: undefined,
 				content: replyMsg,
 			};
 			const replyLen = replyMsg.length;
-			if (replyLen < parseInt(config.minimumPostLength, 10)) {
-				return alerts.error('[[error:content-too-short, ' + config.minimumPostLength + ']]');
-			} else if (replyLen > parseInt(config.maximumPostLength, 10)) {
-				return alerts.error('[[error:content-too-long, ' + config.maximumPostLength + ']]');
+			
+			// Check maximum length (backend validation)
+			if (replyLen > parseInt(config.maximumPostLength, 10)) {
+				showError('Reply content is too long. Maximum ' + config.maximumPostLength + ' characters allowed.');
+				return;
 			}
 
 			ready = false;
@@ -113,6 +165,7 @@ define('quickreply', [
 
 				components.get('topic/quickreply/text').val('');
 				QuickReply.updateCharCount();
+				hideError(); // Clear any errors on success
 				storage.removeItem(qrDraftId);
 				QuickReply._autocomplete.hide();
 				hooks.fire('action:quickreply.success', { data });
