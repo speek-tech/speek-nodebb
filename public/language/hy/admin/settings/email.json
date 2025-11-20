@@ -4,10 +4,8 @@
 	"address-help": "Հետևյալ էլփոստի հասցեն վերաբերում է այն էլ.փոստին, որը ստացողը կտեսնի «Ումից» և «Պատասխանել» դաշտերում:",
 	"from": "Ում Անունից",
 	"from-help": "Նամակում ցուցադրվող «ում անունից»:",
-
 	"confirmation-settings": "Հաստատում",
 	"confirmation.expiry": "Ժամեր՝ էլ փոստի հաստատման հղումը վավեր պահելու համար",
-
 	"smtp-transport": "SMTP Transport",
 	"smtp-transport.enabled": "Enable SMTP Transport",
 	"smtp-transport-help": "Դուք կարող եք ընտրել հայտնի ծառայությունների ցանկից կամ մուտքագրել հատուկ մեկը:",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "Կապերի միավորումը թույլ չի տալիս NodeBB-ին նոր կապ ստեղծել յուրաքանչյուր էլփոստի համար: Այս տարբերակը կիրառվում է միայն այն դեպքում, եթե SMTP Transport-ը միացված է:",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "Խմբագրել էլփոստի ձևանմուշը",
 	"template.select": "Ընտրեք էլփոստի ձևանմուշ",
 	"template.revert": "Վերադառնալ բնօրինակին",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "Հիմնականում, իրենց հաշվի հետ կապված էլփոստով օգտատերերն արդեն ստուգված են, սակայն կան իրավիճակներ, երբ դա այդպես չէ (օրինակ՝ SSO մուտքեր, մեծահայր օգտատերեր և այլն): Միացնել այս կարգավորումը ձեր սեփական ռիսկով &ndash; Չստուգված հասցեներով էլ-նամակներ ուղարկելը կարող է հակասպամի մասին տարածաշրջանային օրենքների խախտում լինել:",
 	"prompt": "Հորդորեք օգտատերերին մուտքագրել կամ հաստատել իրենց էլ.փոստերը",
 	"prompt-help": "Եթե օգտատերը չունի էլ.փոստ կամ էլ.փոստը չի հաստատվել, ապա էկրանին կցուցադրվի նախազգուշացում:",
-	"sendEmailToBanned": "Նամակներ ուղարկեք օգտատերերին, նույնիսկ եթե դրանք արգելված են"
+	"sendEmailToBanned": "Նամակներ ուղարկեք օգտատերերին, նույնիսկ եթե դրանք արգելված են",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

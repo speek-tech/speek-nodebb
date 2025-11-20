@@ -4,10 +4,8 @@
 	"address-help": "E-pasta adrese, ko saņēmējs redzēs laukos \"No:\" un \"Atbildēt:\".",
 	"from": "Sūtītāja vārds vai nosaukums",
 	"from-help": "Vārds vai nosaukums, ko saņēmējs redzēs kā sūtītāju.",
-
 	"confirmation-settings": "Confirmation",
 	"confirmation.expiry": "Hours to keep email confirmation link valid",
-
 	"smtp-transport": "SMTP transports",
 	"smtp-transport.enabled": "Enable SMTP Transport",
 	"smtp-transport-help": "Izvēlies no labi zināmu pakalpojumu saraksta vai ievadi pielāgotu pakalpojumu.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "Pooling connections prevents NodeBB from creating a new connection for every email. This option only applies if SMTP Transport is enabled.",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "Rediģēt e-pasta veidni",
 	"template.select": "Atlasīt e-pasta veidni",
 	"template.revert": "Atgriezt uz oriģinālo",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "By default, users with emails associated with their account have already been verified, but there are situations where this is not the case (e.g. SSO logins, grandfathered users, etc). <strong>Enable this setting at your own risk</strong> &ndash; sending emails to unverified addresses may be a violation of regional anti-spam laws.",
 	"prompt": "Prompt users to enter or confirm their emails",
 	"prompt-help": "If a user does not have an email set, or their email is not confirmed, a warning will be shown on screen.",
-	"sendEmailToBanned": "Send emails to users even if they have been banned"
+	"sendEmailToBanned": "Send emails to users even if they have been banned",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }

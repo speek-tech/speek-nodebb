@@ -4,10 +4,8 @@
 	"address-help": "다음 이메일 주소는 수신자가 \"보낸 사람\" 및 \"회신\" 필드에서 나타나는 이메일을 가리킵니다.",
 	"from": "보낸 사람 이름",
 	"from-help": "이메일에 표시할 발신자 이름입니다.",
-
 	"confirmation-settings": "검증",
 	"confirmation.expiry": "이메일 확인 링크를 유효한 상태로 유지할 시간입니다.",
-
 	"smtp-transport": "SMTP 전송",
 	"smtp-transport.enabled": "SMTP 전송 활성화",
 	"smtp-transport-help": "서비스 목록 중에서 선택하거나 사용자 정의할 수 있습니다.",
@@ -30,7 +28,6 @@
 	"smtp-transport.pool-help": "연결을 풀링하면 모든 이메일마다 새로운 연결을 생성하지 않습니다. 이 옵션은 SMTP 전송이 활성화된 경우에만 적용됩니다.",
 	"smtp-transport.allow-self-signed": "Allow self-signed certificates",
 	"smtp-transport.allow-self-signed-help": "Enabling this setting will allow you to use self-signed or invalid TLS certificates.",
-
 	"template": "이메일 템플릿 수정",
 	"template.select": "이메일 템플릿 선택",
 	"template.revert": "원본으로 되돌리기",
@@ -50,5 +47,7 @@
 	"include-unverified-warning": "기본적으로, 계정과 연결된 이메일이 있는 사용자는 이미 확인되었지만, 이러한 경우가 아닌 경우도 있습니다 (예: SSO 로그인, 예전 사용자 등). <strong>이 설정을 활성화하면 주의가 필요합니다</strong> - 확인되지 않은 주소로 이메일을 보내는 것은 해당 현지 지역의 법률을 위반할 수 있습니다.",
 	"prompt": "사용자에게 이메일을 입력하거나 확인하라는 메시지 표시",
 	"prompt-help": "사용자가 이메일을 설정하지 않았거나 이메일이 확인되지 않으면 화면에 경고가 표시됩니다.",
-	"sendEmailToBanned": "차단된 사용자에게도 이메일 보내기"
+	"sendEmailToBanned": "차단된 사용자에게도 이메일 보내기",
+	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
 }
