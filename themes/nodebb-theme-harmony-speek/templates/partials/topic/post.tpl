@@ -78,12 +78,12 @@
 			{{{ if !hideReplies }}}
 			<a component="post/reply-count" data-target-component="post/replies/container" href="#" class="speek-reaction-link" title="[[topic:replies]]">
 				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
-				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
+				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replyCount }}}{./replyCount}{{{ else if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replyCount }}}{./replyCount}{{{ else if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
 			</a>
 			{{{ else }}}
 			<span class="speek-reaction-link">
 				{buildLucideIcon("message-square", 24, "speek-reaction-icon")}
-				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
+				<span class="speek-reaction-count" component="post/reply-count/text" data-replies="{{{ if ./replyCount }}}{./replyCount}{{{ else if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}">{{{ if ./replyCount }}}{./replyCount}{{{ else if ./replies.count }}}{./replies.count}{{{ else }}}0{{{ end }}}</span>
 			</span>
 			{{{ end }}}
 		</div>

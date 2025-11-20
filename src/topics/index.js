@@ -190,8 +190,19 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
 		Topics.events.get(topicData.tid, uid, reverse),
 	]);
 
-	topicData.thumbs = thumbs[0];
-	topicData.posts = posts;
+		topicData.thumbs = thumbs[0];
+		topicData.posts = posts;
+		const totalReplies = Math.max((topicData.postcount || 0) - 1, 0);
+		topicData.replyCount = totalReplies;
+
+		const mainPost = topicData.posts.find(p => parseInt(p.index, 10) === 0);
+		if (mainPost) {
+			mainPost.replyCount = totalReplies;
+			mainPost.replies = mainPost.replies || {};
+			if (!mainPost.replies.count || mainPost.replies.count < totalReplies) {
+				mainPost.replies.count = totalReplies;
+			}
+		}
 	topicData.posts.forEach((p) => {
 		p.events = events.filter(
 			event => event.timestamp >= p.eventStart && event.timestamp < p.eventEnd
@@ -223,8 +234,8 @@ Topics.getTopicWithPosts = async function (topicData, set, uid, start, stop, rev
 	if (forker) {
 		topicData.forkTimestampISO = utils.toISOString(topicData.forkTimestamp);
 	}
-	topicData.related = related || [];
-	topicData.unreplied = topicData.postcount === 1;
+		topicData.related = related || [];
+		topicData.unreplied = topicData.postcount === 1;
 	topicData.icons = [];
 
 	const result = await plugins.hooks.fire('filter:topic.get', { topic: topicData, uid: uid });
