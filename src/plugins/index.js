@@ -105,6 +105,7 @@ Plugins.reload = async function () {
 	Plugins.loadedPlugins.length = 0;
 
 	await user.addInterstitials();
+	user.initWatchAllNotifications();
 
 	const paths = await Plugins.getPluginPaths();
 	for (const path of paths) {

@@ -75,10 +75,10 @@ module.exports = function (User) {
 		settings.categoryTopicSort = getSetting(settings, 'categoryTopicSort', 'recently_replied');
 		settings.followTopicsOnCreate = parseInt(getSetting(settings, 'followTopicsOnCreate', 1), 10) === 1;
 		settings.followTopicsOnReply = parseInt(getSetting(settings, 'followTopicsOnReply', 0), 10) === 1;
-		settings.upvoteNotifFreq = getSetting(settings, 'upvoteNotifFreq', 'all');
-		settings.disableIncomingChats = parseInt(getSetting(settings, 'disableIncomingChats', 0), 10) === 1;
-		settings.topicSearchEnabled = parseInt(getSetting(settings, 'topicSearchEnabled', 0), 10) === 1;
-		settings.updateUrlWithPostIndex = parseInt(getSetting(settings, 'updateUrlWithPostIndex', 1), 10) === 1;
+	settings.upvoteNotifFreq = getSetting(settings, 'upvoteNotifFreq', 'all');
+	settings.disableIncomingChats = parseInt(getSetting(settings, 'disableIncomingChats', 0), 10) === 1;
+	settings.topicSearchEnabled = parseInt(getSetting(settings, 'topicSearchEnabled', 0), 10) === 1;
+	settings.updateUrlWithPostIndex = parseInt(getSetting(settings, 'updateUrlWithPostIndex', 1), 10) === 1;
 		settings.bootswatchSkin = validator.escape(String(settings.bootswatchSkin || ''));
 		settings.homePageRoute = validator.escape(String(settings.homePageRoute || '')).replace(/&#x2F;/g, '/');
 		settings.scrollToMyPost = parseInt(getSetting(settings, 'scrollToMyPost', 1), 10) === 1;
@@ -164,10 +164,10 @@ module.exports = function (User) {
 			bootswatchSkin: data.bootswatchSkin,
 			categoryWatchState: data.categoryWatchState,
 			categoryTopicSort: data.categoryTopicSort,
-			topicPostSort: data.topicPostSort,
-			chatAllowList: data.chatAllowList,
-			chatDenyList: data.chatDenyList,
-		};
+		topicPostSort: data.topicPostSort,
+		chatAllowList: data.chatAllowList,
+		chatDenyList: data.chatDenyList,
+	};
 		const notificationTypes = await notifications.getAllNotificationTypes();
 		notificationTypes.forEach((notificationType) => {
 			if (data[notificationType]) {
