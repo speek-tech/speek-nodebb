@@ -366,12 +366,35 @@ module.exports = function (Topics) {
 
 		const uniquePids = _.uniq(_.flatten(arrayOfReplyPids));
 
-		let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp']);
+		let replyData = await posts.getPostsFields(uniquePids, ['pid', 'uid', 'timestamp', 'deleted', 'tid']);
 		const result = await plugins.hooks.fire('filter:topics.getPostReplies', {
 			uid: callerUid,
 			replies: replyData,
 		});
 		replyData = await user.blocks.filter(callerUid, result.replies);
+		
+		// Filter out deleted replies for non-admin/non-moderator users
+		const isAdmin = await user.isAdministrator(callerUid);
+		if (!isAdmin) {
+			// Get category IDs for checking moderator status
+			const cids = await Promise.all(replyData.map(async (reply) => {
+				if (!reply || !reply.tid) return null;
+				const topics = require('../topics');
+				return await topics.getTopicField(reply.tid, 'cid');
+			}));
+			
+			const isMods = await Promise.all(cids.map(cid => 
+				cid ? user.isModerator(callerUid, cid) : Promise.resolve(false)
+			));
+			
+			// Filter out deleted replies where user is not admin/mod and not the reply owner
+			replyData = replyData.filter((reply, index) => {
+				if (!reply || !reply.deleted) return true;
+				const isMod = isMods[index];
+				const isOwner = reply.uid && callerUid && parseInt(reply.uid, 10) === parseInt(callerUid, 10);
+				return isMod || isOwner;
+			});
+		}
 
 		const uids = replyData.map(replyData => replyData && replyData.uid);
 

@@ -470,6 +470,16 @@ body.template-topic {
 			border: none;
 			box-shadow: none;
 
+			// Admin action buttons
+			.speek-post-actions {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-top: 8px;
+				padding-top: 8px;
+				border-top: 1px solid #F3F1E9;
+			}
+
 			// Ensure all content inside has correct background
 			.content,
 			[component="post/content"],

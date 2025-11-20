@@ -53,6 +53,34 @@ Posts.getPostsByPids = async function (pids, uid) {
 	if (!data || !Array.isArray(data.posts)) {
 		return [];
 	}
+	
+	// Filter out deleted posts for non-admin/non-moderator users
+	const user = require('../user');
+	const categories = require('../categories');
+	const privileges = require('../privileges');
+	
+	const isAdmin = await user.isAdministrator(uid);
+	if (!isAdmin) {
+		// Check if user is moderator for each post's category
+		const cids = await Promise.all(data.posts.map(async (post) => {
+			if (!post || !post.tid) return null;
+			const topics = require('../topics');
+			return await topics.getTopicField(post.tid, 'cid');
+		}));
+		
+		const isMods = await Promise.all(cids.map(cid => 
+			cid ? user.isModerator(uid, cid) : Promise.resolve(false)
+		));
+		
+		// Filter out deleted posts where user is not admin/mod and not the post owner
+		data.posts = data.posts.filter((post, index) => {
+			if (!post || !post.deleted) return true;
+			const isMod = isMods[index];
+			const isOwner = post.uid && uid && parseInt(post.uid, 10) === parseInt(uid, 10);
+			return isMod || isOwner;
+		});
+	}
+	
 	return data.posts.filter(Boolean);
 };
 
