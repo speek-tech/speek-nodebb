@@ -420,11 +420,56 @@ body.template-topic {
 			border: none;
 			box-shadow: none;
 
+			// Admin action buttons
+			.speek-post-actions {
+				display: flex;
+				align-items: center;
+				gap: 8px;
+				margin-top: 8px;
+				padding-top: 8px;
+				border-top: 1px solid #F3F1E9;
+			}
+
 			// Ensure all content inside has correct background
 			.content,
 			[component="post/content"],
 			.speek-post-description {
 				background-color: #FDFDFC !important;
+			}
+			
+			// Admin delete controls in content area - show for ALL posts
+			.speek-post-admin-delete {
+				display: block !important;
+				margin-top: 12px;
+				padding-top: 12px;
+				border-top: 1px solid #F3F1E9;
+				
+				.btn-delete-admin {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 6px;
+					padding: 6px 12px;
+					border-radius: 8px;
+					background: transparent;
+					border: 1px solid #E0DBC7;
+					color: #dc3545;
+					text-decoration: none;
+					font-size: 13px;
+					font-weight: 600;
+					transition: all 0.2s ease;
+					
+					i {
+						font-size: 13px;
+					}
+					
+					&:hover {
+						background: #fee;
+						border-color: #dc3545;
+						color: #dc3545;
+						text-decoration: none;
+					}
+				}
 			}
 
 			// Override for reply cards
@@ -613,6 +658,47 @@ body.template-topic {
 				gap: 0;
 				align-items: center;
 				justify-content: flex-start;
+				
+				// Admin controls
+				.speek-admin-controls {
+					display: flex;
+					gap: 8px;
+					align-items: center;
+					padding-left: 16px;
+					border-left: 1px solid #F3F1E9;
+					margin-left: 16px;
+					
+					.btn-ghost-admin {
+						display: inline-flex;
+						align-items: center;
+						justify-content: center;
+						width: 32px;
+						height: 32px;
+						border-radius: 8px;
+						background: transparent;
+						border: 1px solid #E0DBC7;
+						color: #355E66;
+						text-decoration: none;
+						transition: all 0.2s ease;
+						
+						i {
+							font-size: 14px;
+						}
+						
+						&:hover {
+							background: #F3F1E9;
+							border-color: #355E66;
+							color: #355E66;
+							text-decoration: none;
+						}
+						
+						&[component="post/purge"]:hover {
+							background: #fee;
+							border-color: #dc3545;
+							color: #dc3545;
+						}
+					}
+				}
 
 				.speek-reaction-item {
 					display: flex;
@@ -896,9 +982,45 @@ body.template-topic {
 			gap: 12px;
 			margin-bottom: 24px;
 
-			// Hide footer for all replies in replies container
+			// Show footer for admin controls in replies
 			.speek-post-card-footer {
 				display: none !important;
+			}
+			
+			// Admin delete controls for reply cards - SHOW for replies
+			.speek-post-admin-delete {
+				display: block !important; // Override the hide for replies
+				margin-top: 12px;
+				padding-top: 12px;
+				border-top: 1px solid #D4CFBC;
+				background: #E6E2D2 !important;
+				
+				.btn-delete-admin {
+					display: inline-flex;
+					align-items: center;
+					justify-content: center;
+					gap: 6px;
+					padding: 6px 12px;
+					border-radius: 8px;
+					background: transparent;
+					border: 1px solid #D4CFBC;
+					color: #dc3545;
+					text-decoration: none;
+					font-size: 13px;
+					font-weight: 600;
+					transition: all 0.2s ease;
+					
+					i {
+						font-size: 13px;
+					}
+					
+					&:hover {
+						background: rgba(255, 238, 238, 0.8);
+						border-color: #dc3545;
+						color: #dc3545;
+						text-decoration: none;
+					}
+				}
 			}
 
 			.speek-post-card-header {
@@ -987,6 +1109,16 @@ body.template-topic {
 		// Hide footer for reply cards
 		.speek-post-card-footer {
 			display: none !important;
+		}
+		
+		// Show admin delete controls for reply cards
+		.speek-post-admin-delete {
+			display: block !important; // Show in reply cards
+			background: #E6E2D2 !important;
+			
+			.btn-delete-admin {
+				display: inline-flex !important; // Ensure button shows
+			}
 		}
 
 		// Ensure all nested components have the correct background

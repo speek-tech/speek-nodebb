@@ -59,6 +59,17 @@
 			<div component="post/signature" data-uid="{posts.user.uid}" class="speek-post-signature">{posts.user.signature}</div>
 			{{{ end }}}
 		</div>
+		
+		<!-- Admin Controls in content area (hidden for main posts via CSS, shown for replies) -->
+		{{{ if privileges.isAdminOrMod }}}
+		{{{ if !posts.deleted }}}
+		<div class="speek-post-admin-delete">
+			<a component="post/purge" href="#" class="btn btn-sm btn-delete-admin" title="[[topic:purge]]">
+				<i class="fa fa-trash"></i> Delete
+			</a>
+		</div>
+		{{{ end }}}
+		{{{ end }}}
 	</div>
 
 	<!-- Reaction Container - Only show for primary/main post, not replies -->
@@ -87,12 +98,14 @@
 			</span>
 			{{{ end }}}
 		</div>
+		
+		<!-- No admin controls in footer - using content area controls instead -->
 	</div>
 	{{{ end }}}
 	{{{ end }}}
 
-	<!-- Hidden action buttons for functionality -->
-	<div component="post/actions" class="speek-post-actions-hidden d-none">
+	<!-- Action buttons for moderators/admins -->
+	<div component="post/actions" class="speek-post-actions {{{ if !privileges.isAdminOrMod }}}d-none{{{ end }}}">
 		<a component="post/reply" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:reply]]"><i class="fa fa-fw fa-reply text-primary"></i></a>
 		<a component="post/quote" href="#" class="btn btn-ghost btn-sm {{{ if !privileges.topics:reply }}}hidden{{{ end }}}" title="[[topic:quote]]"><i class="fa fa-fw fa-quote-right text-primary"></i></a>
 		{{{ if ./announces }}}
