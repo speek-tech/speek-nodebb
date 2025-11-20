@@ -24,8 +24,10 @@
 
 			<div class="d-flex align-items-center gap-3 ms-auto">
 				<div component="category/controls" class="d-flex mb-0 gap-2 flex-wrap justify-content-end">
-					{{{ if (template.category || template.world) }}}
+					{{{ if template.world }}}
 					<!-- IMPORT partials/category/watch.tpl -->
+					{{{ end }}}
+					{{{ if (template.category || template.world) }}}
 					<!-- Tags filter hidden for Speek design -->
 					<!-- IMPORT partials/category/sort.tpl -->
 					{{{ end }}}
