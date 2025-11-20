@@ -24,8 +24,12 @@
 		<div class="speek-post-card-content">
 			<a href="{config.relative_path}/topic/{./slug}" class="speek-post-link">
 				<h3 component="topic/header" class="speek-post-title">{./title}</h3>
-				{{{ if ./teaser.content }}}
-				<p class="speek-post-preview">{./teaser.content}</p>
+				{{{ if ./mainPostPreview }}}
+				<p class="speek-post-preview">{./mainPostPreview}</p>
+				{{{ else }}}
+					{{{ if ./teaser.content }}}
+					<p class="speek-post-preview">{./teaser.content}</p>
+					{{{ end }}}
 				{{{ end }}}
 			</a>
 		</div>

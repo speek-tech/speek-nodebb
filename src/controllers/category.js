@@ -206,6 +206,8 @@ categoryController.get = async function (req, res, next) {
 	}
 	categoryData.unreadCount = unreadCount;
 
+	await addMainPostPreviews(categoryData, req.uid);
+
 	res.render('category', categoryData);
 };
 
@@ -432,5 +434,42 @@ async function getRelatedSpaces(currentCid, uid, limit = 10) {
 	} catch (error) {
 		console.error('Error fetching related spaces:', error);
 		return [];
+	}
+}
+
+async function addMainPostPreviews(categoryData, uid) {
+	if (!categoryData || !Array.isArray(categoryData.topics) || !categoryData.topics.length) {
+		return;
+	}
+
+	const tids = categoryData.topics
+		.map(topic => topic && topic.tid)
+		.filter(Boolean);
+
+	if (!tids.length) {
+		return;
+	}
+
+	try {
+		const mainPosts = await topics.getMainPosts(tids, uid);
+		const previewByTid = {};
+
+		mainPosts.forEach((post) => {
+			if (post && post.tid) {
+				const decoded = utils.decodeHTMLEntities(post.content || '');
+				const preview = utils.stripHTMLTags(decoded).replace(/\s+/g, ' ').trim();
+				if (preview) {
+					previewByTid[post.tid] = preview;
+				}
+			}
+		});
+
+		categoryData.topics.forEach((topic) => {
+			if (topic && previewByTid[topic.tid]) {
+				topic.mainPostPreview = previewByTid[topic.tid];
+			}
+		});
+	} catch (err) {
+		console.error('Error getting main post previews for category topics:', err.message);
 	}
 }
