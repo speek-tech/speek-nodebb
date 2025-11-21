@@ -6,6 +6,7 @@ $breakpoint-tablet-max: 1023px;
 $breakpoint-desktop: 1024px;
 $breakpoint-desktop-max: 1279px;
 $breakpoint-desktop-xl: 1280px;
+$breakpoint-desktop-2xl: 1536px;
 
 // Usage: @include mobile { ... }
 @mixin mobile {
@@ -44,7 +45,14 @@ $breakpoint-desktop-xl: 1280px;
 
 // Usage: @include desktop-xl { ... }
 @mixin desktop-xl {
-	@media (min-width: $breakpoint-desktop-xl) {
+	@media (min-width: $breakpoint-desktop-xl) and (max-width: #{$breakpoint-desktop-2xl - 1px}) {
+		@content;
+	}
+}
+
+// Usage: @include desktop-2xl { ... }
+@mixin desktop-2xl {
+	@media (min-width: $breakpoint-desktop-2xl) {
 		@content;
 	}
 }

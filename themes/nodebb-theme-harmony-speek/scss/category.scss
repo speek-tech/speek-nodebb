@@ -172,6 +172,12 @@
 	}
 }
 
+@include desktop-2xl {
+	.categories-page {
+		margin-top: 32px !important;
+	}
+}
+
 @include tablet {
 	.categories-page {
 		margin-top: 24px !important;
@@ -1105,6 +1111,8 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		display: flex;
 		flex-direction: column;
 		gap: 16px;
+		padding-left: 0;
+		padding-right: 0;
 		
 		.category-item.speek-post-card {
 			background: #fdfdfc;
@@ -1747,6 +1755,227 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 		.speek-space-card {
 			width: 320px;
+		}
+	}
+}
+
+// =====================================
+// Responsive Padding for Category Pages
+// =====================================
+
+// Mobile: No padding for full width
+@include mobile {
+	.speek-category-header {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.speek-category-content,
+	.speek-category-main {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Tablet: No padding for full width
+@include tablet {
+	.speek-category-header {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.speek-category-content,
+	.speek-category-main {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Desktop: No padding for full width
+@include desktop {
+	.speek-category-header {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.speek-category-content,
+	.speek-category-main {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Desktop XL: No padding for full width
+@include desktop-xl {
+	.speek-category-header {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.speek-category-content,
+	.speek-category-main {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// Desktop 2XL: No padding for full width
+@include desktop-2xl {
+	.speek-category-header {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	.speek-category-content,
+	.speek-category-main {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// =====================================
+// Responsive Padding for Topic List Header
+// =====================================
+
+.page-category .topic-list-header .d-flex.flex-row.p-2 {
+	// Mobile: No padding for full width
+	@include mobile {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Tablet: No padding for full width
+	@include tablet {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop: No padding for full width
+	@include desktop {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop XL: No padding for full width
+	@include desktop-xl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop 2XL: No padding for full width
+	@include desktop-2xl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// =====================================
+// Responsive Padding for Topics List
+// =====================================
+
+.page-category .topics-list.speek-topics-list {
+	// Mobile: No padding for full width
+	@include mobile {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Tablet: No padding for full width
+	@include tablet {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop: No padding for full width
+	@include desktop {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop XL: No padding for full width
+	@include desktop-xl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+	
+	// Desktop 2XL: No padding for full width
+	@include desktop-2xl {
+		padding-left: 0 !important;
+		padding-right: 0 !important;
+	}
+}
+
+// =====================================
+// Full Width Layout for ALL screens
+// =====================================
+
+// Remove all padding and margins for ALL screen sizes
+@include mobile {
+	.page-category {
+		// Remove padding from all containers
+		.row.flex-fill,
+		.category.d-flex.flex-column.col-12,
+		[data-widget-area="header"] {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+	}
+}
+
+@include tablet {
+	.page-category {
+		// Remove padding from all containers
+		.row.flex-fill,
+		.category.d-flex.flex-column.col-12,
+		[data-widget-area="header"] {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+	}
+}
+
+@include desktop {
+	.page-category {
+		// Remove padding from all containers
+		.row.flex-fill,
+		.category.d-flex.flex-column.col-12,
+		[data-widget-area="header"] {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+	}
+}
+
+@include desktop-xl {
+	.page-category {
+		// Remove padding from all containers
+		.row.flex-fill,
+		.category.d-flex.flex-column.col-12,
+		[data-widget-area="header"] {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
+		}
+	}
+}
+
+@include desktop-2xl {
+	.page-category {
+		// Remove padding from all containers
+		.row.flex-fill,
+		.category.d-flex.flex-column.col-12,
+		[data-widget-area="header"] {
+			padding-left: 0 !important;
+			padding-right: 0 !important;
+			margin-left: 0 !important;
+			margin-right: 0 !important;
 		}
 	}
 }
