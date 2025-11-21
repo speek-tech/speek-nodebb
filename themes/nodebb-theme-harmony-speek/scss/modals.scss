@@ -29,6 +29,26 @@
 	max-width: 512px;
 	width: 100%;
 	margin: 0 auto;
+	left: auto !important;
+
+	// Center modal on larger screens
+	@include desktop {
+		left: auto !important;
+	}
+	
+	// Center modal on larger screens
+	@include desktop-up {
+		left: 30% !important;
+	}
+	
+	// Remove left positioning for smaller devices
+	@include mobile {
+		left: auto !important;
+	}
+	
+	@include tablet {
+		left: 30% !important;
+	}
 
 	.speek-new-post-modal-header {
 		border-bottom: none;
@@ -384,6 +404,21 @@ body.speek-modal-open,
 body:has(#speek-new-post-modal.show),
 body:has(#speek-new-post-modal.showing),
 body.modal-open:has(#speek-new-post-modal) {
+	// Remove any white borders that might appear on the page
+	border: none !important;
+	outline: none !important;
+	
+	// Ensure page containers don't get white borders
+	#panel,
+	#content,
+	.container,
+	.container-lg,
+	.page-categories,
+	.categories-page,
+	.categories-grid {
+		border: none !important;
+		outline: none !important;
+	}
 	.composer,
 	[component="composer"],
 	.composer-container,
@@ -444,6 +479,37 @@ body.speek-composer-hidden {
 		padding: 16px;
 		max-width: 100%;
 		margin: 16px;
+	}
+}
+
+// Prevent white borders on category page when modal is open
+body.modal-open,
+body.speek-modal-open,
+body:has(#speek-new-post-modal.show),
+body:has(#speek-new-post-modal.showing) {
+	// Remove any borders, outlines, or box-shadows from all elements
+	*, *:before, *:after {
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+	}
+	
+	// Specifically target page containers and common elements
+	html, body,
+	#panel, #content,
+	.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl,
+	.page-categories, .categories-page, .categories-grid,
+	.category-card, .category-item,
+	.row, .col, [class*="col-"],
+	.layout-container, .main-container,
+	iframe, .iframe-container,
+	.topic-list, .topics-list,
+	.speek-category-header, .speek-category-content, .speek-category-main {
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		-moz-box-shadow: none !important;
 	}
 }
 
