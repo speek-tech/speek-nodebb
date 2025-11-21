@@ -483,27 +483,33 @@ body.speek-composer-hidden {
 }
 
 // Prevent white borders on category page when modal is open
-body.modal-open {
-	// Remove any focus outlines or borders that might appear
+body.modal-open,
+body.speek-modal-open,
+body:has(#speek-new-post-modal.show),
+body:has(#speek-new-post-modal.showing) {
+	// Remove any borders, outlines, or box-shadows from all elements
 	*, *:before, *:after {
-		outline: none !important;
-	}
-	
-	// Specifically target page containers
-	#panel,
-	#content,
-	.container,
-	.container-lg,
-	.page-categories,
-	.categories-page,
-	.categories-grid,
-	.category-card,
-	.row,
-	.col-lg-9,
-	.col-lg-12 {
 		border: none !important;
 		outline: none !important;
 		box-shadow: none !important;
+	}
+	
+	// Specifically target page containers and common elements
+	html, body,
+	#panel, #content,
+	.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl,
+	.page-categories, .categories-page, .categories-grid,
+	.category-card, .category-item,
+	.row, .col, [class*="col-"],
+	.layout-container, .main-container,
+	iframe, .iframe-container,
+	.topic-list, .topics-list,
+	.speek-category-header, .speek-category-content, .speek-category-main {
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
+		-webkit-box-shadow: none !important;
+		-moz-box-shadow: none !important;
 	}
 }
 
