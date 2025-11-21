@@ -94,13 +94,22 @@
 			<div class="mb-3">
 				<label class="form-label" for="dailyDigestFreq">[[admin/settings/email:digest-frequency]]</label>
 				<select class="form-select" id="dailyDigestFreq" data-field="dailyDigestFreq">
-					<option value="off">[[admin/settings/user:digest-freq.off]]</option>
-					<option value="daily">[[admin/settings/user:digest-freq.daily]]</option>
-					<option value="weekly">[[admin/settings/user:digest-freq.weekly]]</option>
-					<option value="biweekly">[[admin/settings/user:digest-freq.biweekly]]</option>
-					<option value="monthly">[[admin/settings/user:digest-freq.monthly]]</option>
+					<option value="off">[[admin/settings/email:digest-frequency-off]]</option>
+					<option value="day">[[admin/settings/email:digest-frequency-daily]]</option>
+					<option value="week">[[admin/settings/email:digest-frequency-weekly]]</option>
+					<option value="biweek">[[admin/settings/email:digest-frequency-biweekly]]</option>
+					<option value="month">[[admin/settings/email:digest-frequency-monthly]]</option>
 				</select>
 				<p class="form-text">[[admin/settings/email:digest-frequency-help]]</p>
+				<div class="alert alert-info mt-2">
+					<strong>[[admin/settings/email:digest-schedule-title]]</strong><br>
+					• <strong>[[user:digest-daily]]:</strong> [[admin/settings/email:digest-schedule-daily]]<br>
+					• <strong>[[user:digest-weekly]]:</strong> [[admin/settings/email:digest-schedule-weekly]]<br>
+					• <strong>[[user:digest-biweekly]]:</strong> [[admin/settings/email:digest-schedule-biweekly]]<br>
+					• <strong>[[user:digest-monthly]]:</strong> [[admin/settings/email:digest-schedule-monthly]]<br>
+					<br>
+					<em>[[admin/settings/email:digest-schedule-example]]</em>
+				</div>
 			</div>
 			<div class="mb-3">
 				<div class="mb-3 d-flex justify-content-between align-items-center">
