@@ -29,6 +29,26 @@
 	max-width: 512px;
 	width: 100%;
 	margin: 0 auto;
+	left: auto !important;
+
+	// Center modal on larger screens
+	@include desktop {
+		left: auto !important;
+	}
+	
+	// Center modal on larger screens
+	@include desktop-up {
+		left: 30% !important;
+	}
+	
+	// Remove left positioning for smaller devices
+	@include mobile {
+		left: auto !important;
+	}
+	
+	@include tablet {
+		left: 30% !important;
+	}
 
 	.speek-new-post-modal-header {
 		border-bottom: none;
@@ -384,6 +404,21 @@ body.speek-modal-open,
 body:has(#speek-new-post-modal.show),
 body:has(#speek-new-post-modal.showing),
 body.modal-open:has(#speek-new-post-modal) {
+	// Remove any white borders that might appear on the page
+	border: none !important;
+	outline: none !important;
+	
+	// Ensure page containers don't get white borders
+	#panel,
+	#content,
+	.container,
+	.container-lg,
+	.page-categories,
+	.categories-page,
+	.categories-grid {
+		border: none !important;
+		outline: none !important;
+	}
 	.composer,
 	[component="composer"],
 	.composer-container,
@@ -444,6 +479,31 @@ body.speek-composer-hidden {
 		padding: 16px;
 		max-width: 100%;
 		margin: 16px;
+	}
+}
+
+// Prevent white borders on category page when modal is open
+body.modal-open {
+	// Remove any focus outlines or borders that might appear
+	*, *:before, *:after {
+		outline: none !important;
+	}
+	
+	// Specifically target page containers
+	#panel,
+	#content,
+	.container,
+	.container-lg,
+	.page-categories,
+	.categories-page,
+	.categories-grid,
+	.category-card,
+	.row,
+	.col-lg-9,
+	.col-lg-12 {
+		border: none !important;
+		outline: none !important;
+		box-shadow: none !important;
 	}
 }
 
