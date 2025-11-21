@@ -56,7 +56,7 @@ html:has(body.in-iframe) {
 }
 
 @mixin speek-inline-dropdown {
-	position: relative;
+	position: relative !important;
 
 	.dropdown-menu {
 		display: block;
@@ -68,30 +68,36 @@ html:has(body.in-iframe) {
 		right: auto !important;
 		bottom: auto !important;
 		margin: 0 !important;
-		padding: 0.5rem;
-		min-width: 220px;
-		border-radius: 18px;
-		border: 1px solid rgba(53, 94, 102, 0.12);
-		background-color: rgba(252, 249, 236, 0.98);
+		padding: 8px !important;
+		min-width: 200px !important;
+		max-width: 300px !important;
+		width: auto !important;
+		border-radius: 18px !important;
+		border: 1px solid rgba(53, 94, 102, 0.12) !important;
+		background-color: rgba(252, 249, 236, 0.98) !important;
 		box-shadow: 0 20px 40px -18px rgba(31, 45, 50, 0.25);
-		overflow: visible;
-		max-height: 75vh;
-		overflow-y: auto;
-		transform: translate3d(0, 6px, 0);
+		overflow: visible !important;
+		max-height: none !important; // Remove height constraint
+		overflow-y: visible !important; // Prevent internal scrolling
+		transform: translate3d(0, 6px, 0) !important; // Slight upward offset for animation
 		transition:
-			opacity 160ms ease,
-			transform 180ms ease,
-			visibility 0s linear 180ms;
-		z-index: 1000;
+			opacity 200ms cubic-bezier(0.16, 1, 0.3, 1),
+			transform 200ms cubic-bezier(0.16, 1, 0.3, 1),
+			visibility 0s linear 200ms !important;
+		z-index: 999999 !important; // Extremely high z-index to ensure visibility
 		pointer-events: none;
+		// Ensure it doesn't affect document flow or cause scrolling
+		box-sizing: border-box !important;
+		scroll-margin: 0 !important;
+		scroll-padding: 0 !important;
 	}
 
 	.dropdown-menu.show {
 		opacity: 1;
 		visibility: visible;
-		transform: none;
+		transform: translate3d(0, 0, 0) !important; // Final position
 		pointer-events: auto;
-		transition-delay: 0s;
+		transition-delay: 0s !important;
 	}
 }
 
@@ -107,15 +113,26 @@ html:has(body.in-iframe) {
 
 @include desktop-up {
 	.bottom-sheet {
-		position: relative;
+		position: relative !important;
 
 		.dropdown-menu {
-			margin-top: 0 !important;
+			position: absolute !important;
+			margin: 0 !important;
 			top: calc(100% + 8px) !important;
 			left: 0 !important;
 			right: auto !important;
 			bottom: auto !important;
-			transform: translate3d(0, 8px, 0) !important;
+			transform: translate3d(0, 4px, 0) !important; // No transform offset
+			z-index: 999999 !important;
+			// Ensure consistent styling with mixin
+			min-width: 200px !important;
+			max-width: 300px !important;
+			width: auto !important;
+			padding: 8px !important;
+			border-radius: 12px !important;
+			background-color: rgba(252, 249, 236, 0.98) !important;
+			border: 1px solid rgba(53, 94, 102, 0.12) !important;
+			box-shadow: 0 20px 40px -18px rgba(31, 45, 50, 0.25);
 		}
 	}
 }
