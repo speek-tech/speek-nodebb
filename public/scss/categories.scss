@@ -282,7 +282,8 @@ ul.categories-list.list-unstyled,
   .categories-grid {
     display: grid !important;
     grid-template-columns: repeat(2, 1fr) !important;
-    gap: 40px !important;
+    row-gap: 40px !important;
+    column-gap: 24px !important;
     width: 100% !important;
     padding: 24px 0 0 !important;
     align-self: stretch !important;
@@ -298,6 +299,10 @@ ul.categories-list.list-unstyled,
     // Tablet and up: 2 columns
     @include tablet-up {
       grid-template-columns: repeat(2, 1fr) !important;
+      column-gap: 20px !important;
+    }
+    @include desktop-up {
+      column-gap: 24px !important;
     }
   }
 
