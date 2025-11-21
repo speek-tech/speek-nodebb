@@ -141,6 +141,8 @@ usersAPI.updateSettings = async function (caller, data) {
 	const current = await db.getObject(`user:${data.uid}:settings`);
 	const payload = { ...defaults, ...current, ...data.settings };
 	delete payload.uid;
+	// Digest frequency is now controlled globally by admin, reject user attempts to change it
+	delete payload.dailyDigestFreq;
 
 	return await user.saveSettings(data.uid, payload);
 };

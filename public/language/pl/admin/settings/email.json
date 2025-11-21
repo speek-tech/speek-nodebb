@@ -49,5 +49,7 @@
 	"prompt-help": "Jeśli użytkownik nie ma ustawionego adresu e-mail, albo jego adres nie jest potwierdzony, na ekranie zostanie wyświetlone ostrzeżenie.",
 	"sendEmailToBanned": "Wysyłaj maile także do zbanowanych użytkowników",
 	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
-	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following.",
+	"digest-frequency": "Digest Frequency (for all users)",
+	"digest-frequency-help": "Set how often digest emails are sent to all users. This setting applies globally and users cannot change it individually."
 }

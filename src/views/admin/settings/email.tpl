@@ -92,6 +92,17 @@
 				<p class="form-text">[[admin/settings/email:watch-all-activity-admins-help]]</p>
 			</div>
 			<div class="mb-3">
+				<label class="form-label" for="dailyDigestFreq">[[admin/settings/email:digest-frequency]]</label>
+				<select class="form-select" id="dailyDigestFreq" data-field="dailyDigestFreq">
+					<option value="off">[[admin/settings/user:digest-freq.off]]</option>
+					<option value="daily">[[admin/settings/user:digest-freq.daily]]</option>
+					<option value="weekly">[[admin/settings/user:digest-freq.weekly]]</option>
+					<option value="biweekly">[[admin/settings/user:digest-freq.biweekly]]</option>
+					<option value="monthly">[[admin/settings/user:digest-freq.monthly]]</option>
+				</select>
+				<p class="form-text">[[admin/settings/email:digest-frequency-help]]</p>
+			</div>
+			<div class="mb-3">
 				<div class="mb-3 d-flex justify-content-between align-items-center">
 					<label class="form-label" for="digestHour">[[admin/settings/email:subscriptions.hour]]</label>
 					<input type="number" class="form-control input-lg" id="digestHour" data-field="digestHour" placeholder="17" min="0" max="24" style="width: 64px;"/>

@@ -49,5 +49,7 @@
 	"prompt-help": "如果用户没有设置电子邮箱，或者他们的电子邮件未被验证，页面上将会显示警告。",
 	"sendEmailToBanned": "即使用户已被封禁也发送电子邮件",
 	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
-	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following.",
+	"digest-frequency": "Digest Frequency (for all users)",
+	"digest-frequency-help": "Set how often digest emails are sent to all users. This setting applies globally and users cannot change it individually."
 }

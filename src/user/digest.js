@@ -45,35 +45,36 @@ Digest.execute = async function (payload) {
 };
 
 Digest.getUsersInterval = async (uids) => {
-	// Checks whether user specifies digest setting, or false for system default setting
+	// Use global admin setting for all users
 	let single = false;
 	if (!Array.isArray(uids) && !isNaN(parseInt(uids, 10))) {
 		uids = [uids];
 		single = true;
 	}
 
-	const settings = await db.getObjects(uids.map(uid => `user:${uid}:settings`));
-	const interval = uids.map((uid, index) => (settings[index] && settings[index].dailyDigestFreq) || false);
+	// Return global digest frequency for all users
+	const globalDigestFreq = meta.config.dailyDigestFreq || 'off';
+	const interval = uids.map(() => globalDigestFreq);
 	return single ? interval[0] : interval;
 };
 
 Digest.getSubscribers = async function (interval) {
 	let subscribers = [];
 
-	await batch.processSortedSet('users:joindate', async (uids) => {
-		const settings = await user.getMultipleUserSettings(uids);
-		let subUids = [];
-		settings.forEach((hash) => {
-			if (hash.dailyDigestFreq === interval) {
-				subUids.push(hash.uid);
-			}
+	// Use global admin setting instead of individual user settings
+	const globalDigestFreq = meta.config.dailyDigestFreq || 'off';
+	
+	// If the requested interval matches the global setting, get all users
+	if (globalDigestFreq === interval) {
+		await batch.processSortedSet('users:joindate', async (uids) => {
+			// Get all users and filter out banned ones
+			let subUids = await user.bans.filterBanned(uids);
+			subscribers = subscribers.concat(subUids);
+		}, {
+			interval: 1000,
+			batch: 500,
 		});
-		subUids = await user.bans.filterBanned(subUids);
-		subscribers = subscribers.concat(subUids);
-	}, {
-		interval: 1000,
-		batch: 500,
-	});
+	}
 
 	const results = await plugins.hooks.fire('filter:digest.subscribers', {
 		interval: interval,

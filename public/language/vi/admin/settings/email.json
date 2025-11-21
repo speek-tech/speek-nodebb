@@ -49,5 +49,7 @@
 	"prompt-help": "Nếu người dùng chưa cung cấp email hoặc email của họ chưa được xác nhận, một cảnh báo sẽ được hiển thị trên màn hình.",
 	"sendEmailToBanned": "Gửi email cho người dùng ngay cả khi họ đã bị cấm",
 	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
-	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following.",
+	"digest-frequency": "Digest Frequency (for all users)",
+	"digest-frequency-help": "Set how often digest emails are sent to all users. This setting applies globally and users cannot change it individually."
 }
