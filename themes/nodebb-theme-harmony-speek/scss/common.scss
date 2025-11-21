@@ -122,8 +122,8 @@ html:has(body.in-iframe) {
 			left: 0 !important;
 			right: auto !important;
 			bottom: auto !important;
-			transform: translate3d(0, 4px, 0) !important; // No transform offset
-			z-index: 999999 !important;
+			transform: none !important; // Remove transform to prevent overlap
+			z-index: 1050 !important;
 			// Ensure consistent styling with mixin
 			min-width: 200px !important;
 			max-width: 300px !important;
@@ -133,6 +133,24 @@ html:has(body.in-iframe) {
 			background-color: rgba(252, 249, 236, 0.98) !important;
 			border: 1px solid rgba(53, 94, 102, 0.12) !important;
 			box-shadow: 0 20px 40px -18px rgba(31, 45, 50, 0.25);
+		}
+	}
+	
+	// Ensure category-pill dropdown menu appears below button on desktop
+	.category-pill {
+		position: relative !important;
+		
+		.category-pill__menu,
+		.dropdown-menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			margin-bottom: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
 		}
 	}
 }

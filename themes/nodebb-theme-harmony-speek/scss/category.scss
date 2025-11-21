@@ -1001,8 +1001,16 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		}
 		
 		.bottom-sheet {
-			.dropdown-menu {
-				top: calc(100% - 35px) !important;
+			.dropdown-menu,
+			.category-pill__menu {
+				position: absolute !important;
+				top: calc(100% + 8px) !important;
+				left: 0 !important;
+				right: auto !important;
+				bottom: auto !important;
+				margin-top: 0 !important;
+				transform: none !important;
+				z-index: 1050 !important;
 			}
 		}
 	}
@@ -1803,6 +1811,39 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		padding-left: 0 !important;
 		padding-right: 0 !important;
 	}
+	
+	// Ensure category dropdown appears below button on desktop
+	.category-pill {
+		position: relative !important;
+		
+		.category-pill__menu,
+		.dropdown-menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
+		}
+	}
+	
+	.bottom-sheet {
+		position: relative !important;
+		
+		.dropdown-menu,
+		.category-pill__menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
+		}
+	}
 }
 
 // Desktop XL: No padding for full width
@@ -1816,6 +1857,39 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	.speek-category-main {
 		padding-left: 0 !important;
 		padding-right: 0 !important;
+	}
+	
+	// Ensure category dropdown appears below button on desktop-xl
+	.category-pill {
+		position: relative !important;
+		
+		.category-pill__menu,
+		.dropdown-menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
+		}
+	}
+	
+	.bottom-sheet {
+		position: relative !important;
+		
+		.dropdown-menu,
+		.category-pill__menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
+		}
 	}
 }
 

@@ -2,6 +2,11 @@
 	position: relative;
 	display: inline-flex;
 	align-items: center;
+	
+	// Ensure dropdown menu positioning context
+	@include desktop-up {
+		position: relative !important;
+	}
 }
 
 .category-pill__trigger {
@@ -89,6 +94,40 @@
 	border: 1px solid rgba(53, 94, 102, 0.1);
 	box-shadow: 0 12px 32px -12px rgba(31, 45, 50, 0.25);
 	background-color: rgba(252, 249, 236, 0.96);
+	
+	// Ensure dropdown appears below button on desktop (1024px and above)
+	@include desktop-up {
+		position: absolute !important;
+		top: calc(100% + 8px) !important;
+		left: 0 !important;
+		right: auto !important;
+		bottom: auto !important;
+		margin-top: 0 !important;
+		margin-bottom: 0 !important;
+		transform: none !important;
+		z-index: 1050 !important;
+	}
+}
+
+// Override Bootstrap's default dropdown positioning for category pills
+.category-pill.dropdown,
+.category-pill.bottom-sheet {
+	@include desktop-up {
+		position: relative !important;
+		
+		.dropdown-menu,
+		.category-pill__menu {
+			position: absolute !important;
+			top: calc(100% + 8px) !important;
+			left: 0 !important;
+			right: auto !important;
+			bottom: auto !important;
+			margin-top: 0 !important;
+			margin-bottom: 0 !important;
+			transform: none !important;
+			z-index: 1050 !important;
+		}
+	}
 }
 
 .category-pill__option {
