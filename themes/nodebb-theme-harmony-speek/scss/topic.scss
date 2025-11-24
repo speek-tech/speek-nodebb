@@ -509,8 +509,8 @@ body.template-topic {
 
 		// Topic Post Card Styles (Figma Design)
 		.speek-topic-post-card {
-			background: #FDFDFC;
-			// background-color: #FDFDFC;
+			background: #FDFDFC !important;
+			background-color: #FDFDFC !important;
 			border-radius: 16px;
 			padding: 16px;
 			display: flex;
@@ -592,12 +592,22 @@ body.template-topic {
 				opacity: 0.65;
 			}
 
+			// Force #FDFDFC background for all posts (including unread) - Edge case fix
+			&.unread,
+			&[data-unread="true"],
+			&[class*="unread"] {
+				background: #FDFDFC !important;
+				background-color: #FDFDFC !important;
+			}
+
 			// User Info Section
 			.speek-post-card-header {
 				display: flex;
 				align-items: center;
 				gap: 12px;
 				// No background color for main post header - only for replies
+				// Ensure header doesn't override card background
+				background-color: transparent !important;
 
 				.speek-user-avatar {
 					flex-shrink: 0;
