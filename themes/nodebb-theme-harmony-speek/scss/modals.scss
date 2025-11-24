@@ -6,16 +6,32 @@
 }
 
 // New Post Creation Modal (Figma Design)
-// Modal dialog positioning for extra large desktops
+// Modal dialog positioning - 5% from top for all breakpoints
 #speek-new-post-modal {
 	.modal-dialog.modal-dialog-centered {
+		// Remove Bootstrap's vertical centering and position 5% from top
+		position: fixed !important;
+		top: 5vh !important;
+		left: 50% !important;
+		// Keep horizontal centering
+		transform: translateX(-50%) !important;
+		margin: 0 !important;
+		max-height: 90vh !important;
+		width: auto;
+		display: flex !important;
+		align-items: flex-start !important;
+		justify-content: center !important;
+
 		@include desktop-xl {
 			// On extra large desktops (≥1280px), shift modal to the right to account for sidebar
 			// This makes it appear visually centered in the main content area
 			// Sidebar is 200px wide, so we offset by half of that (100px) to center in content area
-			// transform: translateX(200px); // Shift right by half sidebar width to visually center
-			margin-left: 100px;
-			margin-right: -100px;
+			transform: translateX(calc(-50% + 100px)) !important;
+		}
+		@include mobile {
+			.speek-new-post-modal-content{
+				max-width: 512px;
+			}
 		}
 	}
 }
@@ -28,27 +44,11 @@
 	padding: 24px;
 	max-width: 512px;
 	width: 100%;
-	margin: 0 auto;
-	left: auto !important;
-
-	// Center modal on larger screens
-	@include desktop {
-		left: auto !important;
-	}
-	
-	// Center modal on larger screens
-	@include desktop-up {
-		left: 30% !important;
-	}
-	
-	// Remove left positioning for smaller devices
-	@include mobile {
-		left: auto !important;
-	}
-	
-	@include tablet {
-		left: 30% !important;
-	}
+	margin: 0 !important;
+	max-height: 90vh;
+	overflow-y: auto;
+	display: flex;
+	flex-direction: column;
 
 	.speek-new-post-modal-header {
 		border-bottom: none;
@@ -475,10 +475,23 @@ body.speek-composer-hidden {
 
 // Responsive styles
 @include mobile {
+	#speek-new-post-modal {
+		.modal-dialog.modal-dialog-centered {
+			// Maintain 5% from top on mobile with proper horizontal centering
+			top: 5vh !important;
+			left: 50% !important;
+			transform: translateX(-50%) !important;
+			width: calc(100vw - 32px);
+			max-width: calc(100vw - 32px);
+			max-height: 90vh !important;
+		}
+	}
+
 	.speek-new-post-modal-content {
 		padding: 16px;
 		max-width: 100%;
-		margin: 16px;
+		margin: 0 !important;
+		max-height: 90vh;
 	}
 }
 
