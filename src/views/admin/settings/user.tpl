@@ -310,23 +310,14 @@
 					<label for="topicSearchEnabled" class="form-check-label">[[admin/settings/user:topic-search]]</label>
 				</div>
 
-				<div class="form-check form-switch mb-3">
-					<input class="form-check-input" type="checkbox" id="updateUrlWithPostIndex" data-field="updateUrlWithPostIndex">
-					<label for="updateUrlWithPostIndex" class="form-check-label">[[admin/settings/user:update-url-with-post-index]]</label>
-				</div>
+			<div class="form-check form-switch mb-3">
+				<input class="form-check-input" type="checkbox" id="updateUrlWithPostIndex" data-field="updateUrlWithPostIndex">
+				<label for="updateUrlWithPostIndex" class="form-check-label">[[admin/settings/user:update-url-with-post-index]]</label>
+			</div>
 
-				<div class="mb-3">
-					<label class="form-label" for="dailyDigestFreq">[[admin/settings/user:digest-freq]]</label>
-					<select id="dailyDigestFreq" class="form-select" data-field="dailyDigestFreq">
-						<option value="off">[[admin/settings/user:digest-freq.off]]</option>
-						<option value="day">[[admin/settings/user:digest-freq.daily]]</option>
-						<option value="week">[[admin/settings/user:digest-freq.weekly]]</option>
-						<option value="biweek">[[admin/settings/user:digest-freq.biweekly]]</option>
-						<option value="month">[[admin/settings/user:digest-freq.monthly]]</option>
-					</select>
-				</div>
+			<!-- Digest frequency is now controlled globally in Admin > Settings > Email -->
 
-				<div class="form-check form-switch mb-3">
+			<div class="form-check form-switch mb-3">
 					<input class="form-check-input" type="checkbox" id="followTopicsOnCreate" data-field="followTopicsOnCreate">
 					<label for="followTopicsOnCreate" class="form-check-label">[[admin/settings/user:follow-created-topics]]</label>
 				</div>

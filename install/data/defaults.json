@@ -169,7 +169,7 @@
     "sendEmailToBanned": 0,
     "requireEmailAddress": 0,
     "inviteExpiration": 7,
-    "dailyDigestFreq": "off",
+    "dailyDigestFreq": "weekly",
     "digestHour": 17,
     "passwordExpiryDays": 0,
     "cross-origin-embedder-policy": 0,

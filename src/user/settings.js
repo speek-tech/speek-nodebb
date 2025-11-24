@@ -144,30 +144,30 @@ module.exports = function (User) {
 		plugins.hooks.fire('action:user.saveSettings', { uid: uid, settings: data });
 
 		const settings = {
-			showemail: data.showemail,
-			showfullname: data.showfullname,
-			openOutgoingLinksInNewTab: data.openOutgoingLinksInNewTab,
-			dailyDigestFreq: data.dailyDigestFreq || 'off',
-			usePagination: data.usePagination,
-			topicsPerPage: Math.min(data.topicsPerPage, parseInt(maxTopicsPerPage, 10) || 20),
-			postsPerPage: Math.min(data.postsPerPage, parseInt(maxPostsPerPage, 10) || 20),
-			userLang: data.userLang || meta.config.defaultLang,
-			acpLang: data.acpLang || meta.config.defaultLang,
-			followTopicsOnCreate: data.followTopicsOnCreate,
-			followTopicsOnReply: data.followTopicsOnReply,
-			disableIncomingChats: data.disableIncomingChats,
-			topicSearchEnabled: data.topicSearchEnabled,
-			updateUrlWithPostIndex: data.updateUrlWithPostIndex,
-			homePageRoute: ((data.homePageRoute === 'custom' ? data.homePageCustom : data.homePageRoute) || '').replace(/^\//, ''),
-			scrollToMyPost: data.scrollToMyPost,
-			upvoteNotifFreq: data.upvoteNotifFreq,
-			bootswatchSkin: data.bootswatchSkin,
-			categoryWatchState: data.categoryWatchState,
-			categoryTopicSort: data.categoryTopicSort,
-		topicPostSort: data.topicPostSort,
-		chatAllowList: data.chatAllowList,
-		chatDenyList: data.chatDenyList,
-	};
+		showemail: data.showemail,
+		showfullname: data.showfullname,
+		openOutgoingLinksInNewTab: data.openOutgoingLinksInNewTab,
+		// dailyDigestFreq is now controlled by admin globally, not by users
+		usePagination: data.usePagination,
+		topicsPerPage: Math.min(data.topicsPerPage, parseInt(maxTopicsPerPage, 10) || 20),
+		postsPerPage: Math.min(data.postsPerPage, parseInt(maxPostsPerPage, 10) || 20),
+		userLang: data.userLang || meta.config.defaultLang,
+		acpLang: data.acpLang || meta.config.defaultLang,
+		followTopicsOnCreate: data.followTopicsOnCreate,
+		followTopicsOnReply: data.followTopicsOnReply,
+		disableIncomingChats: data.disableIncomingChats,
+		topicSearchEnabled: data.topicSearchEnabled,
+		updateUrlWithPostIndex: data.updateUrlWithPostIndex,
+		homePageRoute: ((data.homePageRoute === 'custom' ? data.homePageCustom : data.homePageRoute) || '').replace(/^\//, ''),
+		scrollToMyPost: data.scrollToMyPost,
+		upvoteNotifFreq: data.upvoteNotifFreq,
+		bootswatchSkin: data.bootswatchSkin,
+		categoryWatchState: data.categoryWatchState,
+		categoryTopicSort: data.categoryTopicSort,
+	topicPostSort: data.topicPostSort,
+	chatAllowList: data.chatAllowList,
+	chatDenyList: data.chatDenyList,
+};
 		const notificationTypes = await notifications.getAllNotificationTypes();
 		notificationTypes.forEach((notificationType) => {
 			if (data[notificationType]) {
@@ -176,7 +176,7 @@ module.exports = function (User) {
 		});
 		const result = await plugins.hooks.fire('filter:user.saveSettings', { uid: uid, settings: settings, data: data });
 		await db.setObject(`user:${uid}:settings`, result.settings);
-		await User.updateDigestSetting(uid, data.dailyDigestFreq);
+		// Digest setting is now controlled globally by admin, don't update individual user settings
 		return await User.getSettings(uid);
 	};
 

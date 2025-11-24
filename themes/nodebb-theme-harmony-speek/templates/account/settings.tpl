@@ -165,15 +165,7 @@
 		<hr/>
 		<h6 class="fw-bold">[[global:email]]</h6>
 		<div>
-			<div class="mb-2">
-				<label class="form-label text-sm" for="dailyDigestFreq">[[user:digest-label]]</label>
-				<select class="form-select form-select-sm" id="dailyDigestFreq" data-property="dailyDigestFreq" autocomplete="off">
-					{{{each dailyDigestFreqOptions}}}
-					<option value="{./value}" {{{ if ./selected }}}selected="1"{{{ end }}}>{./name}</option>
-					{{{end}}}
-				</select>
-				<p class="form-text text-xs">[[user:digest-description]]</p>
-			</div>
+			<p class="form-text text-xs">Email digests are managed by administrators and sent automatically to all users.</p>
 		</div>
 		{{{ end }}}
 

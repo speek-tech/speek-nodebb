@@ -49,5 +49,18 @@
 	"prompt-help": "اگر صارف کا ای میل سیٹ نہیں ہے، یا اگر اس کی تصدیق نہیں ہوئی، تو اس کی سکرین پر ایک تنبیہی پیغام دکھایا جائے گا۔",
 	"sendEmailToBanned": "پابندی شدہ صارفین کو بھی ای میلز بھیجیں",
 	"watch-all-activity-admins": "Enable watch-all notifications for administrators",
-	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following."
+	"watch-all-activity-admins-help": "When enabled, all administrators will receive notifications for every new post and comment in the community. Administrators will not receive duplicate notifications for topics they are already following.",
+	"digest-frequency": "Digest Frequency (for all users)",
+	"digest-frequency-help": "Set how often digest emails are sent to all users. This setting applies globally and users cannot change it individually.",
+	"digest-frequency-off": "Off - No digests sent",
+	"digest-frequency-daily": "Daily - Every day at digest hour",
+	"digest-frequency-weekly": "Weekly - Every Sunday at digest hour",
+	"digest-frequency-biweekly": "Bi-Weekly - Every other Sunday at digest hour",
+	"digest-frequency-monthly": "Monthly - 1st of every month at digest hour",
+	"digest-schedule-title": "Schedule Details:",
+	"digest-schedule-daily": "Daily: Runs every day at the digest hour",
+	"digest-schedule-weekly": "Weekly: Runs every Sunday at the digest hour",
+	"digest-schedule-biweekly": "Bi-Weekly: Runs every other Sunday at the digest hour",
+	"digest-schedule-monthly": "Monthly: Runs on the 1st of every month at the digest hour",
+	"digest-schedule-example": "Example: If digest hour is set to 17, weekly digests will be sent every Sunday at 5:00 PM server time."
 }

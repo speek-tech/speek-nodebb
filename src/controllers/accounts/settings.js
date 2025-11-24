@@ -52,13 +52,8 @@ settingsController.get = async function (req, res, next) {
 	userData.notificationSettings = notificationSettings;
 	userData.disableEmailSubscriptions = meta.config.disableEmailSubscriptions;
 
-	userData.dailyDigestFreqOptions = [
-		{ value: 'off', name: '[[user:digest-off]]', selected: userData.settings.dailyDigestFreq === 'off' },
-		{ value: 'day', name: '[[user:digest-daily]]', selected: userData.settings.dailyDigestFreq === 'day' },
-		{ value: 'week', name: '[[user:digest-weekly]]', selected: userData.settings.dailyDigestFreq === 'week' },
-		{ value: 'biweek', name: '[[user:digest-biweekly]]', selected: userData.settings.dailyDigestFreq === 'biweek' },
-		{ value: 'month', name: '[[user:digest-monthly]]', selected: userData.settings.dailyDigestFreq === 'month' },
-	];
+	// Digest frequency is now controlled by admin globally, not by individual users
+	userData.dailyDigestFreqOptions = [];
 
 	userData.languages.forEach((language) => {
 		language.selected = language.code === userData.settings.userLang;
