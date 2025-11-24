@@ -914,6 +914,10 @@ $(document).ready(function () {
 				$.ajax({
 					url: form.attr('action'),
 					method: 'POST',
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest',
+						'Accept': 'application/json'
+					},
 					data: formData,
 					success: function (response) {
 						// Close modal
@@ -942,25 +946,45 @@ $(document).ready(function () {
 					error: function (xhr) {
 						console.error('Error submitting post:', xhr);
 						
-						// Handle server-side validation errors
-						if (xhr.responseJSON && xhr.responseJSON.errors) {
-							const errors = xhr.responseJSON.errors;
-							
-							if (errors.cid || errors.space) {
-								showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+						let errorMessage = 'Error submitting post. Please try again.';
+						
+						// Try to extract error message from JSON response
+						if (xhr.responseJSON) {
+							// Handle NodeBB error format
+							if (xhr.responseJSON.status && xhr.responseJSON.status.message) {
+								errorMessage = xhr.responseJSON.status.message;
 							}
 							
-							if (errors.title) {
-								showError('speek-new-post-title', 'speek-error-title', errors.title);
+							// Handle errors object format
+							if (xhr.responseJSON.errors) {
+								const errors = xhr.responseJSON.errors;
+								
+								if (errors.cid || errors.space) {
+									showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+									return;
+								}
+								
+								if (errors.title) {
+									showError('speek-new-post-title', 'speek-error-title', errors.title);
+									return;
+								}
+								
+								if (errors.content) {
+									errorMessage = errors.content;
+								}
 							}
-							
-							if (errors.content) {
-								showError('speek-new-post-content', 'speek-error-content', errors.content);
+						} else if (xhr.responseText) {
+							// Try to extract error message from HTML response
+							// Look for error message in HTML (NodeBB error pages contain error in a data attribute or specific element)
+							const errorMatch = xhr.responseText.match(/<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/i) ||
+												xhr.responseText.match(/error["\s]*[:=]["\s]*([^<"]+)/i);
+							if (errorMatch && errorMatch[1]) {
+								errorMessage = errorMatch[1].trim();
 							}
-						} else {
-							// Generic error message
-							showError('speek-new-post-content', 'speek-error-content', 'Error submitting post. Please try again.');
 						}
+						
+						// Show error message
+						showError('speek-new-post-content', 'speek-error-content', errorMessage);
 					}
 				});
 			});
