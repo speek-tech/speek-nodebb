@@ -23,11 +23,23 @@
 		justify-content: center !important;
 
 		@include desktop-xl {
-			// On extra large desktops (≥1280px), shift modal to the right to account for sidebar
-			// This makes it appear visually centered in the main content area
-			// Sidebar is 200px wide, so we offset by half of that (100px) to center in content area
-			transform: translateX(calc(-50% + 100px)) !important;
+			// On extra large desktops (1280px to 1535px), ensure proper horizontal centering
+			// Reset any sidebar offset and center properly
+			left: 50% !important;
+			transform: translateX(-50%) !important;
 		}
+
+		@include desktop-2xl {
+			// On 2xl desktops (≥1536px), ensure proper horizontal centering
+			left: 50% !important;
+			transform: translateX(-50%) !important;
+		}
+
+		@include tablet {
+			left: 50% !important;
+            transform: translateX(-40%) !important;
+		}
+
 		@include mobile {
 			.speek-new-post-modal-content{
 				max-width: 512px;
