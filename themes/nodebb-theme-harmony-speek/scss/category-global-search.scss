@@ -270,13 +270,15 @@
 
 @media (max-width: 768px) {
 	.category-inline-search {
-		padding-top: 0;
-		padding-bottom: 0;
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+		// Add padding to accommodate focus ring and transform on mobile
+		padding-top: calc(0px + 3px + 2px); // Space for focus ring (3px) + transform offset (2px) = 5px
+		padding-bottom: 3px; // Space for focus ring (3px)
+		padding-left: 3px !important; // Space for left focus ring
+		padding-right: 3px !important; // Space for right focus ring
 		margin-left: 0 !important;
 		margin-right: 0 !important;
 		gap: 1.25rem;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-search-title {
@@ -320,17 +322,20 @@
 
 @include mobile {
 	.category-inline-search {
-		padding-top: 0;
-		padding-bottom: 0;
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+		// Add padding to accommodate focus ring and transform on mobile
+		padding-top: calc(0px + 3px + 2px); // Space for focus ring (3px) + transform offset (2px) = 5px
+		padding-bottom: 3px; // Space for focus ring (3px)
+		padding-left: 3px !important; // Space for left focus ring
+		padding-right: 3px !important; // Space for right focus ring
 		margin-left: 0 !important;
 		margin-right: 0 !important;
 		gap: 0;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-search-input {
 		gap: 0;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-input {
