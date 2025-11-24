@@ -57,5 +57,7 @@
     "banned.text1": "Пользователь %1 был заблокирован на форуме %2.",
     "banned.text2": "Блокировка продлится до %1.",
     "banned.text3": "Причина вашей блокировки:",
-    "closing": "Спасибо!"
+    "closing": "Спасибо!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

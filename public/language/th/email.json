@@ -57,5 +57,7 @@
     "banned.text1": "ผู้ใช้ %1 ได้ถูกแบนจาก %2",
     "banned.text2": "การแบนนี้มีผลจนถึง %1",
     "banned.text3": "นี่คือเหตุผลที่ทำไมคุณถึงถูกแบน",
-    "closing": "ขอบคุณ!"
+    "closing": "ขอบคุณ!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

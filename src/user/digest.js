@@ -69,6 +69,15 @@ Digest.getSubscribers = async function (interval) {
 		await batch.processSortedSet('users:joindate', async (uids) => {
 			// Get all users and filter out banned ones
 			let subUids = await user.bans.filterBanned(uids);
+			
+			// Filter out users who have unsubscribed from digest emails
+			const userSettings = await user.getMultipleUserSettings(subUids);
+			subUids = subUids.filter((uid, index) => {
+				const setting = userSettings[index];
+				// Only include users who haven't explicitly opted out
+				return !setting || setting.dailyDigestFreq !== 'off';
+			});
+			
 			subscribers = subscribers.concat(subUids);
 		}, {
 			interval: 1000,

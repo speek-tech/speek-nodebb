@@ -57,5 +57,7 @@
     "banned.text1": "Uživatel %1 byl zablokován od %2",
     "banned.text2": "Blokace bude trvat do %1",
     "banned.text3": "Toto je důvod, proč jste byl zablokován:",
-    "closing": "Díky."
+    "closing": "Díky.",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

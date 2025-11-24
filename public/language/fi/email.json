@@ -57,5 +57,7 @@
     "banned.text1": "Käyttäjä \"%1\" esti pääsysi huoneeseen \"%2\".",
     "banned.text2": "Esto päättyy %1.",
     "banned.text3": "Tämä on eston syy:",
-    "closing": "Kiitos!"
+    "closing": "Kiitos!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

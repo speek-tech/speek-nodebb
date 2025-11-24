@@ -104,10 +104,8 @@ const jwtVerifyAsync = util.promisify((token, callback) => {
 });
 const doUnsubscribe = async (payload) => {
 	if (payload.template === 'digest') {
-		await Promise.all([
-			user.setSetting(payload.uid, 'dailyDigestFreq', 'off'),
-			user.updateDigestSetting(payload.uid, 'off'),
-		]);
+		// Set user's preference to opt out of digest emails
+		await user.setSetting(payload.uid, 'dailyDigestFreq', 'off');
 	} else if (payload.template === 'notification') {
 		const currentToNewSetting = {
 			notificationemail: 'notification',

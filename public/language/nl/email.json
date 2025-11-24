@@ -57,5 +57,7 @@
     "banned.text1": "De gebruiker %1 is verbannen van %2.",
     "banned.text2": "Deze verbanning duurt tot %1.",
     "banned.text3": "U bent verbannen om de volgende reden:",
-    "closing": "Bedankt!"
+    "closing": "Bedankt!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

@@ -57,5 +57,7 @@
     "banned.text1": "%1 istifadəçisi %2-dən ban edilib.",
     "banned.text2": "Bu qadağa %1-ə qədər davam edəcək.",
     "banned.text3": "Ban olunmağınızın səbəbi budur:",
-    "closing": "Təşəkkürlər!"
+    "closing": "Təşəkkürlər!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

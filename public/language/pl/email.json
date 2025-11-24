@@ -57,5 +57,7 @@
     "banned.text1": "Użytkownik %1 został zbanowany na %2.",
     "banned.text2": "Ban potrwa do %1",
     "banned.text3": "Oto powód, dla którego zostałeś zbanowany:",
-    "closing": "Dziękujemy!"
+    "closing": "Dziękujemy!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

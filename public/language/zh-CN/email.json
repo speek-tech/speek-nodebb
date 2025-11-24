@@ -57,5 +57,7 @@
     "banned.text1": "您在 %2 的用户 %1 已被封禁。",
     "banned.text2": "本次封禁将在 %1 结束。",
     "banned.text3": "这是您被封禁的原因：",
-    "closing": "谢谢！"
+    "closing": "谢谢！",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }
