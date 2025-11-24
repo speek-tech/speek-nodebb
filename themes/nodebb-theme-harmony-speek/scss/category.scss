@@ -1123,7 +1123,8 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 		padding-right: 0;
 		
 		.category-item.speek-post-card {
-			background: #fdfdfc;
+			background: #FDFDFC !important;
+			background-color: #FDFDFC !important;
 			border-radius: 16px;
 			border: 1px solid $speek-border-light;
 			padding: 24px;
@@ -1131,6 +1132,15 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 			box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05),
 				0px 4px 6px -1px rgba(0, 0, 0, 0.05);
 			transition: box-shadow 0.2s ease;
+
+			// Force #FDFDFC background for all posts (including unread) - Edge case fix
+			// Override global .unread rule from nodebb.css (line 79) that sets background to #EFECE1
+			&.unread,
+			&[data-unread="true"],
+			&[class*="unread"] {
+				background: #FDFDFC !important;
+				background-color: #FDFDFC !important;
+			}
 
 			&:hover {
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -1142,6 +1152,8 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				align-items: center;
 				gap: 12px;
 				margin-bottom: 16px;
+				// Ensure header doesn't override card background
+				background-color: transparent !important;
 
 				.speek-user-avatar {
 					flex-shrink: 0;
@@ -1257,8 +1269,28 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	}
 }
 
+// Additional override for .unread class applied to category items 
+// Override global .unread rule from nodebb.css (line 79) that sets background to #EFECE1 (--speek-bg)
+.page-category .topics-list .category-item.unread.speek-post-card,
+.page-category .topics-list.speek-topics-list .category-item.unread,
+.category-item.unread.speek-post-card {
+	background: #FDFDFC !important;
+	background-color: #FDFDFC !important;
+}
+
 // Carousel cards
 .speek-post-card {
+	// Force #FDFDFC background for all post cards - Edge case fix
+	background: #FDFDFC !important;
+	background-color: #FDFDFC !important;
+	
+	&.unread,
+	&[data-unread="true"],
+	&[class*="unread"] {
+		background: #FDFDFC !important;
+		background-color: #FDFDFC !important;
+	}
+
 	// Space badge for carousel version
 	.speek-space-badge {
 		display: inline-flex;
