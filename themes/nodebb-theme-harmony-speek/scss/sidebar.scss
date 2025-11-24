@@ -78,6 +78,15 @@
 
 	.search-dropdown {
 		width: 300px;
+
+		// Apply same focus state colors to search input (matching input.tsx)
+		.form-control[name="query"] {
+			&:focus {
+				outline: none !important;
+				border-color: #f9f8f4 !important; /* var(--ring) from globals.css */
+				box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5) !important; /* var(--custom-outline-light-outline-50) from globals.css */
+			}
+		}
 	}
 
 	.chats-dropdown, .notifications-dropdown, .drafts-dropdown {

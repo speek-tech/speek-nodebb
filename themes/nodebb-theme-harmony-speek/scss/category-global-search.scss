@@ -31,10 +31,10 @@
 	transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
 	&:focus-within {
-		border-color: var(--ring, #0ea5e9);
-		box-shadow: 0 0 0 3px
-			var(--custom-outline-light-outline-50, rgba(56, 189, 248, 0.3));
+		border-color: #f9f8f4; /* var(--ring) from globals.css */
+		box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5); /* var(--custom-outline-light-outline-50) from globals.css */
 		transform: translateY(-2px);
+		outline: none;
 	}
 }
 
@@ -342,6 +342,20 @@
 
 	.category-search-meta {
 		margin-bottom: 8px;
+	}
+}
+
+// Apply same focus state colors to all NodeBB search inputs
+// Matching input.tsx focus state: ring-[var(--custom-outline-light-outline-50)] and border-[var(--ring)]
+.search-dropdown .form-control[name="query"],
+#search-input,
+.search .form-control[component="category-search"],
+.form-control[component="search"],
+input[type="text"].form-control[name="query"] {
+	&:focus {
+		outline: none !important;
+		border-color: #f9f8f4 !important; /* var(--ring) from globals.css */
+		box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5) !important; /* var(--custom-outline-light-outline-50) from globals.css */
 	}
 }
 
