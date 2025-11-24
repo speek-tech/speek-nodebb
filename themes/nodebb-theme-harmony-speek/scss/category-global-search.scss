@@ -5,10 +5,12 @@
 	gap: 0;
 	padding-top: 20px;
 	padding-bottom: 20px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
+	// Prevent clipping of focus ring
+	overflow: visible;
 }
 
 .category-inline-search-input {
@@ -16,6 +18,9 @@
 	flex-direction: column;
 	gap: 0;
 	width: 100%;
+	// Prevent clipping of focus ring (box-shadow) - add padding for 3px ring
+	box-sizing: content-box; // Ensure padding is included in box model
+	overflow: visible; // Allow box-shadow to be visible
 }
 
 .category-inline-input-wrapper {
@@ -33,8 +38,8 @@
 	&:focus-within {
 		border-color: #f9f8f4; /* var(--ring) from globals.css */
 		box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5); /* var(--custom-outline-light-outline-50) from globals.css */
-		transform: translateY(-2px);
 		outline: none;
+		transform: translateY(-2px);
 	}
 }
 
