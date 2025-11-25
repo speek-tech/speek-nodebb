@@ -353,13 +353,11 @@ $(document).ready(function () {
 	function setupNewPostModal() {
 		console.log('setupNewPostModal function called');
 		require(['jquery', 'bootstrap', 'api', 'ajaxify'], function ($, bootstrap, api, ajaxify) {
-			console.log('setupNewPostModal: require callback executed, dependencies loaded');
 			const modal = $('#speek-new-post-modal');
 			if (!modal.length) {
 				console.log('Modal element not found: #speek-new-post-modal');
 				return;
 			}
-			console.log('Modal element found, setting up event handlers');
 
 			var activeCategoryId = null;
 
@@ -946,99 +944,100 @@ $(document).ready(function () {
 				const formData = {
 					cid: parseInt($('#speek-new-post-cid').val() || $('#speek-new-post-space').val(), 10),
 					title: $('#speek-new-post-title').val().trim(),
-					content: textarea.val().trim()
+					content: textarea.val().trim(),
+					_csrf: $('input[name="_csrf"]').val()
 				};
 
-				console.log('Submitting post with data:', formData);
+				// Submit via AJAX
+				$.ajax({
+					url: form.attr('action'),
+					method: 'POST',
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest',
+						'Accept': 'application/json'
+					},
+					data: formData,
+					success: function (response) {
+						// Close modal
+						const bsModal = bootstrap.Modal.getInstance(modal[0]);
+						if (bsModal) {
+							bsModal.hide();
+							// postMessage will be sent by the hidden.bs.modal event handler
+						}
 
-				// Submit via NodeBB API (api module automatically prepends /api/v3)
-				api.post('/topics', formData, function (err, topicData) {
-					console.log('API response - err:', err, 'topicData:', topicData);
-					if (err) {
-						console.error('Error submitting post:', err);
+						// Reset form
+						form[0].reset();
+						updateCharCount();
+						// Clear all errors
+						hideError('speek-new-post-space', 'speek-error-space');
+						hideError('speek-new-post-title', 'speek-error-title');
+						hideError('speek-new-post-content', 'speek-error-content');
+
+						const redirectTarget = response && response.redirect ? response.redirect : null;
+
+						try {
+							window.parent.postMessage({
+								type: 'nodebb-post-created',
+								redirect: redirectTarget || null
+							}, '*');
+						} catch (err) {
+							console.error('Failed to notify parent window about post creation:', err);
+						}
+
+						if (postSuccessRedirectTimeout) {
+							clearTimeout(postSuccessRedirectTimeout);
+						}
+
+						postSuccessRedirectTimeout = setTimeout(() => {
+							if (redirectTarget) {
+								window.location.href = redirectTarget;
+							} else {
+								window.location.reload();
+							}
+						}, POST_SUCCESS_REDIRECT_DELAY);
+					},
+					error: function (xhr) {
+						console.error('Error submitting post:', xhr);
 						
-						// Handle server-side validation errors
-						if (err.responseJSON && err.responseJSON.errors) {
-							const errors = err.responseJSON.errors;
-							
-							if (errors.cid || errors.space) {
-								showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+						let errorMessage = 'Error submitting post. Please try again.';
+						
+						// Try to extract error message from JSON response
+						if (xhr.responseJSON) {
+							// Handle NodeBB error format
+							if (xhr.responseJSON.status && xhr.responseJSON.status.message) {
+								errorMessage = xhr.responseJSON.status.message;
 							}
 							
-							if (errors.title) {
-								showError('speek-new-post-title', 'speek-error-title', errors.title);
+							// Handle errors object format
+							if (xhr.responseJSON.errors) {
+								const errors = xhr.responseJSON.errors;
+								
+								if (errors.cid || errors.space) {
+									showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+									return;
+								}
+								
+								if (errors.title) {
+									showError('speek-new-post-title', 'speek-error-title', errors.title);
+									return;
+								}
+								
+								if (errors.content) {
+									errorMessage = errors.content;
+								}
 							}
-							
-							if (errors.content) {
-								showError('speek-new-post-content', 'speek-error-content', errors.content);
+						} else if (xhr.responseText) {
+							// Try to extract error message from HTML response
+							// Look for error message in HTML (NodeBB error pages contain error in a data attribute or specific element)
+							const errorMatch = xhr.responseText.match(/<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/i) ||
+												xhr.responseText.match(/error["\s]*[:=]["\s]*([^<"]+)/i);
+							if (errorMatch && errorMatch[1]) {
+								errorMessage = errorMatch[1].trim();
 							}
-						} else {
-							// Generic error message
-							const errorMessage = err.message || err.statusText || 'Error submitting post. Please try again.';
-							showError('speek-new-post-content', 'speek-error-content', errorMessage);
 						}
-						return;
-					}
-
-					// Success - close modal
-					const bsModal = bootstrap.Modal.getInstance(modal[0]);
-					if (bsModal) {
-						bsModal.hide();
-						// postMessage will be sent by the hidden.bs.modal event handler
-					}
-
-					// Reset form
-					form[0].reset();
-					updateCharCount();
-					// Clear all errors
-					hideError('speek-new-post-space', 'speek-error-space');
-					hideError('speek-new-post-title', 'speek-error-title');
-					hideError('speek-new-post-content', 'speek-error-content');
-
-					// Send analytics event
-					try {
-						window.parent.postMessage({
-							type: 'posthog_analytics',
-							action: 'write_post'
-						}, '*');
-					} catch (e) {
-						console.log('Could not send analytics postMessage:', e);
-					}
-
-					// Handle queued posts
-					if (topicData && topicData.queued) {
-						// Post was queued for moderation
-						require(['alerts'], function (alerts) {
-							alerts.alert({
-								type: 'success',
-								title: '[[global:alert.success]]',
-								message: topicData.message || '[[success:post-queued]]',
-								timeout: 10000,
-								clickfn: function () {
-									if (topicData.id) {
-										ajaxify.go(`/post-queue/${topicData.id}`);
-									}
-								},
-							});
-						});
-						// Close modal but don't redirect
-						return;
-					}
-
-					// Redirect to the new topic
-					if (topicData) {
-						// topicData should have slug or tid
-						if (topicData.slug) {
-							ajaxify.go(`/topic/${topicData.slug}`);
-						} else if (topicData.tid) {
-							ajaxify.go(`/topic/${topicData.tid}`);
-						} else {
-							// Fallback: reload page
-							window.location.reload();
-						}
-					} else {
-						// Fallback: reload page
-						window.location.reload();
+						
+						// Show error message
+						showError('speek-new-post-content', 'speek-error-content', errorMessage);
 					}
 				});
 			});
@@ -1162,3 +1161,4 @@ $(document).ready(function () {
 		}
 	}
 });
+
