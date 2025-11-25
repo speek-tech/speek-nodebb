@@ -356,6 +356,9 @@ $(document).ready(function () {
 			}
 			console.log('Modal element found, setting up event handlers');
 
+			const POST_SUCCESS_REDIRECT_DELAY = 1500;
+			let postSuccessRedirectTimeout = null;
+
 			// Hide composer interface on page load if we're using modal approach
 			// Only hide if we're not replying to a topic (tid parameter)
 			const urlParams = new URLSearchParams(window.location.search);
@@ -936,12 +939,28 @@ $(document).ready(function () {
 						hideError('speek-new-post-title', 'speek-error-title');
 						hideError('speek-new-post-content', 'speek-error-content');
 
-						// Reload page or redirect
-						if (response && response.redirect) {
-							window.location.href = response.redirect;
-						} else {
-							window.location.reload();
+						const redirectTarget = response && response.redirect ? response.redirect : null;
+
+						try {
+							window.parent.postMessage({
+								type: 'nodebb-post-created',
+								redirect: redirectTarget || null
+							}, '*');
+						} catch (err) {
+							console.error('Failed to notify parent window about post creation:', err);
 						}
+
+						if (postSuccessRedirectTimeout) {
+							clearTimeout(postSuccessRedirectTimeout);
+						}
+
+						postSuccessRedirectTimeout = setTimeout(() => {
+							if (redirectTarget) {
+								window.location.href = redirectTarget;
+							} else {
+								window.location.reload();
+							}
+						}, POST_SUCCESS_REDIRECT_DELAY);
 					},
 					error: function (xhr) {
 						console.error('Error submitting post:', xhr);
