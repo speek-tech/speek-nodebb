@@ -119,9 +119,22 @@ define('quickreply', [
 			},
 		});
 
+		// Prevent default form submission - handle via JavaScript only
+		const quickReplyForm = element.closest('form');
+		if (quickReplyForm.length) {
+			quickReplyForm.on('submit', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				// Trigger the button click handler instead
+				components.get('topic/quickreply/button').trigger('click');
+				return false;
+			});
+		}
+
 		let ready = true;
 		components.get('topic/quickreply/button').on('click', function (e) {
 			e.preventDefault();
+			e.stopPropagation();
 			if (!ready) {
 				return;
 			}
@@ -130,6 +143,7 @@ define('quickreply', [
 			if (!validateContent()) {
 				return;
 			}
+			
 
 			const replyMsg = components.get('topic/quickreply/text').val().trim();
 			const replyData = {
@@ -161,6 +175,14 @@ define('quickreply', [
 							ajaxify.go(`/post-queue/${data.id}`);
 						},
 					});
+				}
+				try {
+					window.parent.postMessage({
+						type: 'posthog_analytics',
+						action: 'write_reply'
+					}, '*');
+				} catch (e) {
+					console.log('Could not send analytics replyMessage:', e);
 				}
 
 				components.get('topic/quickreply/text').val('');

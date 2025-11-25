@@ -45,6 +45,11 @@ $(document).ready(function () {
 			hookData.modal = config.theme.chatModals && !utils.isMobile();
 			return hookData;
 		});
+
+		// Hook for topic/post page mount
+		hooks.on('action:topic.loaded', function (data) {
+			onTopicMount(data);
+		});
 	});
 
 	function setupMobileMenu() {
@@ -347,7 +352,7 @@ $(document).ready(function () {
 
 	function setupNewPostModal() {
 		console.log('setupNewPostModal function called');
-		require(['jquery', 'bootstrap', 'api'], function ($, bootstrap, api) {
+		require(['jquery', 'bootstrap', 'api', 'ajaxify'], function ($, bootstrap, api, ajaxify) {
 			console.log('setupNewPostModal: require callback executed, dependencies loaded');
 			const modal = $('#speek-new-post-modal');
 			if (!modal.length) {
@@ -904,87 +909,101 @@ $(document).ready(function () {
 				}
 
 				const formData = {
-					cid: $('#speek-new-post-cid').val() || $('#speek-new-post-space').val(),
+					cid: parseInt($('#speek-new-post-cid').val() || $('#speek-new-post-space').val(), 10),
 					title: $('#speek-new-post-title').val().trim(),
-					content: textarea.val().trim(),
-					_csrf: $('input[name="_csrf"]').val()
+					content: textarea.val().trim()
 				};
 
-				// Submit via AJAX
-				$.ajax({
-					url: form.attr('action'),
-					method: 'POST',
-					headers: {
-						'X-Requested-With': 'XMLHttpRequest',
-						'Accept': 'application/json'
-					},
-					data: formData,
-					success: function (response) {
-						// Close modal
-						const bsModal = bootstrap.Modal.getInstance(modal[0]);
-						if (bsModal) {
-							console.log("AAAA")
-							bsModal.hide();
-							// postMessage will be sent by the hidden.bs.modal event handler
-						}
+				console.log('Submitting post with data:', formData);
 
-						// Reset form
-						form[0].reset();
-						updateCharCount();
-						// Clear all errors
-						hideError('speek-new-post-space', 'speek-error-space');
-						hideError('speek-new-post-title', 'speek-error-title');
-						hideError('speek-new-post-content', 'speek-error-content');
-
-						// Reload page or redirect
-						if (response && response.redirect) {
-							window.location.href = response.redirect;
-						} else {
-							window.location.reload();
-						}
-					},
-					error: function (xhr) {
-						console.error('Error submitting post:', xhr);
+				// Submit via NodeBB API (api module automatically prepends /api/v3)
+				api.post('/topics', formData, function (err, topicData) {
+					console.log('API response - err:', err, 'topicData:', topicData);
+					if (err) {
+						console.error('Error submitting post:', err);
 						
-						let errorMessage = 'Error submitting post. Please try again.';
-						
-						// Try to extract error message from JSON response
-						if (xhr.responseJSON) {
-							// Handle NodeBB error format
-							if (xhr.responseJSON.status && xhr.responseJSON.status.message) {
-								errorMessage = xhr.responseJSON.status.message;
+						// Handle server-side validation errors
+						if (err.responseJSON && err.responseJSON.errors) {
+							const errors = err.responseJSON.errors;
+							
+							if (errors.cid || errors.space) {
+								showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
 							}
 							
-							// Handle errors object format
-							if (xhr.responseJSON.errors) {
-								const errors = xhr.responseJSON.errors;
-								
-								if (errors.cid || errors.space) {
-									showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
-									return;
-								}
-								
-								if (errors.title) {
-									showError('speek-new-post-title', 'speek-error-title', errors.title);
-									return;
-								}
-								
-								if (errors.content) {
-									errorMessage = errors.content;
-								}
+							if (errors.title) {
+								showError('speek-new-post-title', 'speek-error-title', errors.title);
 							}
-						} else if (xhr.responseText) {
-							// Try to extract error message from HTML response
-							// Look for error message in HTML (NodeBB error pages contain error in a data attribute or specific element)
-							const errorMatch = xhr.responseText.match(/<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/i) ||
-												xhr.responseText.match(/error["\s]*[:=]["\s]*([^<"]+)/i);
-							if (errorMatch && errorMatch[1]) {
-								errorMessage = errorMatch[1].trim();
+							
+							if (errors.content) {
+								showError('speek-new-post-content', 'speek-error-content', errors.content);
 							}
+						} else {
+							// Generic error message
+							const errorMessage = err.message || err.statusText || 'Error submitting post. Please try again.';
+							showError('speek-new-post-content', 'speek-error-content', errorMessage);
 						}
-						
-						// Show error message
-						showError('speek-new-post-content', 'speek-error-content', errorMessage);
+						return;
+					}
+
+					// Success - close modal
+					const bsModal = bootstrap.Modal.getInstance(modal[0]);
+					if (bsModal) {
+						bsModal.hide();
+						// postMessage will be sent by the hidden.bs.modal event handler
+					}
+
+					// Reset form
+					form[0].reset();
+					updateCharCount();
+					// Clear all errors
+					hideError('speek-new-post-space', 'speek-error-space');
+					hideError('speek-new-post-title', 'speek-error-title');
+					hideError('speek-new-post-content', 'speek-error-content');
+
+					// Send analytics event
+					try {
+						window.parent.postMessage({
+							type: 'posthog_analytics',
+							action: 'write_post'
+						}, '*');
+					} catch (e) {
+						console.log('Could not send analytics postMessage:', e);
+					}
+
+					// Handle queued posts
+					if (topicData && topicData.queued) {
+						// Post was queued for moderation
+						require(['alerts'], function (alerts) {
+							alerts.alert({
+								type: 'success',
+								title: '[[global:alert.success]]',
+								message: topicData.message || '[[success:post-queued]]',
+								timeout: 10000,
+								clickfn: function () {
+									if (topicData.id) {
+										ajaxify.go(`/post-queue/${topicData.id}`);
+									}
+								},
+							});
+						});
+						// Close modal but don't redirect
+						return;
+					}
+
+					// Redirect to the new topic
+					if (topicData) {
+						// topicData should have slug or tid
+						if (topicData.slug) {
+							ajaxify.go(`/topic/${topicData.slug}`);
+						} else if (topicData.tid) {
+							ajaxify.go(`/topic/${topicData.tid}`);
+						} else {
+							// Fallback: reload page
+							window.location.reload();
+						}
+					} else {
+						// Fallback: reload page
+						window.location.reload();
 					}
 				});
 			});
@@ -1068,5 +1087,38 @@ $(document).ready(function () {
 			}
 
 		});
+	}
+
+	// =====================================
+	// Topic/Post Mount Handler
+	// =====================================
+	/**
+	 * Function that triggers when a topic/post page mounts/loads
+	 * Similar to Category.init, this runs when a user clicks on a post and navigates to it
+	 * @param {Object} data - Hook data containing topic information (ajaxify.data)
+	 * @param {number} data.tid - Topic ID
+	 * @param {number} data.cid - Category ID
+	 * @param {string} data.title - Topic title
+	 * @param {string} data.slug - Topic slug
+	 */
+	function onTopicMount(data) {
+		// console.log('[Topic Mount] Topic page loaded, TID:', data.tid, 'CID:', data.cid);
+		
+		// Add your custom logic here that should run when topic/post page mounts
+		// Example:
+		// - Send analytics events (similar to view_space in Category.init)
+		// - Initialize custom components
+		// - Update UI elements
+		// - Send postMessage to parent window
+		
+		// Example: Send postMessage to parent window (similar to view_space)
+		try {
+			window.parent.postMessage({
+				type: 'posthog_analytics',
+				action: 'view_post'
+			}, '*');
+		} catch (e) {
+			console.log('Could not send analytics view-post:', e);
+		}
 	}
 });

@@ -21,6 +21,14 @@ define('forum/category', [
 	});
 
 	Category.init = function () {
+		try {
+			window.parent.postMessage({
+				type: 'posthog_analytics',
+				action: 'view_space'
+			}, '*');
+		} catch (e) {
+			console.log('Could not send analytics view-space:', e);
+		}
 		const cid = ajaxify.data.cid;
 
 		app.enterRoom('category_' + cid);
