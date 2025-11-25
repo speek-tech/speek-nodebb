@@ -5,10 +5,12 @@
 	gap: 0;
 	padding-top: 20px;
 	padding-bottom: 20px;
-	padding-left: 0 !important;
-	padding-right: 0 !important;
+	padding-left: 3px !important;
+	padding-right: 3px !important;
 	margin-left: 0 !important;
 	margin-right: 0 !important;
+	// Prevent clipping of focus ring
+	overflow: visible;
 }
 
 .category-inline-search-input {
@@ -16,6 +18,9 @@
 	flex-direction: column;
 	gap: 0;
 	width: 100%;
+	// Prevent clipping of focus ring (box-shadow) - add padding for 3px ring
+	box-sizing: content-box; // Ensure padding is included in box model
+	overflow: visible; // Allow box-shadow to be visible
 }
 
 .category-inline-input-wrapper {
@@ -31,9 +36,9 @@
 	transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 
 	&:focus-within {
-		border-color: var(--ring, #0ea5e9);
-		box-shadow: 0 0 0 3px
-			var(--custom-outline-light-outline-50, rgba(56, 189, 248, 0.3));
+		border-color: #f9f8f4; /* var(--ring) from globals.css */
+		box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5); /* var(--custom-outline-light-outline-50) from globals.css */
+		outline: none;
 		transform: translateY(-2px);
 	}
 }
@@ -265,13 +270,15 @@
 
 @media (max-width: 768px) {
 	.category-inline-search {
-		padding-top: 0;
-		padding-bottom: 0;
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+		// Add padding to accommodate focus ring and transform on mobile
+		padding-top: calc(0px + 3px + 2px); // Space for focus ring (3px) + transform offset (2px) = 5px
+		padding-bottom: 3px; // Space for focus ring (3px)
+		padding-left: 3px !important; // Space for left focus ring
+		padding-right: 3px !important; // Space for right focus ring
 		margin-left: 0 !important;
 		margin-right: 0 !important;
 		gap: 1.25rem;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-search-title {
@@ -315,17 +322,20 @@
 
 @include mobile {
 	.category-inline-search {
-		padding-top: 0;
-		padding-bottom: 0;
-		padding-left: 0 !important;
-		padding-right: 0 !important;
+		// Add padding to accommodate focus ring and transform on mobile
+		padding-top: calc(0px + 3px + 2px); // Space for focus ring (3px) + transform offset (2px) = 5px
+		padding-bottom: 3px; // Space for focus ring (3px)
+		padding-left: 3px !important; // Space for left focus ring
+		padding-right: 3px !important; // Space for right focus ring
 		margin-left: 0 !important;
 		margin-right: 0 !important;
 		gap: 0;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-search-input {
 		gap: 0;
+		overflow: visible; // Ensure focus ring is not clipped
 	}
 
 	.category-inline-input {
@@ -342,6 +352,20 @@
 
 	.category-search-meta {
 		margin-bottom: 8px;
+	}
+}
+
+// Apply same focus state colors to all NodeBB search inputs
+// Matching input.tsx focus state: ring-[var(--custom-outline-light-outline-50)] and border-[var(--ring)]
+.search-dropdown .form-control[name="query"],
+#search-input,
+.search .form-control[component="category-search"],
+.form-control[component="search"],
+input[type="text"].form-control[name="query"] {
+	&:focus {
+		outline: none !important;
+		border-color: #f9f8f4 !important; /* var(--ring) from globals.css */
+		box-shadow: 0 0 0 3px rgba(164, 149, 91, 0.5) !important; /* var(--custom-outline-light-outline-50) from globals.css */
 	}
 }
 
