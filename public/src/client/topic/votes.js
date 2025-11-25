@@ -116,6 +116,17 @@ define('forum/topic/votes', [
 			});
 		});
 
+		if(!currentState){
+			try {
+				window.parent.postMessage({
+					type: 'posthog_analytics',
+					action: 'upvote_comment'
+				}, '*');
+			} catch (e) {
+				console.log('Could not send analytics replyMessage:', e);
+			}
+		}
+
 		return false;
 	};
 

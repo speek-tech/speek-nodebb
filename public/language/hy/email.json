@@ -57,5 +57,7 @@
     "banned.text1": "%1 օգտվողին արգելվել է %2-ից:",
     "banned.text2": "Այս արգելքը կտևի մինչև %1:",
     "banned.text3": "Սա է պատճառը, որ դուք արգելվել եք.",
-    "closing": "Շնորհակալությո՛ւն"
+    "closing": "Շնորհակալությո՛ւն",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

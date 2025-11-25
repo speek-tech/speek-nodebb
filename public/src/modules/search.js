@@ -273,6 +273,7 @@ define('search', [
 	Search.query = function (data, callback) {
 		callback = callback || function () {};
 		ajaxify.go('search?' + createQueryString(data), callback);
+		
 	};
 
 	Search.api = function (data, callback) {

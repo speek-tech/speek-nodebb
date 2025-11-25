@@ -57,5 +57,7 @@
     "banned.text1": "ব্যবহারকারি %1  %2 তে নিষিদ্ধ হয়েছেন",
     "banned.text2": "This ban will last until %1.",
     "banned.text3": "এই কারনে আপনি নিষিদ্ধ হয়েছেন :",
-    "closing": "ধন্যবাদ!"
+    "closing": "ধন্যবাদ!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

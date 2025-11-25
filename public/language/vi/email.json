@@ -57,5 +57,7 @@
     "banned.text1": "Người dùng %1 đã bị cấm khỏi %2",
     "banned.text2": "Lệnh cấm sẽ kéo dài đến %1.",
     "banned.text3": "Đây là lý do tại sao bạn bị cấm:",
-    "closing": "Cảm ơn!"
+    "closing": "Cảm ơn!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

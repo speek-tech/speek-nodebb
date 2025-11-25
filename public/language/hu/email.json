@@ -57,5 +57,7 @@
     "banned.text1": "%1 nevű felhasználó ki lett tiltva a(z) %2 oldalról.",
     "banned.text2": "A kitiltás lejárta: %1.",
     "banned.text3": "A kitiltásod oka:",
-    "closing": "Köszönjük!"
+    "closing": "Köszönjük!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

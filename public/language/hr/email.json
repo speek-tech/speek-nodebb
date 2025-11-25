@@ -57,5 +57,7 @@
     "banned.text1": "Korisnik %2 je blokirao %1.",
     "banned.text2": "Blok će trajati do %1.",
     "banned.text3": "Blokirani ste zbog:",
-    "closing": "Hvala!"
+    "closing": "Hvala!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

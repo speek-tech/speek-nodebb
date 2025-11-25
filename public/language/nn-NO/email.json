@@ -57,5 +57,7 @@
     "banned.text1": "Brukaren %1 har blitt utestengt frå %2.",
     "banned.text2": "Denne utestenginga vil vare til %1.",
     "banned.text3": "Dette er årsaka til at du har blitt utestengt:",
-    "closing": "Takk!"
+    "closing": "Takk!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

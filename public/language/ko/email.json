@@ -57,5 +57,7 @@
     "banned.text1": "%1 사용자가 %2에서 차단되었습니다.",
     "banned.text2": "이 차단은 %1까지 유지됩니다.",
     "banned.text3": "차단된 사유는 다음과 같습니다:",
-    "closing": "감사합니다!"
+    "closing": "감사합니다!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

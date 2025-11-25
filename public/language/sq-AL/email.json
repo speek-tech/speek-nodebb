@@ -57,5 +57,7 @@
     "banned.text1": "Përdoruesi %1 është përjashtuar nga %2.",
     "banned.text2": "Ky përjashtim do të zgjasë deri më %1.",
     "banned.text3": "Kjo është arsyeja pse jeni përjashtuar:",
-    "closing": "Faleminderit!"
+    "closing": "Faleminderit!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

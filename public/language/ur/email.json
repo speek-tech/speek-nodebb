@@ -57,5 +57,7 @@
     "banned.text1": "صارف %1 کو %2 سے بلاک کر دیا گیا ہے۔",
     "banned.text2": "یہ پابندی %1 تک نافذ رہے گی۔",
     "banned.text3": "آپ پر پابندی لگنے کی وجہ یہ ہے:",
-    "closing": "شکریہ!"
+    "closing": "شکریہ!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

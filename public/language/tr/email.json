@@ -57,5 +57,7 @@
     "banned.text1": "%1 kullanıcısı %2 sitesinden yasaklandı.",
     "banned.text2": "Bu yasak %1 tarihine kadar sürecek.",
     "banned.text3": "Yasaklanmanın nedeni:",
-    "closing": "Teşekkürler!"
+    "closing": "Teşekkürler!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }
