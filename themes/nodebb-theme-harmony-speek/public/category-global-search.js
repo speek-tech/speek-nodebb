@@ -92,6 +92,15 @@
 		}
 
 		function renderResults(result, query) {
+			try {
+				window.parent.postMessage({
+					type: 'posthog_analytics',
+					action: 'search_community',
+					query: query
+				}, '*');
+			} catch (e) {
+				console.log('Could not send analytics search community', e);
+			}
 			resultsList.empty();
 
 			if (!result.posts || !result.posts.length) {
