@@ -21,11 +21,33 @@ const relative_path = nconf.get('relative_path');
 const url = nconf.get('url');
 
 helpers.noScriptErrors = async function (req, res, error, httpStatus) {
-	if (req.body.noscript !== 'true') {
-		if (typeof error === 'string') {
-			return res.status(httpStatus).send(error);
+	// Check if this is an AJAX request (jQuery sends X-Requested-With header)
+	const isAjax = req.xhr || 
+		req.headers['x-requested-with'] === 'XMLHttpRequest' ||
+		(req.headers.accept && req.headers.accept.indexOf('application/json') !== -1);
+	
+	// If it's an AJAX request, return JSON error instead of HTML
+	if (isAjax || req.body.noscript !== 'true') {
+		let errorMessage = error;
+		
+		// Translate error message if it's in the format [[error:...]]
+		if (typeof error === 'string' && error.startsWith('[[')) {
+			const settings = req.query.lang ? null : await user.getSettings(req.uid);
+			const language = String(req.query.lang || settings.userLang || meta.config.defaultLang);
+			errorMessage = await translator.translate(error, language);
 		}
-		return res.status(httpStatus).json(error);
+		
+		// Return JSON error response
+		return res.status(httpStatus).json({
+			status: {
+				code: httpStatus === 400 ? 'bad-request' : 'internal-server-error',
+				message: errorMessage,
+			},
+			errors: {
+				content: errorMessage, // Map to content field for frontend
+			},
+			response: {},
+		});
 	}
 	const middleware = require('../middleware');
 	const httpStatusString = httpStatus.toString();

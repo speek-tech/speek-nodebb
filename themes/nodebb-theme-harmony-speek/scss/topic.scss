@@ -509,8 +509,8 @@ body.template-topic {
 
 		// Topic Post Card Styles (Figma Design)
 		.speek-topic-post-card {
-			background: #FDFDFC;
-			// background-color: #FDFDFC;
+			background: #FDFDFC !important;
+			background-color: #FDFDFC !important;
 			border-radius: 16px;
 			padding: 16px;
 			display: flex;
@@ -574,8 +574,8 @@ body.template-topic {
 
 			// Override for reply cards
 			&.speek-reply-card {
-				background: #E6E2D2 !important;
-				background-color: #E6E2D2 !important;
+				background: #FDFDFC !important;
+				background-color: #FDFDFC !important;
 				border: 1px solid #E0DBC7 !important;
 				padding: 16px;
 				gap: 12px;
@@ -584,12 +584,20 @@ body.template-topic {
 				.content,
 				[component="post/content"],
 				.speek-post-description {
-					background-color: #E6E2D2 !important;
+					background-color: #FDFDFC !important;
 				}
 			}
 
 			&.deleted {
 				opacity: 0.65;
+			}
+
+			// Force #FDFDFC background for all posts (including unread) - Edge case fix
+			&.unread,
+			&[data-unread="true"],
+			&[class*="unread"] {
+				background: #FDFDFC !important;
+				background-color: #FDFDFC !important;
 			}
 
 			// User Info Section
@@ -598,6 +606,8 @@ body.template-topic {
 				align-items: center;
 				gap: 12px;
 				// No background color for main post header - only for replies
+				// Ensure header doesn't override card background
+				background-color: transparent !important;
 
 				.speek-user-avatar {
 					flex-shrink: 0;
@@ -1104,7 +1114,8 @@ body.template-topic {
 
 		// Apply reply card styles to all posts inside replies container
 		.speek-topic-post-card {
-			background: #E6E2D2 !important;
+			background: #FDFDFC !important;
+			background-color: #FDFDFC !important;
 			border: 1px solid #E0DBC7 !important;
 			border-radius: 16px;
 			padding: 16px;
@@ -1122,7 +1133,7 @@ body.template-topic {
 				margin-top: 12px;
 				padding-top: 12px;
 				border-top: 1px solid #D4CFBC;
-				background: #E6E2D2 !important;
+				background: #FDFDFC !important;
 				
 				.btn-delete-admin {
 					display: inline-flex;
@@ -1155,6 +1166,7 @@ body.template-topic {
 			.speek-post-card-header {
 				gap: 12px;
 				padding: 4px 0 0 0;
+				background-color: transparent !important; // Ensure header doesn't override card background
 
 				.speek-user-info {
 					gap: 0;
@@ -1190,7 +1202,7 @@ body.template-topic {
 					font-weight: 400;
 					line-height: 1.5em;
 					color: #122023;
-					background-color: #E6E2D2 !important;
+					background-color: #FDFDFC !important;
 					margin-bottom: 0 !important;
 					
 					// Remove margin-bottom from all child elements
@@ -1214,7 +1226,7 @@ body.template-topic {
 
 			.content,
 			[component="post/content"] {
-				background-color: #E6E2D2 !important;
+				background-color: #FDFDFC !important;
 			}
 		}
 	}
@@ -1225,8 +1237,8 @@ body.template-topic {
 	[component="post"].speek-reply-card,
 	.speek-post-replies-container .speek-topic-post-card,
 	.speek-post-card.speek-reply-card {
-		background: #E6E2D2 !important;
-		background-color: #E6E2D2 !important;
+		background: #FDFDFC !important;
+		background-color: #FDFDFC !important;
 		border: 1px solid #E0DBC7 !important;
 		border-radius: 16px !important;
 		padding: 16px !important;
@@ -1243,7 +1255,7 @@ body.template-topic {
 		// Show admin delete controls for reply cards
 		.speek-post-admin-delete {
 			display: block !important; // Show in reply cards
-			background: #E6E2D2 !important;
+			background: #FDFDFC !important;
 			
 			.btn-delete-admin {
 				display: inline-flex !important; // Ensure button shows
@@ -1253,8 +1265,8 @@ body.template-topic {
 		// Ensure all nested components have the correct background
 		// Header background color only for child posts (replies)
 		.speek-post-card-header {
-			background-color: #E6E2D2 !important;
-			background: #E6E2D2 !important;
+			background-color: transparent !important; // Ensure header doesn't override card background
+			background: transparent !important;
 			display: flex !important;
 			flex-direction: row !important;
 			align-items: center !important;
@@ -1287,8 +1299,8 @@ body.template-topic {
 			}
 
 			.speek-user-info {
-				background-color: #E6E2D2 !important;
-				background: #E6E2D2 !important;
+				background-color: transparent !important; // Ensure info doesn't override card background
+				background: transparent !important;
 				display: flex !important;
 				flex-direction: column !important;
 				gap: 0 !important;
@@ -1296,8 +1308,8 @@ body.template-topic {
 				min-width: 0 !important;
 
 				.speek-user-name {
-					background-color: #E6E2D2 !important;
-					background: #E6E2D2 !important;
+					background-color: transparent !important; // Ensure name doesn't override card background
+					background: transparent !important;
 					font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 					font-size: 16px !important;
 					font-weight: 700 !important;
@@ -1308,8 +1320,8 @@ body.template-topic {
 				}
 
 				.speek-post-timestamp {
-					background-color: #E6E2D2 !important;
-					background: #E6E2D2 !important;
+					background-color: transparent !important; // Ensure timestamp doesn't override card background
+					background: transparent !important;
 					font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
 					font-size: 14px !important;
 					font-weight: 400 !important;
@@ -1318,16 +1330,16 @@ body.template-topic {
 
 					.timeago {
 						color: #525252 !important;
-						background-color: #E6E2D2 !important;
-						background: #E6E2D2 !important;
+						background-color: transparent !important; // Ensure timeago doesn't override card background
+						background: transparent !important;
 					}
 				}
 			}
 		}
 
 		.speek-post-card-content {
-			background-color: #E6E2D2 !important;
-			background: #E6E2D2 !important;
+			background-color: #FDFDFC !important;
+			background: #FDFDFC !important;
 			display: flex !important;
 			flex-direction: column !important;
 			gap: 16px !important;
@@ -1335,8 +1347,8 @@ body.template-topic {
 			width: 100% !important;
 
 			.speek-post-content-wrapper {
-				background-color: #E6E2D2 !important;
-				background: #E6E2D2 !important;
+				background-color: #FDFDFC !important;
+				background: #FDFDFC !important;
 				display: flex !important;
 				flex-direction: column !important;
 				gap: 0 !important;
@@ -1348,8 +1360,8 @@ body.template-topic {
 				font-weight: 400 !important;
 				line-height: 1.5em !important;
 				color: #122023 !important;
-				background-color: #E6E2D2 !important;
-				background: #E6E2D2 !important;
+				background-color: #FDFDFC !important;
+				background: #FDFDFC !important;
 				margin-bottom: 0 !important;
 				
 				// Remove margin-bottom from all child elements
@@ -1374,15 +1386,15 @@ body.template-topic {
 		p,
 		div:not(.speek-user-avatar):not(.speek-user-avatar *),
 		span:not(.speek-user-avatar *):not(.speek-user-avatar span) {
-			background-color: #E6E2D2 !important;
-			background: #E6E2D2 !important;
+			background-color: #FDFDFC !important;
+			background: #FDFDFC !important;
 			color: #122023 !important;
 		}
 
 		// Ensure links have the background
 		a:not(.speek-user-avatar a):not(.speek-user-avatar *) {
-			background-color: #E6E2D2 !important;
-			background: #E6E2D2 !important;
+			background-color: #FDFDFC !important;
+			background: #FDFDFC !important;
 		}
 
 		// Preserve avatar background (should remain as is)
