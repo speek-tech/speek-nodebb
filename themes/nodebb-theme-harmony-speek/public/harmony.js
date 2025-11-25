@@ -356,6 +356,62 @@ $(document).ready(function () {
 			}
 			console.log('Modal element found, setting up event handlers');
 
+			var activeCategoryId = null;
+
+			function normalizeCategoryId(value) {
+				if (value === undefined || value === null || value === '') {
+					return null;
+				}
+				var parsed = parseInt(value, 10);
+				return isNaN(parsed) ? null : parsed;
+			}
+
+			function deriveActiveCategoryId() {
+				try {
+					if (window.ajaxify && window.ajaxify.data) {
+						var data = window.ajaxify.data;
+						var candidates = [
+							data.cid,
+							data.parentCid,
+							data.category && data.category.cid,
+							data.categories && data.categories.cid,
+							data.topic && data.topic.cid,
+							Array.isArray(data.categories) && data.categories.length ? data.categories[0].cid : null,
+							Array.isArray(data.parents) && data.parents.length ? data.parents[0].cid : null,
+						];
+
+						for (var i = 0; i < candidates.length; i++) {
+							var normalized = normalizeCategoryId(candidates[i]);
+							if (normalized !== null) {
+								return normalized;
+							}
+						}
+					}
+				} catch (err) {
+					console.warn('Unable to derive active category id', err);
+				}
+
+				var activeLink = $('[data-cid].category.active').attr('data-cid');
+				return normalizeCategoryId(activeLink);
+			}
+
+			function refreshActiveCategoryId(explicitCid) {
+				var normalized = normalizeCategoryId(explicitCid);
+				if (normalized === null) {
+					normalized = deriveActiveCategoryId();
+				}
+				if (normalized !== null) {
+					activeCategoryId = normalized;
+				}
+			}
+
+			refreshActiveCategoryId();
+			$(window).on('action:ajaxify.end', function () {
+				setTimeout(function () {
+					refreshActiveCategoryId();
+				}, 0);
+			});
+
 			const POST_SUCCESS_REDIRECT_DELAY = 1500;
 			let postSuccessRedirectTimeout = null;
 
@@ -396,7 +452,7 @@ $(document).ready(function () {
 			const textarea = $('#speek-new-post-content');
 			const charCurrent = $('#speek-char-current');
 			const charMax = $('#speek-char-max');
-			const maxLength = parseInt(textarea.attr('maxlength')) || 5000;
+			const maxLength = parseInt(textarea.attr('maxlength'), 10) || 1000;
 
 			// Load categories for the dropdown
 			function loadCategories() {
@@ -413,7 +469,7 @@ $(document).ready(function () {
 			}
 
 			// Populate category dropdown
-			function populateCategories(categories) {
+			function populateCategories(categories, selectedCategoryId) {
 				const select = $('#speek-new-post-space');
 				select.empty();
 				
@@ -434,12 +490,32 @@ $(document).ready(function () {
 				}
 				
 				addCategories(categories);
-				
-				// Select first option by default
-				const firstOption = select.find('option:first');
-				if (firstOption.length && firstOption.val()) {
-					select.val(firstOption.val());
-					$('#speek-new-post-cid').val(firstOption.val());
+
+				function trySelectCategory(cid) {
+					const normalized = normalizeCategoryId(cid);
+					if (normalized === null) {
+						return false;
+					}
+					const cidString = normalized.toString();
+					const option = select.find('option[value="' + cidString + '"]');
+					if (option.length) {
+						select.val(cidString);
+						$('#speek-new-post-cid').val(cidString);
+						activeCategoryId = normalized;
+						return true;
+					}
+					return false;
+				}
+
+				if (!trySelectCategory(selectedCategoryId)) {
+					if (!trySelectCategory(activeCategoryId)) {
+						const firstOption = select.find('option:first');
+						if (firstOption.length && firstOption.val()) {
+							trySelectCategory(firstOption.val());
+						} else {
+							$('#speek-new-post-cid').val('');
+						}
+					}
 				}
 			}
 
@@ -449,16 +525,17 @@ $(document).ready(function () {
 					const modalElement = document.getElementById('speek-new-post-modal');
 					if (modalElement) {
 						const bsModal = new bootstrap.Modal(modalElement);
+						let resolvedCategoryId = normalizeCategoryId(categoryId);
+						if (resolvedCategoryId === null) {
+							refreshActiveCategoryId();
+						} else {
+							activeCategoryId = resolvedCategoryId;
+						}
 						
 						// Load categories first
 						loadCategories().then(function (data) {
 							if (data && data.categories) {
-								populateCategories(data.categories);
-								
-								if (categoryId) {
-									$('#speek-new-post-space').val(categoryId);
-									$('#speek-new-post-cid').val(categoryId);
-								}
+								populateCategories(data.categories, resolvedCategoryId);
 							}
 						}).catch(function (err) {
 							console.error('Failed to load categories:', err);
@@ -661,51 +738,6 @@ $(document).ready(function () {
 				}
 			});
 
-			// Load categories for the dropdown
-			function loadCategories() {
-				return new Promise(function (resolve, reject) {
-					api.get('/api/categories', {}, function (err, data) {
-						if (err) {
-							console.error('Error loading categories:', err);
-							reject(err);
-							return;
-						}
-						resolve(data);
-					});
-				});
-			}
-
-			// Populate category dropdown
-			function populateCategories(categories) {
-				const select = $('#speek-new-post-space');
-				select.empty();
-				
-				function addCategories(cats, level) {
-					level = level || '';
-					cats.forEach(function (category) {
-						if (category && !category.disabled) {
-							const option = $('<option></option>')
-								.attr('value', category.cid)
-								.text(level + category.name);
-							select.append(option);
-							
-							if (category.children && category.children.length > 0) {
-								addCategories(category.children, level + '  ');
-							}
-						}
-					});
-				}
-				
-				addCategories(categories);
-				
-				// Select first option by default
-				const firstOption = select.find('option:first');
-				if (firstOption.length && firstOption.val()) {
-					select.val(firstOption.val());
-					$('#speek-new-post-cid').val(firstOption.val());
-				}
-			}
-
 			// Hide composer interface when modal is shown
 			modal.on('show.bs.modal', function () {
 				// Hide composer interface
@@ -714,7 +746,7 @@ $(document).ready(function () {
 				
 				loadCategories().then(function (data) {
 					if (data && data.categories) {
-						populateCategories(data.categories);
+						populateCategories(data.categories, activeCategoryId);
 					}
 				}).catch(function (err) {
 					console.error('Failed to load categories:', err);
@@ -1010,7 +1042,12 @@ $(document).ready(function () {
 
 			// Handle space/category selection
 			$('#speek-new-post-space').on('change', function () {
-				$('#speek-new-post-cid').val($(this).val());
+				const selectedValue = $(this).val();
+				$('#speek-new-post-cid').val(selectedValue);
+				const normalized = normalizeCategoryId(selectedValue);
+				if (normalized !== null) {
+					activeCategoryId = normalized;
+				}
 			});
 
 			// Function to send postMessage when modal closes

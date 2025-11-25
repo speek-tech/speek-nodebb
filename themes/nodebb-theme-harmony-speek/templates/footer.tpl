@@ -44,7 +44,7 @@
 							<!-- Space/Category Selector -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-space" class="speek-form-label">Space</label>
-								<div class="speek-select-wrapper">
+								<div class="speek-select-wrapper speek-field-shell">
 									<select id="speek-new-post-space" name="cid" class="speek-select">
 									</select>
 									{buildLucideIcon("chevron-down", 16, "speek-select-chevron")}
@@ -55,7 +55,7 @@
 							<!-- Post Title Input -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-title" class="speek-form-label">Post title<span class="speek-required-asterisk">*</span></label>
-								<div class="speek-input-wrapper">
+								<div class="speek-input-wrapper speek-field-shell">
 									<input 
 										type="text" 
 										id="speek-new-post-title" 
@@ -70,17 +70,19 @@
 							<!-- Post Content Textarea -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-content" class="speek-form-label">Post content<span class="speek-required-asterisk">*</span></label>
-								<div class="speek-textarea-wrapper">
+								<div class="speek-textarea-wrapper speek-field-shell">
 									<textarea 
 										id="speek-new-post-content" 
 										name="content" 
 										class="speek-textarea" 
 										placeholder="Enter your post content here..." 
-										rows="4"
-										maxlength="5000"
+										rows="5"
+										maxlength="1000"
 									></textarea>
+								</div>
+								<div class="speek-field-meta" aria-live="polite">
 									<div class="speek-char-count">
-										<span id="speek-char-current">0</span> / <span id="speek-char-max">5000</span>
+										<span id="speek-char-current">0</span> / <span id="speek-char-max">1000</span>
 									</div>
 								</div>
 								<!-- Formatting Toolbar -->
