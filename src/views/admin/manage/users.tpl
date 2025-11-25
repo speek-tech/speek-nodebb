@@ -108,6 +108,7 @@
 							<th class="text-muted">[[admin/manage/users:users.username]]</th>
 							<th class="text-muted">[[admin/manage/users:users.email]]</th>
 							<th class="text-muted">[[admin/manage/users:users.ip]]</th>
+							<th class="text-muted text-center">Digest</th>
 							<th data-sort="postcount" class="text-end pointer text-nowrap">[[admin/manage/users:users.postcount]] {{{if sort_postcount}}}<i class="fa fa-sort-{{{if reverse}}}down{{{else}}}up{{{end}}}">{{{end}}}</th>
 							<th data-sort="reputation" class="text-end pointer text-nowrap">[[admin/manage/users:users.reputation]] {{{if sort_reputation}}}<i class="fa fa-sort-{{{if reverse}}}down{{{else}}}up{{{end}}}">{{{end}}}</th>
 							<th data-sort="flags" class="text-end pointer text-nowrap">[[admin/manage/users:users.flags]] {{{if sort_flags}}}<i class="fa fa-sort-{{{if reverse}}}down{{{else}}}up{{{end}}}">{{{end}}}</th>
@@ -168,6 +169,13 @@
 										{{{ end }}}
 									</ul>
 								</div>
+								{{{ end }}}
+							</td>
+							<td class="text-center">
+								{{{ if users.digestEnabled }}}
+								<i class="fa fa-check-circle text-success" title="Digest emails enabled" data-bs-toggle="tooltip"></i>
+								{{{ else }}}
+								<i class="fa fa-times-circle text-danger" title="User has unsubscribed from digest emails" data-bs-toggle="tooltip"></i>
 								{{{ end }}}
 							</td>
 							<td class="text-end">{formattedNumber(users.postcount)}</td>
