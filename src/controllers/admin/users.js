@@ -178,12 +178,20 @@ async function loadUserInfo(callerUid, uids) {
 		return uids.map((uid, index) => confirmObjs[index]);
 	}
 
-	const [isAdmin, userData, lastonline, confirmObjs, ips] = await Promise.all([
+	async function getDigestSettings() {
+		return await Promise.all(uids.map(async (uid) => {
+			const setting = await db.getObjectField(`user:${uid}:settings`, 'dailyDigestFreq');
+			return setting || null;
+		}));
+	}
+
+	const [isAdmin, userData, lastonline, confirmObjs, ips, digestSettings] = await Promise.all([
 		user.isAdministrator(uids),
 		user.getUsersWithFields(uids, userFields, callerUid),
 		db.sortedSetScores('users:online', uids),
 		getConfirmObjs(),
 		getIPs(),
+		getDigestSettings(),
 	]);
 	userData.forEach((user, index) => {
 		if (user) {
@@ -195,6 +203,7 @@ async function loadUserInfo(callerUid, uids) {
 			user.ips = ips[index];
 			user.ip = ips[index] && ips[index][0] ? ips[index][0] : null;
 			user.emailToConfirm = user.email;
+			user.digestEnabled = digestSettings[index] !== 'off';
 			if (confirmObjs[index] && confirmObjs[index].email) {
 				const confirmObj = confirmObjs[index];
 				user['email:expired'] = !confirmObj.expires || Date.now() >= confirmObj.expires;

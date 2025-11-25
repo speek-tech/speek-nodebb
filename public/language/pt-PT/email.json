@@ -57,5 +57,7 @@
     "banned.text1": "O utilizador %1 foi banido de %2.",
     "banned.text2": "Este banimento irá durar até %1.",
     "banned.text3": "Esta é a razão porque foste banido:",
-    "closing": "Obrigado!"
+    "closing": "Obrigado!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

@@ -57,5 +57,7 @@
     "banned.text1": "Lietotājs %1 ir bloķēts no %2.",
     "banned.text2": "Bloķēšana ilgs līdz %1.",
     "banned.text3": "Šis ir iemesls, kāpēc Tu esi bloķēts:",
-    "closing": "Paldies!"
+    "closing": "Paldies!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

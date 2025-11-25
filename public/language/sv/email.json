@@ -57,5 +57,7 @@
     "banned.text1": "Användaren %1 har blivit bannlyst från %2.",
     "banned.text2": "Denna bannlysning gäller t.o.m. %1",
     "banned.text3": "Anledningen till din bannlysning är:",
-    "closing": "Tack!"
+    "closing": "Tack!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

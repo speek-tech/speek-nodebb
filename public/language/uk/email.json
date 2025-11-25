@@ -57,5 +57,7 @@
     "banned.text1": "Користувач %1 був забанений на %2.",
     "banned.text2": "Тривалість бану - до %1.",
     "banned.text3": "Це причина, чому ви були забанені:",
-    "closing": "Дякуємо!"
+    "closing": "Дякуємо!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

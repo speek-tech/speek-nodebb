@@ -29,6 +29,8 @@
     "digest.popular-topics": "Popular topics from %1",
     "digest.cta": "Click here to visit %1",
     "digest.unsub.info": "This digest was sent to you due to your subscription settings.",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails",
     "digest.day": "day",
     "digest.week": "week",
     "digest.month": "month",

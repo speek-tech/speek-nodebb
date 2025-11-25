@@ -57,5 +57,7 @@
     "banned.text1": "您在 %2 的帳戶 %1 已被停權。",
     "banned.text2": "本次停權將在 %1 結束。",
     "banned.text3": "這是您被停權的原因：",
-    "closing": "謝謝！"
+    "closing": "謝謝！",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

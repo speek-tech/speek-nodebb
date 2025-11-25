@@ -57,5 +57,7 @@
     "banned.text1": "Потребителят %1 беше блокиран от %2.",
     "banned.text2": "Това блокиране ще е в сила до %1.",
     "banned.text3": "Това е причината, поради която бяхте блокиран(а):",
-    "closing": "Благодарим Ви!"
+    "closing": "Благодарим Ви!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

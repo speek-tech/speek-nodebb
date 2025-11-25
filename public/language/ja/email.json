@@ -57,5 +57,7 @@
     "banned.text1": "%1さんは%2さんにBANされています。",
     "banned.text2": "このBANは%1まで続きます。",
     "banned.text3": "あなたがBANされた理由:",
-    "closing": "ありがとうございます！"
+    "closing": "ありがとうございます！",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

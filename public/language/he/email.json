@@ -57,5 +57,7 @@
     "banned.text1": "המשתמש %1 הורחק מ %2.",
     "banned.text2": "הרחקה זו תמשך עד %1",
     "banned.text3": "זו הסיבה שבגללה הורחקת:",
-    "closing": "תודה!"
+    "closing": "תודה!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

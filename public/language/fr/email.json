@@ -57,5 +57,7 @@
     "banned.text1": "L'utilisateur %1 a été banni de %2.",
     "banned.text2": "Ce ban est effectif jusqu'au %1.",
     "banned.text3": "Voici la raison pour laquelle vous avez été banni :",
-    "closing": "Merci !"
+    "closing": "Merci !",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }

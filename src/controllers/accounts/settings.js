@@ -104,10 +104,8 @@ const jwtVerifyAsync = util.promisify((token, callback) => {
 });
 const doUnsubscribe = async (payload) => {
 	if (payload.template === 'digest') {
-		await Promise.all([
-			user.setSetting(payload.uid, 'dailyDigestFreq', 'off'),
-			user.updateDigestSetting(payload.uid, 'off'),
-		]);
+		// Set user's preference to opt out of digest emails
+		await user.setSetting(payload.uid, 'dailyDigestFreq', 'off');
 	} else if (payload.template === 'notification') {
 		const currentToNewSetting = {
 			notificationemail: 'notification',
@@ -125,20 +123,84 @@ settingsController.unsubscribe = async (req, res, next) => {
 	if (req.method === 'HEAD') {
 		return res.sendStatus(204);
 	}
+	
+	let success = false;
+	let errorMessage = '';
+	
 	try {
 		const payload = await jwtVerifyAsync(req.params.token);
 		if (!payload || !unsubscribable.includes(payload.template)) {
 			return next();
 		}
 		await doUnsubscribe(payload);
-		res.render('unsubscribe', {
-			payload,
-		});
+		success = true;
 	} catch (err) {
-		res.render('unsubscribe', {
-			error: err.message,
-		});
+		errorMessage = err.message;
 	}
+	
+	// Send plain HTML response
+	const html = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>${success ? 'Unsubscribed Successfully' : 'Unsubscribe Failed'}</title>
+	<style>
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			min-height: 100vh;
+			margin: 0;
+			background: #f5f5f5;
+		}
+		.container {
+			max-width: 600px;
+			padding: 40px;
+			background: white;
+			border-radius: 12px;
+			box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+			text-align: center;
+		}
+		.icon {
+			font-size: 64px;
+			margin-bottom: 20px;
+		}
+		.success { color: #28a745; }
+		.error { color: #dc3545; }
+		h1 {
+			font-size: 28px;
+			font-weight: 600;
+			margin: 0 0 16px 0;
+			color: #333;
+		}
+		p {
+			font-size: 16px;
+			line-height: 1.5;
+			color: #666;
+			margin: 0;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		${success ? `
+			<div class="icon success">✓</div>
+			<h1>Successfully Unsubscribed</h1>
+			<p>You will no longer receive digest emails from our mailing list.</p>
+		` : `
+			<div class="icon error">✕</div>
+			<h1>Unable to Unsubscribe</h1>
+			<p>${errorMessage || 'There was an error processing your request. Please try again later.'}</p>
+		`}
+	</div>
+</body>
+</html>
+	`;
+	
+	res.send(html);
 };
 
 settingsController.unsubscribePost = async function (req, res) {

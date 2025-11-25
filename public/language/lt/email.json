@@ -57,5 +57,7 @@
     "banned.text1": "Vartotojas %1 buvo užblokuotas iš %2",
     "banned.text2": "Jūs užblokuotas iki %1.",
     "banned.text3": "Jūsų užblokavimo priežastis:",
-    "closing": "Ačiū!"
+    "closing": "Ačiū!",
+    "digest.unsubscribe-info": "Don't want to receive these emails?",
+    "digest.unsubscribe-cta": "Unsubscribe from digest emails"
 }
