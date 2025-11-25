@@ -45,6 +45,11 @@ $(document).ready(function () {
 			hookData.modal = config.theme.chatModals && !utils.isMobile();
 			return hookData;
 		});
+
+		// Hook for topic/post page mount
+		hooks.on('action:topic.loaded', function (data) {
+			onTopicMount(data);
+		});
 	});
 
 	function setupMobileMenu() {
@@ -1082,5 +1087,38 @@ $(document).ready(function () {
 			}
 
 		});
+	}
+
+	// =====================================
+	// Topic/Post Mount Handler
+	// =====================================
+	/**
+	 * Function that triggers when a topic/post page mounts/loads
+	 * Similar to Category.init, this runs when a user clicks on a post and navigates to it
+	 * @param {Object} data - Hook data containing topic information (ajaxify.data)
+	 * @param {number} data.tid - Topic ID
+	 * @param {number} data.cid - Category ID
+	 * @param {string} data.title - Topic title
+	 * @param {string} data.slug - Topic slug
+	 */
+	function onTopicMount(data) {
+		// console.log('[Topic Mount] Topic page loaded, TID:', data.tid, 'CID:', data.cid);
+		
+		// Add your custom logic here that should run when topic/post page mounts
+		// Example:
+		// - Send analytics events (similar to view_space in Category.init)
+		// - Initialize custom components
+		// - Update UI elements
+		// - Send postMessage to parent window
+		
+		// Example: Send postMessage to parent window (similar to view_space)
+		try {
+			window.parent.postMessage({
+				type: 'posthog_analytics',
+				action: 'view_post'
+			}, '*');
+		} catch (e) {
+			console.log('Could not send analytics view-post:', e);
+		}
 	}
 });
