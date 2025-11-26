@@ -484,6 +484,24 @@ body.speek-composer-hidden {
 		margin: 0 !important;
 		max-height: 90vh;
 	}
+
+	// Full width buttons on mobile with reversed order
+	.speek-new-post-modal-footer {
+		flex-direction: column;
+		gap: 12px;
+
+		.speek-btn {
+			width: 100%;
+		}
+
+		.speek-btn--destructive {
+			order: 2;
+		}
+
+		.speek-btn--primary {
+			order: 1;
+		}
+	}
 }
 
 // Prevent outlines and unwanted borders on category page when modal is open

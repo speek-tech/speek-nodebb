@@ -124,11 +124,11 @@
 					</form>
 				</div>
 
-				<!-- Modal Footer -->
-				<div class="modal-footer speek-new-post-modal-footer">
-					<button type="button" class="speek-btn speek-btn--destructive" data-bs-dismiss="modal">Discard</button>
-					<button type="submit" form="speek-new-post-form" class="speek-btn speek-btn--primary">Submit post</button>
-				</div>
+			<!-- Modal Footer -->
+			<div class="modal-footer speek-new-post-modal-footer">
+				<button type="button" class="speek-btn speek-btn--destructive" data-bs-dismiss="modal">Discard</button>
+				<button type="submit" form="speek-new-post-form" class="speek-btn speek-btn--primary">Submit post</button>
+			</div>
 			</div>
 		</div>
 	</div>
