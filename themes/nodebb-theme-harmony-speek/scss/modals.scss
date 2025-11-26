@@ -131,28 +131,30 @@
 	}
 }
 
-.speek-field-shell,
 .speek-select-wrapper,
 .speek-input-wrapper,
 .speek-textarea-wrapper {
 	width: 100%;
-	border-radius: 16px;
-	background: #FBFAF5;
-	border: 1px solid #E8E2D4;
-	padding: 8px 16px;
-	box-shadow: 0px 12px 32px rgba(17, 24, 39, 0.08);
-	min-height: 56px;
+	border-radius: 8px;
+	background: #FFFFFF;
+	border: 1px solid rgba(212, 212, 212, 1);
+	padding: 4px !important;
+	box-shadow: none;
+	min-height: 48px;
 	display: flex;
 	align-items: center;
-	transition: border-color 0.2s ease, box-shadow 0.2s ease;
-}
+	transition: border-color 0.2s ease;
+	outline: none;
 
-.speek-field-shell:focus-within,
-.speek-select-wrapper:focus-within,
-.speek-input-wrapper:focus-within,
-.speek-textarea-wrapper:focus-within {
-	border-color: #C7BDA6;
-	box-shadow: 0 0 0 3px rgba(199, 189, 166, 0.35);
+	&:hover {
+		border-color: rgba(202, 195, 182, 1);
+	}
+
+	&:focus-within {
+		border-color: rgba(165, 154, 132, 1);
+		outline: none;
+		border: 2px solid rgba(212, 212, 212, 1);
+	}
 }
 
 // Select Dropdown
@@ -174,6 +176,7 @@
 		cursor: pointer;
 		padding: 0;
 		min-height: auto;
+		outline: none;
 
 		&:focus {
 			outline: none;
@@ -211,6 +214,7 @@
 		line-height: 1.5em;
 		color: #151F1D;
 		padding: 0;
+		outline: none;
 
 		&::placeholder {
 			color: #8B8F96;
@@ -247,13 +251,14 @@
 		resize: none;
 		padding: 0;
 		margin: 0;
+		outline: none !important;
 
 		&::placeholder {
 			color: #8B8F96;
 		}
 
 		&:focus {
-			outline: none;
+			outline: none !important;
 			border: none !important;
 		}
 	}
@@ -484,19 +489,17 @@ body.speek-composer-hidden {
 	}
 }
 
-// Prevent white borders on category page when modal is open
+// Prevent outlines and unwanted borders on category page when modal is open
 body.modal-open,
 body.speek-modal-open,
 body:has(#speek-new-post-modal.show),
 body:has(#speek-new-post-modal.showing) {
-	// Remove any borders, outlines, or box-shadows from all elements
+	// Remove outlines from all elements
 	*, *:before, *:after {
-		border: none !important;
 		outline: none !important;
-		box-shadow: none !important;
 	}
 	
-	// Specifically target page containers and common elements
+	// Specifically target page containers and common elements (not modal content)
 	html, body,
 	#panel, #content,
 	.container, .container-fluid, .container-lg, .container-md, .container-sm, .container-xl, .container-xxl,

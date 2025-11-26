@@ -44,7 +44,7 @@
 							<!-- Space/Category Selector -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-space" class="speek-form-label">Space</label>
-								<div class="speek-select-wrapper speek-field-shell">
+								<div class="speek-select-wrapper">
 									<select id="speek-new-post-space" name="cid" class="speek-select">
 									</select>
 									{buildLucideIcon("chevron-down", 16, "speek-select-chevron")}
@@ -55,7 +55,7 @@
 							<!-- Post Title Input -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-title" class="speek-form-label">Post title<span class="speek-required-asterisk">*</span></label>
-								<div class="speek-input-wrapper speek-field-shell">
+								<div class="speek-input-wrapper">
 									<input 
 										type="text" 
 										id="speek-new-post-title" 
@@ -70,7 +70,7 @@
 							<!-- Post Content Textarea -->
 							<div class="speek-form-group">
 								<label for="speek-new-post-content" class="speek-form-label">Post content<span class="speek-required-asterisk">*</span></label>
-								<div class="speek-textarea-wrapper speek-field-shell">
+								<div class="speek-textarea-wrapper">
 									<textarea 
 										id="speek-new-post-content" 
 										name="content" 
