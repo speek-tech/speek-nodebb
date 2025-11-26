@@ -103,21 +103,23 @@ module.exports = function (User) {
 			User.updateDigestSetting(userData.uid, meta.config.dailyDigestFreq),
 		]);
 
-		if (data.email && isFirstUser) {
-			await User.setUserField(uid, 'email', data.email);
-			await User.email.confirmByUid(userData.uid);
-		}
+	if (data.email && isFirstUser) {
+		await User.setUserField(uid, 'email', data.email);
+		await User.email.confirmByUid(userData.uid);
+	}
 
-		if (data.email && userData.uid > 1) {
-			if (!data.token || !await User.isInviteTokenValid(data.token, data.email)) {
-				await User.email.sendValidationEmail(userData.uid, {
-					email: data.email,
-					template: 'welcome',
-					subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`,
-				}).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
-			}
-		}
-		if (userNameChanged) {
+	// SPEEK: Disabled welcome emails since NodeBB is embedded in main app
+	// Welcome emails are handled by the main application, not NodeBB
+	// if (data.email && userData.uid > 1) {
+	// 	if (!data.token || !await User.isInviteTokenValid(data.token, data.email)) {
+	// 		await User.email.sendValidationEmail(userData.uid, {
+	// 			email: data.email,
+	// 			template: 'welcome',
+	// 			subject: `[[email:welcome-to, ${meta.config.title || meta.config.browserTitle || 'NodeBB'}]]`,
+	// 		}).catch(err => winston.error(`[user.create] Validation email failed to send\n[emailer.send] ${err.stack}`));
+	// 	}
+	// }
+	if (userNameChanged) {
 			await User.notifications.sendNameChangeNotification(userData.uid, userData.username);
 		}
 		plugins.hooks.fire('action:user.create', { user: userData, data: data });
