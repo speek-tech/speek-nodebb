@@ -353,13 +353,70 @@ $(document).ready(function () {
 	function setupNewPostModal() {
 		console.log('setupNewPostModal function called');
 		require(['jquery', 'bootstrap', 'api', 'ajaxify'], function ($, bootstrap, api, ajaxify) {
-			console.log('setupNewPostModal: require callback executed, dependencies loaded');
 			const modal = $('#speek-new-post-modal');
 			if (!modal.length) {
 				console.log('Modal element not found: #speek-new-post-modal');
 				return;
 			}
-			console.log('Modal element found, setting up event handlers');
+
+			var activeCategoryId = null;
+
+			function normalizeCategoryId(value) {
+				if (value === undefined || value === null || value === '') {
+					return null;
+				}
+				var parsed = parseInt(value, 10);
+				return isNaN(parsed) ? null : parsed;
+			}
+
+			function deriveActiveCategoryId() {
+				try {
+					if (window.ajaxify && window.ajaxify.data) {
+						var data = window.ajaxify.data;
+						var candidates = [
+							data.cid,
+							data.parentCid,
+							data.category && data.category.cid,
+							data.categories && data.categories.cid,
+							data.topic && data.topic.cid,
+							Array.isArray(data.categories) && data.categories.length ? data.categories[0].cid : null,
+							Array.isArray(data.parents) && data.parents.length ? data.parents[0].cid : null,
+						];
+
+						for (var i = 0; i < candidates.length; i++) {
+							var normalized = normalizeCategoryId(candidates[i]);
+							if (normalized !== null) {
+								return normalized;
+							}
+						}
+					}
+				} catch (err) {
+					console.warn('Unable to derive active category id', err);
+				}
+
+				var activeLink = $('[data-cid].category.active').attr('data-cid');
+				return normalizeCategoryId(activeLink);
+			}
+
+			function refreshActiveCategoryId(explicitCid) {
+				var normalized = normalizeCategoryId(explicitCid);
+				if (normalized === null) {
+					normalized = deriveActiveCategoryId();
+				}
+				if (normalized !== null) {
+					activeCategoryId = normalized;
+				}
+			}
+
+			refreshActiveCategoryId();
+			$(window).on('action:ajaxify.end', function () {
+				setTimeout(function () {
+					refreshActiveCategoryId();
+				}, 0);
+			});
+
+			const POST_SUCCESS_REDIRECT_DELAY = 1500;
+			let postSuccessRedirectTimeout = null;
 
 			// Hide composer interface on page load if we're using modal approach
 			// Only hide if we're not replying to a topic (tid parameter)
@@ -398,7 +455,7 @@ $(document).ready(function () {
 			const textarea = $('#speek-new-post-content');
 			const charCurrent = $('#speek-char-current');
 			const charMax = $('#speek-char-max');
-			const maxLength = parseInt(textarea.attr('maxlength')) || 5000;
+			const maxLength = parseInt(textarea.attr('maxlength'), 10) || 1000;
 
 			// Load categories for the dropdown
 			function loadCategories() {
@@ -415,7 +472,7 @@ $(document).ready(function () {
 			}
 
 			// Populate category dropdown
-			function populateCategories(categories) {
+			function populateCategories(categories, selectedCategoryId) {
 				const select = $('#speek-new-post-space');
 				select.empty();
 				
@@ -436,12 +493,32 @@ $(document).ready(function () {
 				}
 				
 				addCategories(categories);
-				
-				// Select first option by default
-				const firstOption = select.find('option:first');
-				if (firstOption.length && firstOption.val()) {
-					select.val(firstOption.val());
-					$('#speek-new-post-cid').val(firstOption.val());
+
+				function trySelectCategory(cid) {
+					const normalized = normalizeCategoryId(cid);
+					if (normalized === null) {
+						return false;
+					}
+					const cidString = normalized.toString();
+					const option = select.find('option[value="' + cidString + '"]');
+					if (option.length) {
+						select.val(cidString);
+						$('#speek-new-post-cid').val(cidString);
+						activeCategoryId = normalized;
+						return true;
+					}
+					return false;
+				}
+
+				if (!trySelectCategory(selectedCategoryId)) {
+					if (!trySelectCategory(activeCategoryId)) {
+						const firstOption = select.find('option:first');
+						if (firstOption.length && firstOption.val()) {
+							trySelectCategory(firstOption.val());
+						} else {
+							$('#speek-new-post-cid').val('');
+						}
+					}
 				}
 			}
 
@@ -451,16 +528,17 @@ $(document).ready(function () {
 					const modalElement = document.getElementById('speek-new-post-modal');
 					if (modalElement) {
 						const bsModal = new bootstrap.Modal(modalElement);
+						let resolvedCategoryId = normalizeCategoryId(categoryId);
+						if (resolvedCategoryId === null) {
+							refreshActiveCategoryId();
+						} else {
+							activeCategoryId = resolvedCategoryId;
+						}
 						
 						// Load categories first
 						loadCategories().then(function (data) {
 							if (data && data.categories) {
-								populateCategories(data.categories);
-								
-								if (categoryId) {
-									$('#speek-new-post-space').val(categoryId);
-									$('#speek-new-post-cid').val(categoryId);
-								}
+								populateCategories(data.categories, resolvedCategoryId);
 							}
 						}).catch(function (err) {
 							console.error('Failed to load categories:', err);
@@ -663,51 +741,6 @@ $(document).ready(function () {
 				}
 			});
 
-			// Load categories for the dropdown
-			function loadCategories() {
-				return new Promise(function (resolve, reject) {
-					api.get('/api/categories', {}, function (err, data) {
-						if (err) {
-							console.error('Error loading categories:', err);
-							reject(err);
-							return;
-						}
-						resolve(data);
-					});
-				});
-			}
-
-			// Populate category dropdown
-			function populateCategories(categories) {
-				const select = $('#speek-new-post-space');
-				select.empty();
-				
-				function addCategories(cats, level) {
-					level = level || '';
-					cats.forEach(function (category) {
-						if (category && !category.disabled) {
-							const option = $('<option></option>')
-								.attr('value', category.cid)
-								.text(level + category.name);
-							select.append(option);
-							
-							if (category.children && category.children.length > 0) {
-								addCategories(category.children, level + '  ');
-							}
-						}
-					});
-				}
-				
-				addCategories(categories);
-				
-				// Select first option by default
-				const firstOption = select.find('option:first');
-				if (firstOption.length && firstOption.val()) {
-					select.val(firstOption.val());
-					$('#speek-new-post-cid').val(firstOption.val());
-				}
-			}
-
 			// Hide composer interface when modal is shown
 			modal.on('show.bs.modal', function () {
 				// Hide composer interface
@@ -716,7 +749,7 @@ $(document).ready(function () {
 				
 				loadCategories().then(function (data) {
 					if (data && data.categories) {
-						populateCategories(data.categories);
+						populateCategories(data.categories, activeCategoryId);
 					}
 				}).catch(function (err) {
 					console.error('Failed to load categories:', err);
@@ -911,106 +944,112 @@ $(document).ready(function () {
 				const formData = {
 					cid: parseInt($('#speek-new-post-cid').val() || $('#speek-new-post-space').val(), 10),
 					title: $('#speek-new-post-title').val().trim(),
-					content: textarea.val().trim()
+					content: textarea.val().trim(),
+					_csrf: $('input[name="_csrf"]').val()
 				};
 
-				console.log('Submitting post with data:', formData);
+				// Submit via AJAX
+				$.ajax({
+					url: form.attr('action'),
+					method: 'POST',
+					headers: {
+						'X-Requested-With': 'XMLHttpRequest',
+						'Accept': 'application/json'
+					},
+					data: formData,
+					success: function (response) {
+						// Close modal
+						const bsModal = bootstrap.Modal.getInstance(modal[0]);
+						if (bsModal) {
+							bsModal.hide();
+							// postMessage will be sent by the hidden.bs.modal event handler
+						}
 
-				// Submit via NodeBB API (api module automatically prepends /api/v3)
-				api.post('/topics', formData, function (err, topicData) {
-					console.log('API response - err:', err, 'topicData:', topicData);
-					if (err) {
-						console.error('Error submitting post:', err);
+						// Reset form
+						form[0].reset();
+						updateCharCount();
+						// Clear all errors
+						hideError('speek-new-post-space', 'speek-error-space');
+						hideError('speek-new-post-title', 'speek-error-title');
+						hideError('speek-new-post-content', 'speek-error-content');
+
+						const redirectTarget = response && response.redirect ? response.redirect : null;
+
+						try {
+							window.parent.postMessage({
+								type: 'nodebb-post-created',
+								redirect: redirectTarget || null
+							}, '*');
+						} catch (err) {
+							console.error('Failed to notify parent window about post creation:', err);
+						}
+
+						if (postSuccessRedirectTimeout) {
+							clearTimeout(postSuccessRedirectTimeout);
+						}
+
+						postSuccessRedirectTimeout = setTimeout(() => {
+							if (redirectTarget) {
+								window.location.href = redirectTarget;
+							} else {
+								window.location.reload();
+							}
+						}, POST_SUCCESS_REDIRECT_DELAY);
+					},
+					error: function (xhr) {
+						console.error('Error submitting post:', xhr);
 						
-						// Handle server-side validation errors
-						if (err.responseJSON && err.responseJSON.errors) {
-							const errors = err.responseJSON.errors;
-							
-							if (errors.cid || errors.space) {
-								showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+						let errorMessage = 'Error submitting post. Please try again.';
+						
+						// Try to extract error message from JSON response
+						if (xhr.responseJSON) {
+							// Handle NodeBB error format
+							if (xhr.responseJSON.status && xhr.responseJSON.status.message) {
+								errorMessage = xhr.responseJSON.status.message;
 							}
 							
-							if (errors.title) {
-								showError('speek-new-post-title', 'speek-error-title', errors.title);
+							// Handle errors object format
+							if (xhr.responseJSON.errors) {
+								const errors = xhr.responseJSON.errors;
+								
+								if (errors.cid || errors.space) {
+									showError('speek-new-post-space', 'speek-error-space', errors.cid || errors.space || 'Please select a valid space');
+									return;
+								}
+								
+								if (errors.title) {
+									showError('speek-new-post-title', 'speek-error-title', errors.title);
+									return;
+								}
+								
+								if (errors.content) {
+									errorMessage = errors.content;
+								}
 							}
-							
-							if (errors.content) {
-								showError('speek-new-post-content', 'speek-error-content', errors.content);
+						} else if (xhr.responseText) {
+							// Try to extract error message from HTML response
+							// Look for error message in HTML (NodeBB error pages contain error in a data attribute or specific element)
+							const errorMatch = xhr.responseText.match(/<div[^>]*class="[^"]*error[^"]*"[^>]*>(.*?)<\/div>/i) ||
+												xhr.responseText.match(/error["\s]*[:=]["\s]*([^<"]+)/i);
+							if (errorMatch && errorMatch[1]) {
+								errorMessage = errorMatch[1].trim();
 							}
-						} else {
-							// Generic error message
-							const errorMessage = err.message || err.statusText || 'Error submitting post. Please try again.';
-							showError('speek-new-post-content', 'speek-error-content', errorMessage);
 						}
-						return;
-					}
-
-					// Success - close modal
-					const bsModal = bootstrap.Modal.getInstance(modal[0]);
-					if (bsModal) {
-						bsModal.hide();
-						// postMessage will be sent by the hidden.bs.modal event handler
-					}
-
-					// Reset form
-					form[0].reset();
-					updateCharCount();
-					// Clear all errors
-					hideError('speek-new-post-space', 'speek-error-space');
-					hideError('speek-new-post-title', 'speek-error-title');
-					hideError('speek-new-post-content', 'speek-error-content');
-
-					// Send analytics event
-					try {
-						window.parent.postMessage({
-							type: 'posthog_analytics',
-							action: 'write_post'
-						}, '*');
-					} catch (e) {
-						console.log('Could not send analytics postMessage:', e);
-					}
-
-					// Handle queued posts
-					if (topicData && topicData.queued) {
-						// Post was queued for moderation
-						require(['alerts'], function (alerts) {
-							alerts.alert({
-								type: 'success',
-								title: '[[global:alert.success]]',
-								message: topicData.message || '[[success:post-queued]]',
-								timeout: 10000,
-								clickfn: function () {
-									if (topicData.id) {
-										ajaxify.go(`/post-queue/${topicData.id}`);
-									}
-								},
-							});
-						});
-						// Close modal but don't redirect
-						return;
-					}
-
-					// Redirect to the new topic
-					if (topicData) {
-						// topicData should have slug or tid
-						if (topicData.slug) {
-							ajaxify.go(`/topic/${topicData.slug}`);
-						} else if (topicData.tid) {
-							ajaxify.go(`/topic/${topicData.tid}`);
-						} else {
-							// Fallback: reload page
-							window.location.reload();
-						}
-					} else {
-						// Fallback: reload page
-						window.location.reload();
+						
+						// Show error message
+						showError('speek-new-post-content', 'speek-error-content', errorMessage);
 					}
 				});
 			});
 
 			// Handle space/category selection
 			$('#speek-new-post-space').on('change', function () {
-				$('#speek-new-post-cid').val($(this).val());
+				const selectedValue = $(this).val();
+				$('#speek-new-post-cid').val(selectedValue);
+				const normalized = normalizeCategoryId(selectedValue);
+				if (normalized !== null) {
+					activeCategoryId = normalized;
+				}
 			});
 
 			// Function to send postMessage when modal closes
@@ -1122,3 +1161,4 @@ $(document).ready(function () {
 		}
 	}
 });
+
