@@ -209,14 +209,24 @@ define('forum/topic/events', [
 		});
 		$(`[component="post/parent"][data-parent-pid="${postData.pid}"]`).remove();
 		
-		// If main post (index 0) was deleted, redirect to category page
+		// If main post (index 0) was deleted, redirect to topic list (category page)
 		if (isMainPost) {
 			setTimeout(function () {
+				// Try multiple ways to get category slug
+				let categorySlug = null;
+				
 				if (ajaxify.data.category && ajaxify.data.category.slug) {
-					ajaxify.go('category/' + ajaxify.data.category.slug);
+					categorySlug = ajaxify.data.category.slug;
+				} else if (ajaxify.data.cid) {
+					// Fallback: redirect to category by cid
+					categorySlug = ajaxify.data.cid;
+				}
+				
+				if (categorySlug) {
+					ajaxify.go('category/' + categorySlug);
 				} else {
-					// Fallback: go to home page
-					ajaxify.go('');
+					// Last resort: redirect to categories list (topic list homepage)
+					ajaxify.go('categories');
 				}
 			}, 600); // Wait for fade out animation
 		}
