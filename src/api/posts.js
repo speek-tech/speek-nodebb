@@ -183,6 +183,8 @@ postsAPI.delete = async function (caller, data) {
 		throw new Error('[[error:no-post]]');
 	}
 
+	// Store if this is the main post - if so, we'll delete the entire topic after cascade deletion
+	const isMainPost = isMain;
 	const isMainAndLast = isMain && isLast;
 	const postData = await posts.getPostFields(data.pid, ['toPid', 'tid', 'uid']);
 	postData.pid = data.pid;
@@ -193,25 +195,45 @@ postsAPI.delete = async function (caller, data) {
 	}
 
 	posts.clearCachedPost(data.pid);
+	
+	// Collect all reply PIDs BEFORE purging (for frontend notification)
+	const allReplyPids = await posts.collectReplyPids(data.pid);
+	
 	await Promise.all([
 		posts.purge(data.pid, caller.uid),
 		require('.').activitypub.delete.note(caller, { pid: data.pid }),
 	]);
 
+	// Emit websocket events for all cascade-deleted replies FIRST
+	// This ensures frontend removes reply cards from DOM
+	if (allReplyPids.length > 0) {
+		allReplyPids.forEach((replyPid) => {
+			websockets.in(`topic_${postData.tid}`).emit('event:post_purged', { 
+				pid: replyPid, 
+				tid: postData.tid 
+			});
+		});
+	}
+	
+	// Then emit event for the main post
 	websockets.in(`topic_${postData.tid}`).emit('event:post_purged', postData);
 	const topicData = await topics.getTopicFields(postData.tid, ['title', 'cid', 'deleted', 'scheduled']);
 
 	await events.log({
 		type: 'post-purge',
 		pid: data.pid,
+		type: 'post-purge',
+		pid: data.pid,
 		uid: caller.uid,
+		ip: caller.ip,
 		ip: caller.ip,
 		tid: postData.tid,
 		title: String(topicData.title),
 	});
 
-	// If this is the main and last post, delete the topic permanently too
-	if (isMainAndLast && !topicData.scheduled) {
+	// If this is the main post, delete the entire topic
+	// (cascade deletion ensures all replies are gone, so topic is empty)
+	if (isMainPost && !topicData.scheduled) {
 		await apiHelpers.doTopicAction(
 			'purge',
 			'event:topic_purged',
