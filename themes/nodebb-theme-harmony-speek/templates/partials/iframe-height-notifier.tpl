@@ -181,24 +181,22 @@
         }
     }
 
-    // Use ResizeObserver to watch for content size changes
+    // ResizeObserver - throttled but responsive
+    var resizeObserverTimer = null;
     if (window.ResizeObserver && document.body) {
         resizeObserver = new ResizeObserver(function(entries) {
-            // Check if body size actually changed
-            for (let entry of entries) {
-                const newHeight = entry.contentRect.height;
-                if (Math.abs(newHeight - pendingHeight) > MIN_CHANGE_PX || pendingHeight === null) {
-                    debouncedHeightCheck();
+            // Throttle with debounce
+            if (resizeObserverTimer) clearTimeout(resizeObserverTimer);
+            resizeObserverTimer = setTimeout(function() {
+                var height = getDocumentHeight();
+                // Only update if significant change (>50px)
+                if (Math.abs(height - lastSentHeight) > 50) {
+                    forceSendHeight();
                 }
-            }
+            }, 300);
         });
         
         resizeObserver.observe(document.body);
-        
-        // Also observe html element
-        if (document.documentElement) {
-            resizeObserver.observe(document.documentElement);
-        }
     }
 
     // Window resize handler - for content changes (breakpoint changes handled by parent)
@@ -224,36 +222,107 @@
         }
     }
 
-    // Use hooks if available (NodeBB's hook system)
-    if (window.hooks && window.hooks.on) {
-        window.hooks.on('action:ajaxify.contentLoaded', function() {
-            setTimeout(forceSendHeight, 400);
-        });
-
-        window.hooks.on('action:ajaxify.end', function() {
-            setTimeout(forceSendHeight, 600);
-        });
+    // Height update for post events - single delayed call to avoid scroll issues
+    var heightUpdateTimer = null;
+    function debouncedForceSendHeight(delay) {
+        clearTimeout(heightUpdateTimer);
+        heightUpdateTimer = setTimeout(function() {
+            forceSendHeight();
+            // Do a second update after more time to catch any layout settling
+            setTimeout(forceSendHeight, 300);
+        }, delay || 400);
     }
 
-    // Monitor for images loading
-    let imageLoadTimer = null;
+    // Function to register hooks when available
+    function registerHooks() {
+        if (window.hooks && window.hooks.on) {
+            window.hooks.on('action:ajaxify.contentLoaded', function() {
+                debouncedForceSendHeight(400);
+            });
+
+            window.hooks.on('action:ajaxify.end', function() {
+                debouncedForceSendHeight(600);
+            });
+
+            // Listen for new posts being added (replies, real-time updates)
+            window.hooks.on('action:posts.loaded', function() {
+                debouncedForceSendHeight(500);
+            });
+
+            // Listen for quickreply success
+            window.hooks.on('action:quickreply.success', function() {
+                debouncedForceSendHeight(500);
+            });
+            
+            return true;
+        }
+        return false;
+    }
+
+    // Try to register hooks immediately, or wait for them to be available
+    if (!registerHooks()) {
+        // Poll for hooks to become available (NodeBB initializes them later)
+        var hookCheckInterval = setInterval(function() {
+            if (registerHooks()) {
+                clearInterval(hookCheckInterval);
+            }
+        }, 100);
+        
+        // Stop checking after 10 seconds
+        setTimeout(function() {
+            clearInterval(hookCheckInterval);
+        }, 10000);
+    }
+
+    // jQuery-based fallback for post events (more reliable timing)
+    function setupJQueryListeners() {
+        if (window.jQuery || window.$) {
+            var $ = window.jQuery || window.$;
+            $(document).on('action:posts.loaded', function() {
+                debouncedForceSendHeight(500);
+            });
+            $(document).on('action:quickreply.success', function() {
+                debouncedForceSendHeight(500);
+            });
+            $(window).on('action:posts.loaded', function() {
+                debouncedForceSendHeight(500);
+            });
+            $(window).on('action:quickreply.success', function() {
+                debouncedForceSendHeight(500);
+            });
+            return true;
+        }
+        return false;
+    }
+
+    // Try jQuery listeners immediately or wait
+    if (!setupJQueryListeners()) {
+        var jqCheckInterval = setInterval(function() {
+            if (setupJQueryListeners()) {
+                clearInterval(jqCheckInterval);
+            }
+        }, 100);
+        setTimeout(function() {
+            clearInterval(jqCheckInterval);
+        }, 10000);
+    }
+
+    // MutationObserver disabled - was causing input lag
+    // Relying on event-based detection (hooks + jQuery) instead
+
+    // Monitor for images loading (throttled)
+    var imageLoadTimer = null;
+    var lastImageLoad = 0;
     document.addEventListener('load', function(e) {
         if (e.target.tagName === 'IMG') {
+            var now = Date.now();
+            if (now - lastImageLoad < 1000) return; // Max once per second
+            lastImageLoad = now;
+            
             clearTimeout(imageLoadTimer);
-            imageLoadTimer = setTimeout(function() {
-                debouncedHeightCheck();
-            }, 300);
+            imageLoadTimer = setTimeout(forceSendHeight, 500);
         }
     }, true);
-
-    // Monitor for AJAX content loading
-    if (window.jQuery) {
-        window.jQuery(document).ajaxComplete(function() {
-            setTimeout(function() {
-                debouncedHeightCheck();
-            }, 300);
-        });
-    }
 
     // Send initial height
     sendInitialHeight();
