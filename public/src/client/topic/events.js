@@ -189,10 +189,18 @@ define('forum/topic/events', [
 		if (!postData || String(postData.tid) !== String(ajaxify.data.tid)) {
 			return;
 		}
-		components.get('post', 'pid', postData.pid).fadeOut(500, function () {
+		
+		// Check if this is the main post (index 0) being deleted
+		const postEl = components.get('post', 'pid', postData.pid);
+		const postIndex = postEl.length ? parseInt(postEl.attr('data-index'), 10) : -1;
+		const isMainPost = postIndex === 0;
+		
+		// Remove the post from DOM
+		postEl.fadeOut(500, function () {
 			$(this).remove();
 			posts.showBottomPostBar();
 		});
+		
 		ajaxify.data.postcount -= 1;
 		ajaxify.data.replyCount = Math.max(ajaxify.data.postcount - 1, 0);
 		postTools.updatePostCount(ajaxify.data.postcount);
@@ -200,6 +208,18 @@ define('forum/topic/events', [
 			replies.onPostPurged(postData);
 		});
 		$(`[component="post/parent"][data-parent-pid="${postData.pid}"]`).remove();
+		
+		// If main post (index 0) was deleted, redirect to category page
+		if (isMainPost) {
+			setTimeout(function () {
+				if (ajaxify.data.category && ajaxify.data.category.slug) {
+					ajaxify.go('category/' + ajaxify.data.category.slug);
+				} else {
+					// Fallback: go to home page
+					ajaxify.go('');
+				}
+			}, 600); // Wait for fade out animation
+		}
 	}
 
 	function togglePostDeleteState(data) {
