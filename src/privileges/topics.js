@@ -130,44 +130,41 @@ privsTopics.filterUids = async function (privilege, tid, uids) {
 
 privsTopics.canPurge = async function (tid, uid) {
 	const cid = await topics.getTopicField(tid, 'cid');
-	let [purge, owner, isAdmin, isModerator] = await Promise.all([
-		privsCategories.isUserAllowedTo('purge', cid, uid),
+	let [owner, isAdmin, isModerator] = await Promise.all([
 		topics.isOwner(tid, uid),
 		user.isAdministrator(uid),
 		user.isModerator(uid, cid),
 	]);
 
-	// Allow remote posts to purge themselves (as:Delete received)
-	if (!utils.isNumber(tid) && owner) {
-		purge = true;
-	}
-
-	return (purge && (owner || isModerator)) || isAdmin;
+	// Allow users to delete their own topics (permanent delete)
+	// Allow admins and moderators to delete anything
+	return isAdmin || isModerator || owner;
 };
 
 privsTopics.canDelete = async function (tid, uid) {
-	const topicData = await topics.getTopicFields(tid, ['uid', 'cid', 'postcount', 'deleterUid']);
-	const [isModerator, isAdministrator, isOwner, allowedTo] = await Promise.all([
+	const topicData = await topics.getTopicFields(tid, ['uid', 'cid']);
+	const [isModerator, isAdministrator, isOwner] = await Promise.all([
 		user.isModerator(uid, topicData.cid),
 		user.isAdministrator(uid),
 		topics.isOwner(tid, uid),
-		helpers.isAllowedTo('topics:delete', uid, [topicData.cid]),
 	]);
 
+	// Admin can always delete
 	if (isAdministrator) {
 		return true;
 	}
 
-	const { preventTopicDeleteAfterReplies } = meta.config;
-	if (!isModerator && preventTopicDeleteAfterReplies && (topicData.postcount - 1) >= preventTopicDeleteAfterReplies) {
-		const langKey = preventTopicDeleteAfterReplies > 1 ?
-			`[[error:cant-delete-topic-has-replies, ${meta.config.preventTopicDeleteAfterReplies}]]` :
-			'[[error:cant-delete-topic-has-reply]]';
-		throw new Error(langKey);
+	// Moderators can always delete
+	if (isModerator) {
+		return true;
 	}
 
-	const { deleterUid } = topicData;
-	return allowedTo[0] && ((isOwner && (deleterUid === 0 || deleterUid === topicData.uid)) || isModerator);
+	// Users can delete their own topics (permanent delete, no reply count check)
+	if (isOwner) {
+		return true;
+	}
+
+	return false;
 };
 
 privsTopics.canEdit = async function (tid, uid) {
