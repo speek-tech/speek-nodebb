@@ -45,21 +45,9 @@
 {{{ end }}}
 
 {{{ if privileges.deletable }}}
-<li {{{ if deleted }}}hidden{{{ end }}}>
-	<a component="topic/delete" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if deleted }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-trash-o text-secondary"></i> [[topic:thread-tools.delete]]</a>
+<li>
+	<a component="topic/delete" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem"><i class="fa fa-fw fa-trash-o text-secondary"></i> [[topic:thread-tools.delete]]</a>
 </li>
-
-{{{ if !scheduled }}}
-<li {{{ if !deleted }}}hidden{{{ end }}}>
-	<a component="topic/restore" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if !deleted }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-history text-secondary"></i> [[topic:thread-tools.restore]]</a>
-</li>
-{{{ end }}}
-
-{{{ if privileges.purge }}}
-<li {{{ if !deleted }}}hidden{{{ end }}}>
-	<a component="topic/purge" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2 {{{ if !deleted }}}hidden{{{ end }}}" role="menuitem"><i class="fa fa-fw fa-eraser text-secondary"></i> [[topic:thread-tools.purge]]</a>
-</li>
-{{{ end }}}
 {{{ if privileges.isAdminOrMod }}}
 <li>
 	<a component="topic/delete/posts" href="#" class="dropdown-item rounded-1 d-flex align-items-center gap-2" role="menuitem"><i class="fa fa-fw fa-trash-o text-secondary"></i> [[topic:thread-tools.delete-posts]]</a>

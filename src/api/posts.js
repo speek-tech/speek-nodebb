@@ -171,60 +171,54 @@ postsAPI.edit = async function (caller, data) {
 };
 
 postsAPI.delete = async function (caller, data) {
-	await deleteOrRestore(caller, data, {
-		command: 'delete',
-		event: 'event:post_deleted',
-		type: 'post-delete',
-	});
-};
-
-postsAPI.restore = async function (caller, data) {
-	await deleteOrRestore(caller, data, {
-		command: 'restore',
-		event: 'event:post_restored',
-		type: 'post-restore',
-	});
-};
-
-async function deleteOrRestore(caller, data, params) {
 	if (!data || !data.pid) {
 		throw new Error('[[error:invalid-data]]');
 	}
-	const postData = await posts.tools[params.command](caller.uid, data.pid);
-	const results = await isMainAndLastPost(data.pid);
-	if (results.isMain && results.isLast) {
-		await deleteOrRestoreTopicOf(params.command, data.pid, caller);
+
+	const [exists, { isMain, isLast }] = await Promise.all([
+		posts.exists(data.pid),
+		isMainAndLastPost(data.pid),
+	]);
+	if (!exists) {
+		throw new Error('[[error:no-post]]');
 	}
 
-	websockets.in(`topic_${postData.tid}`).emit(params.event, postData);
+	const isMainAndLast = isMain && isLast;
+	const postData = await posts.getPostFields(data.pid, ['toPid', 'tid', 'uid']);
+	postData.pid = data.pid;
+
+	const canDelete = await privileges.posts.canDelete(data.pid, caller.uid);
+	if (!canDelete.flag) {
+		throw new Error(canDelete.message);
+	}
+
+	posts.clearCachedPost(data.pid);
+	await Promise.all([
+		posts.purge(data.pid, caller.uid),
+		require('.').activitypub.delete.note(caller, { pid: data.pid }),
+	]);
+
+	websockets.in(`topic_${postData.tid}`).emit('event:post_purged', postData);
+	const topicData = await topics.getTopicFields(postData.tid, ['title', 'cid', 'deleted', 'scheduled']);
 
 	await events.log({
-		type: params.type,
-		uid: caller.uid,
+		type: 'post-purge',
 		pid: data.pid,
-		tid: postData.tid,
+		uid: caller.uid,
 		ip: caller.ip,
+		tid: postData.tid,
+		title: String(topicData.title),
 	});
 
-	// Explicitly non-awaited
-	posts.getPostSummaryByPids([data.pid], caller.uid, { extraFields: ['edited'] }).then(([post]) => {
-		require('.').activitypub.update.note(caller, { post });
-	});
-}
-
-async function deleteOrRestoreTopicOf(command, pid, caller) {
-	const topic = await posts.getTopicFields(pid, ['tid', 'cid', 'deleted', 'scheduled']);
-	// exempt scheduled topics from being deleted/restored
-	if (topic.scheduled) {
-		return;
+	// If this is the main and last post, delete the topic permanently too
+	if (isMainAndLast && !topicData.scheduled) {
+		await apiHelpers.doTopicAction(
+			'purge',
+			'event:topic_purged',
+			caller,
+			{ tids: [postData.tid], cid: topicData.cid }
+		);
 	}
-	// command: delete/restore
-	await apiHelpers.doTopicAction(
-		command,
-		topic.deleted ? 'event:topic_restored' : 'event:topic_deleted',
-		caller,
-		{ tids: [topic.tid], cid: topic.cid }
-	);
 }
 
 postsAPI.purge = async function (caller, data) {

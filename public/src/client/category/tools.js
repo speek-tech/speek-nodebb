@@ -22,17 +22,7 @@ define('forum/category/tools', [
 		});
 
 		components.get('topic/delete').on('click', function () {
-			categoryCommand('del', '/state', 'delete', onDeleteRestoreComplete);
-			return false;
-		});
-
-		components.get('topic/restore').on('click', function () {
-			categoryCommand('put', '/state', 'restore', onDeleteRestoreComplete);
-			return false;
-		});
-
-		components.get('topic/purge').on('click', function () {
-			categoryCommand('del', '', 'purge', onPurgeComplete);
+			categoryCommand('del', '', 'delete', onPurgeComplete);
 			return false;
 		});
 

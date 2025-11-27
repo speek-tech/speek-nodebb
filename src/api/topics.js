@@ -121,18 +121,7 @@ topicsAPI.reply = async function (caller, data) {
 };
 
 topicsAPI.delete = async function (caller, data) {
-	await doTopicAction('delete', 'event:topic_deleted', caller, {
-		tids: data.tids,
-	});
-};
-
-topicsAPI.restore = async function (caller, data) {
-	await doTopicAction('restore', 'event:topic_restored', caller, {
-		tids: data.tids,
-	});
-};
-
-topicsAPI.purge = async function (caller, data) {
+	// Permanent delete (purge)
 	await doTopicAction('purge', 'event:topic_purged', caller, {
 		tids: data.tids,
 	});
