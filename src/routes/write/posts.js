@@ -13,14 +13,11 @@ module.exports = function () {
 	setupApiRoute(router, 'get', '/:pid', [middleware.assert.post], controllers.write.posts.get);
 	// There is no POST route because you POST to a topic to create a new post. Intuitive, no?
 	setupApiRoute(router, 'put', '/:pid', [middleware.ensureLoggedIn, middleware.checkRequired.bind(null, ['content'])], controllers.write.posts.edit);
-	setupApiRoute(router, 'delete', '/:pid', middlewares, controllers.write.posts.purge);
+	setupApiRoute(router, 'delete', '/:pid', middlewares, controllers.write.posts.delete);
 
 	setupApiRoute(router, 'get', '/:pid/index', [middleware.assert.post], controllers.write.posts.getIndex);
 	setupApiRoute(router, 'get', '/:pid/raw', [middleware.assert.post], controllers.write.posts.getRaw);
 	setupApiRoute(router, 'get', '/:pid/summary', [middleware.assert.post], controllers.write.posts.getSummary);
-
-	setupApiRoute(router, 'put', '/:pid/state', middlewares, controllers.write.posts.restore);
-	setupApiRoute(router, 'delete', '/:pid/state', middlewares, controllers.write.posts.delete);
 
 	setupApiRoute(router, 'put', '/:pid/move', [...middlewares, middleware.checkRequired.bind(null, ['tid'])], controllers.write.posts.move);
 

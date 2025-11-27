@@ -125,8 +125,6 @@ define('forum/topic/postTools', [
 			.toggleClass('hidden', isDeleted);
 
 		postEl.find('[component="post/delete"]').toggleClass('hidden', isDeleted).parent().attr('hidden', isDeleted ? '' : null);
-		postEl.find('[component="post/restore"]').toggleClass('hidden', !isDeleted).parent().attr('hidden', !isDeleted ? '' : null);
-		postEl.find('[component="post/purge"]').toggleClass('hidden', !isDeleted).parent().attr('hidden', !isDeleted ? '' : null);
 
 		PostTools.removeMenu(postEl);
 	};
@@ -327,13 +325,7 @@ define('forum/topic/postTools', [
 			return true;
 		}
 
-		postContainer.on('click', '[component="post/restore"]', function () {
-			togglePostDelete($(this));
-		});
-
-		postContainer.on('click', '[component="post/purge"]', function () {
-			purgePost($(this));
-		});
+		// Restore handler removed - delete is now permanent
 
 		postContainer.on('click', '[component="post/move"]', function () {
 			const btn = $(this);
@@ -501,14 +493,7 @@ define('forum/topic/postTools', [
 
 	function togglePostDelete(button) {
 		const pid = getData(button, 'data-pid');
-		const postEl = components.get('post', 'pid', pid);
-		const action = !postEl.hasClass('deleted') ? 'delete' : 'restore';
-
-		postAction(action, pid);
-	}
-
-	function purgePost(button) {
-		postAction('purge', getData(button, 'data-pid'));
+		postAction('delete', pid);
 	}
 
 	async function postAction(action, pid) {
@@ -522,9 +507,8 @@ define('forum/topic/postTools', [
 				return;
 			}
 
-			const route = action === 'purge' ? '' : '/state';
-			const method = action === 'restore' ? 'put' : 'del';
-			api[method](`/posts/${encodeURIComponent(pid)}${route}`).catch(alerts.error);
+			// Permanent delete
+			api.del(`/posts/${encodeURIComponent(pid)}`).catch(alerts.error);
 		});
 	}
 

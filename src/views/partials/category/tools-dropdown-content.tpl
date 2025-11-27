@@ -64,16 +64,6 @@
 			<i class="fa fa-fw fa-trash-o text-secondary"></i> [[topic:thread-tools.delete]]
 		</a>
 	</li>
-	<li>
-		<a component="topic/restore" href="#" class="hidden dropdown-item rounded-1" role="menuitem">
-			<i class="fa fa-fw fa-history text-secondary"></i> [[topic:thread-tools.restore]]
-		</a>
-	</li>
-	<li>
-		<a component="topic/purge" href="#" class="hidden dropdown-item rounded-1" role="menuitem">
-			<i class="fa fa-fw fa-eraser text-secondary"></i> [[topic:thread-tools.purge]]
-		</a>
-	</li>
 
 	{{{each thread_tools}}}
 	<li>

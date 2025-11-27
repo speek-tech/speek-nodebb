@@ -169,30 +169,45 @@ privsPosts.canEdit = async function (pid, uid) {
 };
 
 privsPosts.canDelete = async function (pid, uid) {
-	const postData = await posts.getPostFields(pid, ['uid', 'tid', 'timestamp', 'deleterUid']);
+	const postData = await posts.getPostFields(pid, ['uid', 'tid', 'timestamp']);
 	const results = await utils.promiseParallel({
 		isAdmin: user.isAdministrator(uid),
 		isMod: posts.isModerator([pid], uid),
 		isLocked: topics.isLocked(postData.tid),
 		isOwner: posts.isOwner(pid, uid),
-		'posts:delete': privsPosts.can('posts:delete', pid, uid),
 	});
 	results.isMod = results.isMod[0];
+	
+	// Admin can always delete
 	if (results.isAdmin) {
 		return { flag: true };
 	}
 
-	if (!results.isMod && results.isLocked) {
-		return { flag: false, message: '[[error:topic-locked]]' };
+	// Moderators can delete if not locked
+	if (results.isMod) {
+		if (results.isLocked) {
+			return { flag: false, message: '[[error:topic-locked]]' };
+		}
+		return { flag: true };
 	}
 
-	const { postDeleteDuration } = meta.config;
-	if (!results.isMod && postDeleteDuration && (Date.now() - postData.timestamp > postDeleteDuration * 1000)) {
-		return { flag: false, message: `[[error:post-delete-duration-expired, ${meta.config.postDeleteDuration}]]` };
+	// Users can delete their own posts (permanent delete)
+	if (results.isOwner) {
+		// Check if topic is locked
+		if (results.isLocked) {
+			return { flag: false, message: '[[error:topic-locked]]' };
+		}
+		
+		// Check post delete duration for regular users
+		const { postDeleteDuration } = meta.config;
+		if (postDeleteDuration && (Date.now() - postData.timestamp > postDeleteDuration * 1000)) {
+			return { flag: false, message: `[[error:post-delete-duration-expired, ${meta.config.postDeleteDuration}]]` };
+		}
+		
+		return { flag: true };
 	}
-	const { deleterUid } = postData;
-	const flag = results['posts:delete'] && ((results.isOwner && (deleterUid === 0 || deleterUid === postData.uid)) || results.isMod);
-	return { flag: flag, message: '[[error:no-privileges]]' };
+
+	return { flag: false, message: '[[error:no-privileges]]' };
 };
 
 privsPosts.canFlag = async function (pid, uid) {
@@ -235,7 +250,9 @@ privsPosts.canPurge = async function (pid, uid) {
 		results.purge = true;
 	}
 
-	return (results.purge && (results.owner || results.isModerator)) || results.isAdmin;
+	// Allow users to delete their own posts (permanent delete)
+	// Allow admins and moderators to delete anything
+	return results.isAdmin || results.isModerator || results.owner;
 };
 
 async function isAdminOrMod(pid, uid) {

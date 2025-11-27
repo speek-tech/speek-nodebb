@@ -16,14 +16,6 @@ module.exports = function (Topics) {
 	Topics.tools = topicTools;
 
 	topicTools.delete = async function (tid, uid) {
-		return await toggleDelete(tid, uid, true);
-	};
-
-	topicTools.restore = async function (tid, uid) {
-		return await toggleDelete(tid, uid, false);
-	};
-
-	async function toggleDelete(tid, uid, isDelete) {
 		const topicData = await Topics.getTopicData(tid);
 		if (!topicData) {
 			throw new Error('[[error:no-topic]]');
@@ -32,43 +24,15 @@ module.exports = function (Topics) {
 		if (topicData.scheduled) {
 			throw new Error('[[error:invalid-data]]');
 		}
-		const canDelete = await privileges.topics.canDelete(tid, uid);
-
-		const hook = isDelete ? 'delete' : 'restore';
-		const data = await plugins.hooks.fire(`filter:topic.${hook}`, { topicData: topicData, uid: uid, isDelete: isDelete, canDelete: canDelete, canRestore: canDelete });
-
-		if ((!data.canDelete && data.isDelete) || (!data.canRestore && !data.isDelete)) {
+		const canPurge = await privileges.topics.canPurge(tid, uid);
+		if (!canPurge) {
 			throw new Error('[[error:no-privileges]]');
 		}
-		if (data.topicData.deleted && data.isDelete) {
-			throw new Error('[[error:topic-already-deleted]]');
-		} else if (!data.topicData.deleted && !data.isDelete) {
-			throw new Error('[[error:topic-already-restored]]');
-		}
-		if (data.isDelete) {
-			await Topics.delete(data.topicData.tid, data.uid);
-		} else {
-			await Topics.restore(data.topicData.tid);
-		}
-		const events = await Topics.events.log(tid, { type: isDelete ? 'delete' : 'restore', uid });
 
-		data.topicData.deleted = data.isDelete ? 1 : 0;
-
-		if (data.isDelete) {
-			plugins.hooks.fire('action:topic.delete', { topic: data.topicData, uid: data.uid });
-		} else {
-			plugins.hooks.fire('action:topic.restore', { topic: data.topicData, uid: data.uid });
-		}
-		const userData = await user.getUserFields(data.uid, ['username', 'userslug']);
-		return {
-			tid: data.topicData.tid,
-			cid: data.topicData.cid,
-			isDelete: data.isDelete,
-			uid: data.uid,
-			user: userData,
-			events,
-		};
-	}
+		// Permanent delete (purge)
+		await Topics.purgePostsAndTopic(tid, uid);
+		return { tid: tid, cid: topicData.cid, uid: uid };
+	};
 
 	topicTools.purge = async function (tid, uid) {
 		const topicData = await Topics.getTopicData(tid);

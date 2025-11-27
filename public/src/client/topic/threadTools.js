@@ -27,17 +27,7 @@ define('forum/topic/threadTools', [
 
 		// function topicCommand(method, path, command, onComplete) {
 		topicContainer.on('click', '[component="topic/delete"]', function () {
-			topicCommand('del', '/state', 'delete');
-			return false;
-		});
-
-		topicContainer.on('click', '[component="topic/restore"]', function () {
-			topicCommand('put', '/state', 'restore');
-			return false;
-		});
-
-		topicContainer.on('click', '[component="topic/purge"]', function () {
-			topicCommand('del', '', 'purge');
+			topicCommand('del', '', 'delete');
 			return false;
 		});
 
@@ -333,36 +323,8 @@ define('forum/topic/threadTools', [
 	};
 
 	ThreadTools.setDeleteState = function (data) {
-		const threadEl = components.get('topic');
-		if (String(data.tid) !== threadEl.attr('data-tid')) {
-			return;
-		}
-
-		components.get('topic/delete').toggleClass('hidden', data.isDelete).parent().attr('hidden', data.isDelete ? '' : null);
-		components.get('topic/restore').toggleClass('hidden', !data.isDelete).parent().attr('hidden', !data.isDelete ? '' : null);
-		components.get('topic/purge').toggleClass('hidden', !data.isDelete).parent().attr('hidden', !data.isDelete ? '' : null);
-		components.get('topic/deleted/message').toggleClass('hidden', !data.isDelete);
-
-		if (data.isDelete) {
-			app.parseAndTranslate('partials/topic/deleted-message', {
-				deleter: data.user,
-				deleted: true,
-				deletedTimestampISO: utils.toISOString(Date.now()),
-			}, function (html) {
-				components.get('topic/deleted/message').replaceWith(html);
-				html.find('.timeago').timeago();
-			});
-		}
-		const hideReply = data.isDelete && !ajaxify.data.privileges.isAdminOrMod;
-
-		components.get('topic/reply/container').toggleClass('hidden', hideReply);
-		components.get('topic/reply/locked').toggleClass('hidden', ajaxify.data.privileges.isAdminOrMod || !ajaxify.data.locked || data.isDelete);
-		threadEl.find('[component="post"]:not(.deleted) [component="post/reply"], [component="post"]:not(.deleted) [component="post/quote"]').toggleClass('hidden', hideReply);
-
-		threadEl.toggleClass('deleted', data.isDelete);
-		ajaxify.data.deleted = data.isDelete ? 1 : 0;
-
-		posts.addTopicEvents(data.events);
+		// Delete is now permanent, no soft delete state to manage
+		// Topic will be purged immediately
 	};
 
 

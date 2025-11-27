@@ -39,26 +39,7 @@ module.exports = function (Topics) {
 		});
 	}
 
-	async function addTopicPidsToCid(tid, cid) {
-		const pids = await Topics.getPids(tid);
-		let postData = await posts.getPostsFields(pids, ['pid', 'timestamp', 'deleted']);
-		postData = postData.filter(post => post && !post.deleted);
-		const pidsToAdd = postData.map(post => post.pid);
-		const scores = postData.map(post => post.timestamp);
-		await db.sortedSetAdd(`cid:${cid}:pids`, scores, pidsToAdd);
-	}
-
-	Topics.restore = async function (tid) {
-		const cid = await Topics.getTopicField(tid, 'cid');
-		await Promise.all([
-			Topics.deleteTopicFields(tid, [
-				'deleterUid', 'deletedTimestamp',
-			]),
-			addTopicPidsToCid(tid, cid),
-		]);
-		await Topics.setTopicField(tid, 'deleted', 0);
-		await categories.updateRecentTidForCid(cid);
-	};
+	// No restore functionality - delete is permanent
 
 	Topics.purgePostsAndTopic = async function (tid, uid) {
 		const mainPid = await Topics.getTopicField(tid, 'mainPid');

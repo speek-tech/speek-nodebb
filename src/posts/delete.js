@@ -13,38 +13,8 @@ const activitypub = require('../activitypub');
 const utils = require('../utils');
 
 module.exports = function (Posts) {
-	Posts.delete = async function (pid, uid) {
-		return await deleteOrRestore('delete', pid, uid);
-	};
-
-	Posts.restore = async function (pid, uid) {
-		return await deleteOrRestore('restore', pid, uid);
-	};
-
-	async function deleteOrRestore(type, pid, uid) {
-		const isDeleting = type === 'delete';
-		await plugins.hooks.fire(`filter:post.${type}`, { pid: pid, uid: uid });
-		await Posts.setPostFields(pid, {
-			deleted: isDeleting ? 1 : 0,
-			deleterUid: isDeleting ? uid : 0,
-		});
-		const postData = await Posts.getPostFields(pid, ['pid', 'tid', 'uid', 'content', 'timestamp', 'deleted']);
-		const topicData = await topics.getTopicFields(postData.tid, ['tid', 'cid', 'pinned']);
-		postData.cid = topicData.cid;
-		await Promise.all([
-			topics.updateLastPostTimeFromLastPid(postData.tid),
-			topics.updateTeaser(postData.tid),
-			isDeleting ?
-				db.sortedSetRemove(`cid:${topicData.cid}:pids`, pid) :
-				db.sortedSetAdd(`cid:${topicData.cid}:pids`, postData.timestamp, pid),
-		]);
-		await categories.updateRecentTidForCid(postData.cid);
-		plugins.hooks.fire(`action:post.${type}`, { post: _.clone(postData), uid: uid });
-		if (type === 'delete') {
-			await flags.resolveFlag('post', pid, uid);
-		}
-		return postData;
-	}
+	// Permanent delete is handled by Posts.purge function below
+	// No soft delete or restore functionality
 
 	Posts.purge = async function (pids, uid) {
 		pids = Array.isArray(pids) ? pids : [pids];
