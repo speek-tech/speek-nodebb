@@ -326,7 +326,7 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 		// Generate topic unfollow URL for reply notifications
 		if (isReplyNotification) {
 			try {
-				emailParams.topicUnfollowUrl = await UnfollowToken.generateUrl(uid, notification.tid);
+				emailParams.topicUnfollowUrl = UnfollowToken.generateUrl(uid, notification.tid);
 			} catch (err) {
 				winston.warn(`[notifications.sendEmail] Failed to generate unfollow URL: ${err.message}`);
 			}
