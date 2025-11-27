@@ -40,6 +40,23 @@
 	</tr>
 	<!-- 1 Column Text + Button : END -->
 
+	<!-- Topic Unfollow Link : BEGIN -->
+	{{{ if topicUnfollowUrl }}}
+	<tr>
+		<td bgcolor="#ffffff" style="padding: 16px 16px 24px 16px; text-align: center;">
+			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
+				<tr>
+					<td style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 12px; line-height: 18px; color: #888888; text-align: center;">
+						Don't want to receive notifications for this conversation?<br>
+						<a href="{topicUnfollowUrl}" style="color: #888888; text-decoration: underline;">Unfollow this conversation</a>
+					</td>
+				</tr>
+			</table>
+		</td>
+	</tr>
+	{{{ end }}}
+	<!-- Topic Unfollow Link : END -->
+
 </table>
 <!-- Email Body : END -->
 

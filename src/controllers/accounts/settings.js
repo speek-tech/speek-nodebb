@@ -15,6 +15,8 @@ const db = require('../../database');
 const helpers = require('../helpers');
 const slugify = require('../../slugify');
 
+const Topics = require('../../topics');
+
 const settingsController = module.exports;
 
 settingsController.get = async function (req, res, next) {
@@ -98,7 +100,7 @@ settingsController.get = async function (req, res, next) {
 	res.render('account/settings', userData);
 };
 
-const unsubscribable = ['digest', 'notification'];
+const unsubscribable = ['digest', 'notification', 'topic-unfollow'];
 const jwtVerifyAsync = util.promisify((token, callback) => {
 	jwt.verify(token, nconf.get('secret'), (err, payload) => callback(err, payload));
 });
@@ -115,6 +117,9 @@ const doUnsubscribe = async (payload) => {
 		if (currentToNewSetting.hasOwnProperty(current)) {
 			await user.setSetting(payload.uid, `notificationType_${payload.type}`, currentToNewSetting[current]);
 		}
+	} else if (payload.template === 'topic-unfollow') {
+		// Unfollow a specific topic
+		await Topics.unfollow(payload.tid, payload.uid);
 	}
 	return true;
 };
@@ -126,16 +131,29 @@ settingsController.unsubscribe = async (req, res, next) => {
 	
 	let success = false;
 	let errorMessage = '';
+	let template = '';
 	
 	try {
 		const payload = await jwtVerifyAsync(req.params.token);
 		if (!payload || !unsubscribable.includes(payload.template)) {
 			return next();
 		}
+		template = payload.template;
 		await doUnsubscribe(payload);
 		success = true;
 	} catch (err) {
 		errorMessage = err.message;
+	}
+	
+	// Determine success message based on template type
+	let successTitle = 'Successfully Unsubscribed';
+	let successMessage = 'You will no longer receive digest emails from our mailing list.';
+	
+	if (template === 'topic-unfollow') {
+		successTitle = 'Unfollowed Successfully';
+		successMessage = 'You will no longer receive notifications for replies to this conversation.';
+	} else if (template === 'notification') {
+		successMessage = 'You will no longer receive this type of notification by email.';
 	}
 	
 	// Send plain HTML response
@@ -145,7 +163,7 @@ settingsController.unsubscribe = async (req, res, next) => {
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>${success ? 'Unsubscribed Successfully' : 'Unsubscribe Failed'}</title>
+	<title>${success ? successTitle : 'Unsubscribe Failed'}</title>
 	<style>
 		body {
 			font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -188,8 +206,8 @@ settingsController.unsubscribe = async (req, res, next) => {
 	<div class="container">
 		${success ? `
 			<div class="icon success">✓</div>
-			<h1>Successfully Unsubscribed</h1>
-			<p>You will no longer receive digest emails from our mailing list.</p>
+			<h1>${successTitle}</h1>
+			<p>${successMessage}</p>
 		` : `
 			<div class="icon error">✕</div>
 			<h1>Unable to Unsubscribe</h1>
