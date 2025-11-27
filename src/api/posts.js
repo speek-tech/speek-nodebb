@@ -222,7 +222,10 @@ postsAPI.delete = async function (caller, data) {
 	await events.log({
 		type: 'post-purge',
 		pid: data.pid,
+		type: 'post-purge',
+		pid: data.pid,
 		uid: caller.uid,
+		ip: caller.ip,
 		ip: caller.ip,
 		tid: postData.tid,
 		title: String(topicData.title),
