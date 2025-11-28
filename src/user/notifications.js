@@ -146,7 +146,7 @@ UserNotifications.getUnreadInterval = async function (uid, interval) {
 		return [];
 	}
 	const min = Date.now() - times[interval];
-	const nids = await db.getSortedSetRevRangeByScore(`uid:${uid}:notifications:unread`, 0, 20, '+inf', min);
+	const nids = await db.getSortedSetRevRangeByScore(`uid:${uid}:notifications:unread`, 0, 2, '+inf', min);
 	return await UserNotifications.getNotifications(nids, uid);
 };
 

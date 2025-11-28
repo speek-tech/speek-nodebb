@@ -18,6 +18,7 @@ const plugins = require('./plugins');
 const utils = require('./utils');
 const emailer = require('./emailer');
 const ttlCache = require('./cache/ttl');
+const UnfollowToken = require('./topics/unfollow-token');
 
 const Notifications = module.exports;
 
@@ -307,8 +308,12 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	body = posts.relativeToAbsolute(body, posts.urlRegex);
 	body = posts.relativeToAbsolute(body, posts.imgRegex);
 	let errorLogged = false;
+
+	// Check if this is a new-reply notification with topic ID for unfollow link
+	const isReplyNotification = notification.type === 'new-reply' && notification.tid;
+
 	await async.eachLimit(uids, 3, async (uid) => {
-		await emailer.send('notification', uid, {
+		const emailParams = {
 			path: notification.path,
 			notification_url: notification.path.startsWith('http') ? notification.path : nconf.get('url') + notification.path,
 			subject: utils.stripHTMLTags(notification.subject || '[[notifications:new-notification]]'),
@@ -316,7 +321,18 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 			body: body,
 			notification: notification,
 			showUnsubscribe: true,
-		}).catch((err) => {
+		};
+
+		// Generate topic unfollow URL for reply notifications
+		if (isReplyNotification) {
+			try {
+				emailParams.topicUnfollowUrl = UnfollowToken.generateUrl(uid, notification.tid);
+			} catch (err) {
+				winston.warn(`[notifications.sendEmail] Failed to generate unfollow URL: ${err.message}`);
+			}
+		}
+
+		await emailer.send('notification', uid, emailParams).catch((err) => {
 			if (!errorLogged) {
 				winston.error(`[emailer.send] ${err.stack}`);
 				errorLogged = true;
