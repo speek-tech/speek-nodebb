@@ -207,19 +207,19 @@ async function getTermTopics(term, uid) {
 	const popular = data.topics
 		.filter(t => t.postcount > 1)
 		.sort((a, b) => b.postcount - a.postcount)
-		.slice(0, 10);
+		.slice(0, 3);
 	const popularTids = popular.map(t => t.tid);
 
 	const top = data.topics
 		.filter(t => t.votes > 0 && !popularTids.includes(t.tid))
 		.sort((a, b) => b.votes - a.votes)
-		.slice(0, 10);
+		.slice(0, 3);
 	const topTids = top.map(t => t.tid);
 
 	const recent = data.topics
 		.filter(t => !topTids.includes(t.tid) && !popularTids.includes(t.tid))
 		.sort((a, b) => b.lastposttime - a.lastposttime)
-		.slice(0, 10);
+		.slice(0, 3);
 
 	[...top, ...popular, ...recent].forEach((topicObj) => {
 		if (topicObj) {
@@ -239,5 +239,5 @@ async function getTermTopics(term, uid) {
 
 async function getUnreadPublicRooms(uid) {
 	const publicRooms = await messaging.getPublicRooms(uid, uid);
-	return publicRooms.filter(r => r && r.unread);
+	return publicRooms.filter(r => r && r.unread).slice(0, 3);
 }
