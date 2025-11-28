@@ -527,6 +527,13 @@ body.template-topic {
 			gap: 8px;
 			margin-top: 8px;
 			
+			// Hide reply, quote, and downvote icons (keep conditions intact)
+			[component="post/reply"],
+			[component="post/quote"],
+			[component="post/downvote"] {
+				display: none !important;
+			}
+			
 			// Style dropdown menu for three-dot menu
 			[component="post/tools"] {
 				.dropdown-menu {
