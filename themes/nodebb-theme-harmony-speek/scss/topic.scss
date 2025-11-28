@@ -521,12 +521,32 @@ body.template-topic {
 			box-shadow: none;
 
 			// Admin action buttons
-			.speek-post-actions {
-				display: flex;
-				align-items: center;
-				gap: 8px;
-				margin-top: 8px;
+		.speek-post-actions {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			margin-top: 8px;
+			
+			// Style dropdown menu for three-dot menu
+			[component="post/tools"] {
+				.dropdown-menu {
+					background-color: #FCF9ECFA !important;
+					background: #FCF9ECFA !important;
+				}
 			}
+		}
+		
+		// Style dropdown menu in post actions footer (if exists)
+		.speek-post-actions-footer {
+			[component="post/actions"] {
+				[component="post/tools"] {
+					.dropdown-menu {
+						background-color: #FCF9ECFA !important;
+						background: #FCF9ECFA !important;
+					}
+				}
+			}
+		}
 
 			// Ensure all content inside has correct background
 			.content,
@@ -1308,12 +1328,6 @@ body.template-topic {
 			color: #122023 !important;
 		}
 
-		// Ensure links have the background
-		a:not(.speek-user-avatar a):not(.speek-user-avatar *) {
-			background-color: #FDFDFC !important;
-			background: #FDFDFC !important;
-		}
-
 		// Preserve avatar background (should remain as is)
 		.speek-user-avatar,
 		.speek-user-avatar a,
@@ -1414,6 +1428,28 @@ body.template-topic {
 	div:has(.bottom-sheet) {
 		overflow: visible !important;
 		position: relative !important;
+	}
+	
+	// Style dropdown menu background for three-dot menu (admin side)
+	[component="post/actions"] {
+		[component="post/tools"] {
+			.dropdown-menu {
+				background-color: #FCF9ECFA !important;
+				background: #FCF9ECFA !important;
+			}
+		}
+	}
+	
+	// Style dropdown menu in post actions footer (if exists)
+	.speek-post-actions-footer {
+		[component="post/actions"] {
+			[component="post/tools"] {
+				.dropdown-menu {
+					background-color: #FCF9ECFA !important;
+					background: #FCF9ECFA !important;
+				}
+			}
+		}
 	}
 }
 
