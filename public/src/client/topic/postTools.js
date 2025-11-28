@@ -502,7 +502,18 @@ define('forum/topic/postTools', [
 			return;
 		}
 
-		bootbox.confirm('[[topic:post-' + action + '-confirm]]', function (confirm) {
+		// Check if this is a main post (index 0) or a reply/comment
+		const postEl = $('[component="post"][data-pid="' + pid + '"]');
+		const postIndex = parseInt(postEl.attr('data-index'), 10);
+		const isMainPost = postIndex === 0;
+		
+		// Use different confirmation message for main post vs comment
+		let confirmKey = '[[topic:post-' + action + '-confirm]]';
+		if (action === 'delete' && isMainPost) {
+			confirmKey = '[[topic:mainpost-delete-confirm]]';
+		}
+
+		bootbox.confirm(confirmKey, function (confirm) {
 			if (!confirm) {
 				return;
 			}

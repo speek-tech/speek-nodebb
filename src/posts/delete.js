@@ -16,8 +16,54 @@ module.exports = function (Posts) {
 	// Permanent delete is handled by Posts.purge function below
 	// No soft delete or restore functionality
 
+	// Recursively collect all reply PIDs for cascade deletion
+	async function collectAllReplyPids(pids) {
+		const allReplyPids = [];
+		const visited = new Set();
+		const queue = [...pids];
+
+		while (queue.length > 0) {
+			const currentPid = queue.shift();
+			
+			if (visited.has(currentPid)) {
+				continue;
+			}
+			visited.add(currentPid);
+
+			// Get direct replies for this post
+			const replyPids = await db.getSortedSetMembers(`pid:${currentPid}:replies`);
+			
+			if (replyPids && replyPids.length > 0) {
+				replyPids.forEach((replyPid) => {
+					if (!visited.has(replyPid) && replyPid) {
+						allReplyPids.push(replyPid);
+						queue.push(replyPid);
+					}
+				});
+			}
+		}
+
+		return allReplyPids;
+	}
+
+	// Expose function to collect reply PIDs before deletion (for frontend notification)
+	Posts.collectReplyPids = async function (pid) {
+		return await collectAllReplyPids([pid]);
+	};
+
 	Posts.purge = async function (pids, uid) {
 		pids = Array.isArray(pids) ? pids : [pids];
+		
+		// Collect all nested reply PIDs and merge with original PIDs for cascade deletion
+		const allReplyPids = await collectAllReplyPids(pids);
+		
+		// Log cascade deletion for debugging
+		if (allReplyPids.length > 0) {
+			console.log(`[Cascade Delete] Deleting post(s) ${pids.join(', ')} along with ${allReplyPids.length} replies: ${allReplyPids.join(', ')}`);
+		}
+		
+		pids = [...new Set([...pids, ...allReplyPids])];
+		
 		let postData = await Posts.getPostsData(pids);
 		pids = pids.filter((pid, index) => !!postData[index]);
 		postData = postData.filter(Boolean);
