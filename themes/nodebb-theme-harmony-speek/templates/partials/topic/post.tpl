@@ -60,16 +60,6 @@
 			{{{ end }}}
 		</div>
 		
-		<!-- Admin Controls in content area (hidden for main posts via CSS, shown for replies) -->
-		{{{ if privileges.isAdminOrMod }}}
-		{{{ if !posts.deleted }}}
-		<div class="speek-post-admin-delete">
-			<a component="post/purge" href="#" class="btn btn-sm btn-delete-admin" title="[[topic:purge]]">
-				<i class="fa fa-trash"></i> Delete
-			</a>
-		</div>
-		{{{ end }}}
-		{{{ end }}}
 	</div>
 
 	<!-- Reaction Container - Only show for primary/main post, not replies -->
