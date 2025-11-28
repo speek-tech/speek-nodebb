@@ -526,12 +526,23 @@ body.template-topic {
 			align-items: center;
 			gap: 8px;
 			margin-top: 8px;
+			font-size: 0; // Hide any text content that might leak from template conditions
 			
 			// Hide reply, quote, and downvote icons (keep conditions intact)
 			[component="post/reply"],
 			[component="post/quote"],
-			[component="post/downvote"] {
+			[component="post/downvote"],
+			a[component="post/reply"],
+			a[component="post/quote"],
+			a[component="post/downvote"] {
 				display: none !important;
+				visibility: hidden !important;
+			}
+			
+			// Restore font-size for visible elements
+			[component="post/tools"],
+			[component="post/announce-count"] {
+				font-size: initial;
 			}
 			
 			// Style dropdown menu for three-dot menu
