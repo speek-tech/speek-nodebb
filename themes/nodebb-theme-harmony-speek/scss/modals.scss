@@ -290,6 +290,12 @@
 	justify-content: flex-start;
 	flex-wrap: wrap;
 
+	// Hide image upload and code buttons
+	.speek-format-btn[data-format="image"],
+	.speek-format-btn[data-format="code"] {
+		display: none !important;
+	}
+
 	.speek-format-btn {
 		display: flex;
 		align-items: center;

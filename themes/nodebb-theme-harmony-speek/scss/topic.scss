@@ -357,6 +357,18 @@ body.template-topic {
 			color: #355E66;
 		}
 	}
+	
+	// Hide participants (users), views (eye), and followers (glasses) badges from topic header
+	.topic-badges {
+		// Hide badges containing users icon (participants)
+		.speek-topic-badge:has(svg[data-lucide="users"]),
+		// Hide badges containing eye icon (views)
+		.speek-topic-badge:has(svg[data-lucide="eye"]),
+		// Hide badges containing glasses icon (followers)
+		.speek-topic-badge:has(svg[data-lucide="glasses"]) {
+			display: none !important;
+		}
+	}
 
 	// Topic Button Styles
 	.speek-btn {
