@@ -68,8 +68,9 @@ define('quickreply', [
 				showError('Reply content is required');
 				return false;
 			}
-			if (contentValue.length < 2) {
-				showError('Reply content must be at least 2 characters');
+			const minLength = parseInt(config.minimumPostLength, 10) || 2;
+			if (contentValue.length < minLength) {
+				showError('Reply content must be at least ' + minLength + ' characters');
 				return false;
 			}
 			hideError();
@@ -139,7 +140,7 @@ define('quickreply', [
 				return;
 			}
 
-			// Validate content before submitting (minimum 2 characters)
+			// Validate content before submitting (minimum length from config)
 			if (!validateContent()) {
 				return;
 			}

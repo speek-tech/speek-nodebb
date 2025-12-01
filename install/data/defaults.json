@@ -29,7 +29,7 @@
     "groupsExemptFromPostQueue": ["administrators", "Global Moderators"],
     "groupsExemptFromNewUserRestrictions": ["administrators", "Global Moderators"],
     "groupsExemptFromMaintenanceMode": ["administrators", "Global Moderators"],
-    "minimumPostLength": 8,
+    "minimumPostLength": 2,
     "maximumPostLength": 32767,
     "systemTags": "",
     "minimumTagsPerTopic": 0,
