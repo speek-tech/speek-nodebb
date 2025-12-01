@@ -1481,6 +1481,18 @@ body.template-topic {
 			}
 		}
 	}
+
+	// =====================================
+	// Disable selection quote tooltip
+	// =====================================
+
+	// Hide the quote tooltip that appears when selecting text in posts
+	[component="selection/tooltip"] {
+		display: none !important;
+		visibility: hidden !important;
+		opacity: 0 !important;
+		pointer-events: none !important;
+	}
 }
 
 @include media-breakpoint-up(lg) {
