@@ -215,9 +215,12 @@ define('forum/topic/postTools', [
 			return votes.toggleVote($(this), '.downvoted', -1);
 		});
 
-		postContainer.on('click', '[component="post/vote-count"]', function () {
-			votes.showVotes(getData($(this), 'data-pid'));
-		});
+		// Intentionally do not expose the voters modal anymore to avoid leaking
+		// who upvoted/downvoted a post. The vote count remains visible in the UI,
+		// but clicking it should not open a list of voters.
+		// postContainer.on('click', '[component="post/vote-count"]', function () {
+		// 	votes.showVotes(getData($(this), 'data-pid'));
+		// });
 
 		postContainer.on('click', '[component="post/announce-count"]', function () {
 			votes.showAnnouncers(getData($(this), 'data-pid'));

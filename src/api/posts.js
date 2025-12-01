@@ -380,18 +380,16 @@ postsAPI.getVoters = async function (caller, data) {
 		showDownvotes ? db.getSetMembers(`pid:${data.pid}:downvote`) : [],
 	]);
 
-	const [upvoters, downvoters] = await Promise.all([
-		user.getUsersFields(upvoteUids, ['username', 'userslug', 'picture']),
-		user.getUsersFields(downvoteUids, ['username', 'userslug', 'picture']),
-	]);
-
+	// Intentionally avoid resolving voter identities here – we only expose
+	// aggregate counts so that the UI can show how many votes a post has
+	// without revealing who cast them.
 	return {
-		upvoteCount: upvoters.length,
-		downvoteCount: downvoters.length,
+		upvoteCount: upvoteUids.length,
+		downvoteCount: downvoteUids.length,
 		showUpvotes: showUpvotes,
 		showDownvotes: showDownvotes,
-		upvoters: upvoters,
-		downvoters: downvoters,
+		upvoters: [],
+		downvoters: [],
 	};
 };
 
@@ -405,8 +403,14 @@ postsAPI.getUpvoters = async function (caller, data) {
 		throw new Error('[[error:no-privileges]]');
 	}
 
-	const upvotedUids = (await posts.getUpvotedUidsByPids([pid]))[0];
-	return await getTooltipData(upvotedUids);
+	// Do not expose individual upvoter identities via this endpoint anymore.
+	// We still return a tooltip structure so existing clients do not break,
+	// but usernames/otherCount are intentionally empty.
+	return {
+		otherCount: 0,
+		usernames: [],
+		cutoff: 6,
+	};
 };
 
 async function getTooltipData(uids) {

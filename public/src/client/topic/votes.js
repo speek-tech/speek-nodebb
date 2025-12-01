@@ -9,10 +9,14 @@ define('forum/topic/votes', [
 
 	Votes.addVoteHandler = function () {
 		_showTooltip = {};
-		if (canSeeUpVotes()) {
-			components.get('topic').on('mouseenter', '[data-pid] [component="post/vote-count"]', loadDataAndCreateTooltip);
-			components.get('topic').on('mouseleave', '[data-pid] [component="post/vote-count"]', destroyTooltip);
-		}
+
+		// Do not attach tooltips to the vote count anymore – we still show the
+		// numeric count in the UI, but we no longer expose the list of users
+		// who upvoted via hover tooltips.
+		// if (canSeeUpVotes()) {
+		// 	components.get('topic').on('mouseenter', '[data-pid] [component="post/vote-count"]', loadDataAndCreateTooltip);
+		// 	components.get('topic').on('mouseleave', '[data-pid] [component="post/vote-count"]', destroyTooltip);
+		// }
 
 		components.get('topic').on('mouseenter', '[data-pid] [component="post/announce-count"]', loadDataAndCreateTooltip);
 		components.get('topic').on('mouseleave', '[data-pid] [component="post/announce-count"]', destroyTooltip);
