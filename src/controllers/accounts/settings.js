@@ -109,13 +109,20 @@ const doUnsubscribe = async (payload) => {
 		// Set user's preference to opt out of digest emails
 		await user.setSetting(payload.uid, 'dailyDigestFreq', 'off');
 	} else if (payload.template === 'notification') {
+		const settingKey = `notificationType_${payload.type}`;
 		const currentToNewSetting = {
 			notificationemail: 'notification',
 			email: 'none',
 		};
-		const current = await db.getObjectField(`user:${payload.uid}:settings`, `notificationType_${payload.type}`);
+		const current = await db.getObjectField(`user:${payload.uid}:settings`, settingKey);
+
 		if (currentToNewSetting.hasOwnProperty(current)) {
-			await user.setSetting(payload.uid, `notificationType_${payload.type}`, currentToNewSetting[current]);
+			// Standard NodeBB behaviour: preserve in-app notifications when possible
+			await user.setSetting(payload.uid, settingKey, currentToNewSetting[current]);
+		} else if (payload.type === 'new-reply') {
+			// Hard guarantee for Speek: global \"unsubscribe from replies to any post\"
+			// must always stop reply emails, even if the previous value was unexpected.
+			await user.setSetting(payload.uid, settingKey, 'none');
 		}
 	} else if (payload.template === 'topic-unfollow') {
 		// Unfollow a specific topic
