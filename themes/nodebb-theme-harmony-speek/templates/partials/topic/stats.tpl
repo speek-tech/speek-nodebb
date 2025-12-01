@@ -1,6 +1,6 @@
 <span class="badge text-body border border-gray-300 stats text-xs">
 	<i class="fa-regular fa-fw fa-message visible-xs-inline" title="[[global:posts]]"></i>
-	<span component="topic/post-count" title="{replyCount}" data-total-posts="{postcount}" data-reply-count="{replyCount}" class="fw-bold">{humanReadableNumber(replyCount)}</span>
+	<span component="topic/post-count" title="replies" data-total-posts="{postcount}" data-reply-count="{replyCount}" class="fw-bold">{humanReadableNumber(replyCount)}</span>
 	<span class="hidden-xs text-lowercase fw-normal">[[global:posts]]</span>
 </span>
 <span class="badge text-body border border-gray-300 stats text-xs">

@@ -155,7 +155,7 @@ define('forum/topic/postTools', [
 		postCountEl
 			.attr('data-total-posts', postCount)
 			.attr('data-reply-count', replyCount)
-			.attr('title', replyCount)
+			.attr('title', 'replies')
 			.html(helpers.humanReadableNumber(replyCount));
 		setMainReplyCount(replyCount);
 		navigator.setCount(postCount);
