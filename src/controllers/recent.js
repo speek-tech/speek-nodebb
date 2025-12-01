@@ -9,6 +9,7 @@ const meta = require('../meta');
 const helpers = require('./helpers');
 const pagination = require('../pagination');
 const privileges = require('../privileges');
+const utils = require('../utils');
 
 const recentController = module.exports;
 const relative_path = nconf.get('relative_path');
@@ -57,6 +58,43 @@ recentController.getData = async function (req, url, sort, selectedTerm = 'allti
 		floatPinned: req.query.pinned,
 		query: req.query,
 	});
+
+	// Attach a plain-text teaser of the main post content for each topic.
+	// This is used by the external community UI (Recent Conversations) to show
+	// an original post snippet without extra API calls per topic.
+	if (data && Array.isArray(data.topics) && data.topics.length) {
+		try {
+			const tids = data.topics.map(topic => topic && topic.tid).filter(Boolean);
+			if (tids.length) {
+				const mainPosts = await topics.getMainPosts(tids, req.uid);
+				const mainPostByTid = new Map();
+				(mainPosts || []).forEach((post) => {
+					if (post && post.tid) {
+						mainPostByTid.set(String(post.tid), post);
+					}
+				});
+
+				data.topics.forEach((topic) => {
+					if (!topic || !topic.tid || topic.mainPostTeaser) {
+						return;
+					}
+					const post = mainPostByTid.get(String(topic.tid));
+					if (!post || !post.content) {
+						return;
+					}
+					let text = utils.stripHTMLTags(post.content || '').trim().replace(/\s+/g, ' ');
+					const maxLen = 200;
+					if (text.length > maxLen) {
+						text = text.slice(0, maxLen) + '…';
+					}
+					topic.mainPostTeaser = text;
+				});
+			}
+		} catch (err) {
+			// Log but do not fail the recent endpoint if teaser enrichment fails.
+			req.res?.locals?.logger?.warn?.('[recent] Failed to add mainPostTeaser', err);
+		}
+	}
 
 	const isDisplayedAsHome = !(req.originalUrl.startsWith(`${relative_path}/api/${url}`) || req.originalUrl.startsWith(`${relative_path}/${url}`));
 	const baseUrl = isDisplayedAsHome ? '' : url;
