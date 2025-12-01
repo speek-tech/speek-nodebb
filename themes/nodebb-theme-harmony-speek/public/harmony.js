@@ -453,6 +453,7 @@ $(document).ready(function () {
 
 			const form = $('#speek-new-post-form');
 			const textarea = $('#speek-new-post-content');
+			let isSubmittingNewPost = false;
 			const charCurrent = $('#speek-char-current');
 			const charMax = $('#speek-char-max');
 			const maxLength = parseInt(textarea.attr('maxlength'), 10) || 1000;
@@ -928,6 +929,11 @@ $(document).ready(function () {
 			form.on('submit', function (e) {
 				e.preventDefault();
 
+				// Prevent duplicate submissions
+				if (isSubmittingNewPost) {
+					return;
+				}
+
 				// Validate all fields
 				if (!validateForm()) {
 					// Focus on first invalid field
@@ -948,6 +954,13 @@ $(document).ready(function () {
 					_csrf: $('input[name="_csrf"]').val()
 				};
 
+				// Mark as submitting and disable submit button
+				isSubmittingNewPost = true;
+				const submitButton = $('.speek-new-post-modal-footer button[type="submit"]');
+				if (submitButton.length) {
+					submitButton.prop('disabled', true).addClass('disabled');
+				}
+
 				// Submit via AJAX
 				$.ajax({
 					url: form.attr('action'),
@@ -958,6 +971,8 @@ $(document).ready(function () {
 					},
 					data: formData,
 					success: function (response) {
+						// Reset submitting state (modal will close shortly)
+						isSubmittingNewPost = false;
 						// Close modal
 						const bsModal = bootstrap.Modal.getInstance(modal[0]);
 						if (bsModal) {
@@ -997,6 +1012,11 @@ $(document).ready(function () {
 						}, POST_SUCCESS_REDIRECT_DELAY);
 					},
 					error: function (xhr) {
+						// Re-enable submit button on error so user can try again
+						isSubmittingNewPost = false;
+						if (submitButton.length) {
+							submitButton.prop('disabled', false).removeClass('disabled');
+						}
 						console.error('Error submitting post:', xhr);
 						
 						let errorMessage = 'Error submitting post. Please try again.';
