@@ -89,6 +89,15 @@ body.template-topic {
 		// 	padding-left: 16px !important;
 		// 	padding-right: 16px !important;
 		// }
+
+		// Reduce left margin for replies on mobile
+		.speek-post-replies-container .speek-topic-post-card,
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card .speek-topic-post-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			margin-left: 16px !important;
+		}
 	}
 
 	@include tablet {
@@ -100,6 +109,15 @@ body.template-topic {
 		.topic {
 			padding-left: 16px !important;
 			padding-right: 16px !important;
+		}
+
+		// Reduce left margin for replies on tablet
+		.speek-post-replies-container .speek-topic-post-card,
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card .speek-topic-post-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			margin-left: 20px !important;
 		}
 
 		// .posts-container {
@@ -1133,6 +1151,7 @@ body.template-topic {
 			padding: 16px;
 			gap: 12px;
 			margin-bottom: 24px;
+			margin-left: 24px; // Add left spacing for comment-like indentation
 
 			// Show footer for admin controls in replies
 			.speek-post-card-footer {
@@ -1222,6 +1241,7 @@ body.template-topic {
 		flex-direction: column !important;
 		gap: 10px !important;
 		margin-bottom: 0 !important;
+		margin-left: 24px !important; // Add left spacing for comment-like indentation
 
 		// Hide footer for reply cards
 		.speek-post-card-footer {
