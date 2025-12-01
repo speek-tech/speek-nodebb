@@ -85,7 +85,7 @@
 					<div class="d-flex gap-3 align-items-center">
 						<div class="d-flex gap-1 align-items-center">
 							<label for="minimumPostLength">[[admin/admin:min]]</label>
-							<input id="minimumPostLength" type="text" class="form-control text-end" value="8" data-field="minimumPostLength" style="max-width: 80px;">
+							<input id="minimumPostLength" type="text" class="form-control text-end" value="2" data-field="minimumPostLength" style="max-width: 80px;">
 						</div>
 						<div class="d-flex gap-1 align-items-center">
 							<label for="maximumPostLength">[[admin/admin:max]]</label>
