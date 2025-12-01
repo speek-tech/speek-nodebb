@@ -40,22 +40,31 @@
 	</tr>
 	<!-- 1 Column Text + Button : END -->
 
-	<!-- Topic Unfollow Link : BEGIN -->
-	{{{ if topicUnfollowUrl }}}
+	<!-- Reply-specific unsubscribe options : BEGIN -->
+	{{{ if isReplyNotification }}}
 	<tr>
 		<td bgcolor="#ffffff" style="padding: 16px 16px 24px 16px; text-align: center;">
 			<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
 				<tr>
 					<td style="font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 12px; line-height: 18px; color: #888888; text-align: center;">
-						Don't want to receive notifications for this conversation?<br>
-						<a href="{topicUnfollowUrl}" style="color: #888888; text-decoration: underline;">Unfollow this conversation</a>
+						You’re receiving this email because someone replied in a conversation you’re following.<br>
+						{{{ if topicUnfollowUrl }}}
+							<a href="{topicUnfollowUrl}" style="color: #888888; text-decoration: underline; display: inline-block; margin-top: 8px;">
+								Unsubscribe from replies to this post only
+							</a><br>
+						{{{ end }}}
+						{{{ if unsubUrl }}}
+							<a href="{unsubUrl}" style="color: #888888; text-decoration: underline; display: inline-block; margin-top: 4px;">
+								Unsubscribe from replies to any post
+							</a>
+						{{{ end }}}
 					</td>
 				</tr>
 			</table>
 		</td>
 	</tr>
 	{{{ end }}}
-	<!-- Topic Unfollow Link : END -->
+	<!-- Reply-specific unsubscribe options : END -->
 
 </table>
 <!-- Email Body : END -->
