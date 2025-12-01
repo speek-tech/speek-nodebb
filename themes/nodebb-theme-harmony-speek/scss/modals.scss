@@ -290,9 +290,10 @@
 	justify-content: flex-start;
 	flex-wrap: wrap;
 
-	// Hide image upload and code buttons
+	// Hide image upload, More options and code buttons
 	.speek-format-btn[data-format="image"],
-	.speek-format-btn[data-format="code"] {
+	.speek-format-btn[data-format="code"],
+	.speek-format-btn[data-format="more"] {
 		display: none !important;
 	}
 
