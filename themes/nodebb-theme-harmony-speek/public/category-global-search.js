@@ -35,6 +35,21 @@
 			resultsContainer.hide();
 			metaEl.hide();
 			countEl.text('');
+			
+			// Trigger iframe height recalculation when search is cleared
+			// This fixes the blank space issue when search results are hidden
+			setTimeout(function() {
+				if (window.parent && window.parent !== window) {
+					// Send message to parent that search was cleared
+					window.parent.postMessage({
+						type: 'searchCleared'
+					}, '*');
+				}
+				// Also trigger height update in iframe
+				if (window.dispatchEvent) {
+					window.dispatchEvent(new Event('resize'));
+				}
+			}, 100);
 		}
 
 		function hideFeedback() {
