@@ -109,6 +109,16 @@ define('forum/topic/postTools', [
 
 			dropdownMenu.attr('data-loaded', 'true').html(html);
 
+			// Check if dropdown has any visible menu items
+			const visibleItems = dropdownMenu.find('li').filter(function() {
+				return $(this).is(':visible') && !$(this).hasClass('hidden');
+			});
+			
+			// Hide the 3-dot menu button if there are no visible items
+			if (visibleItems.length === 0) {
+				$this.addClass('hidden');
+			}
+
 			new clipboard('[data-clipboard-text]');
 
 			hooks.fire('action:post.tools.load', {
