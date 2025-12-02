@@ -780,6 +780,9 @@ body.template-topic {
 				gap: 0;
 				align-items: center;
 				justify-content: flex-start;
+				border-top: none !important;
+				padding-top: 0 !important;
+				margin-top: 0 !important;
 				
 				// Admin controls
 				.speek-admin-controls {

@@ -1315,6 +1315,24 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 			}
 
+			// Clickable area (header + content)
+			.speek-post-card-clickable {
+				display: block;
+				text-decoration: none;
+				color: inherit;
+				cursor: pointer;
+				margin-bottom: 0;
+
+				&:hover {
+					text-decoration: none;
+					color: inherit;
+
+					.speek-post-title {
+						color: #355e66;
+					}
+				}
+			}
+
 			// Header: Avatar + User Info
 			.speek-post-card-header {
 				display: flex;
@@ -1374,15 +1392,6 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 			.speek-post-card-content {
 				margin-bottom: 16px;
 
-				.speek-post-link {
-					text-decoration: none;
-					color: inherit;
-
-					&:hover .speek-post-title {
-						color: #355e66;
-					}
-				}
-
 				.speek-post-title {
 					font-family: "DM Sans", var(--bs-body-font-family);
 					font-size: 18px;
@@ -1403,11 +1412,17 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				}
 			}
 
-			// Footer: Reactions
+			// Footer: Reactions (not clickable)
 			.speek-post-card-footer {
 				display: flex;
 				gap: 24px;
 				align-items: center;
+				border-top: 1px solid #E0DBC7;
+				padding-top: 16px;
+				margin-top: 16px;
+				position: relative;
+				z-index: 1;
+				pointer-events: auto;
 
 				.speek-reaction-item {
 					display: flex;
@@ -1595,6 +1610,9 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 	display: flex;
 	gap: 16px;
 	align-items: center;
+	border-top: 1px solid #E0DBC7;
+	padding-top: 16px;
+	margin-top: 16px;
 
 	.speek-reaction-item {
 		display: flex;

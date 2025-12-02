@@ -9,20 +9,20 @@
 		<a id="{./index}" data-index="{./index}" component="topic/anchor"></a>
 
 		<!-- Simplified Card Design - Only Figma Elements -->
-		<div class="speek-post-card-header">
-			<div class="speek-user-avatar" aria-hidden="true">
-				{buildAvatar(./user, "48px", true)}
-			</div>
-			<div class="speek-user-info" aria-label="{./user.displayname}">
-				<div class="speek-user-name">{./user.displayname}</div>
-				<div class="speek-post-timestamp">
-					<span class="timeago" title="{./timestampISO}"></span>
+		<a href="{config.relative_path}/topic/{./slug}" class="speek-post-card-clickable">
+			<div class="speek-post-card-header">
+				<div class="speek-user-avatar" aria-hidden="true">
+					{buildAvatar(./user, "48px", true)}
+				</div>
+				<div class="speek-user-info" aria-label="{./user.displayname}">
+					<div class="speek-user-name">{./user.displayname}</div>
+					<div class="speek-post-timestamp">
+						<span class="timeago" title="{./timestampISO}"></span>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="speek-post-card-content">
-			<a href="{config.relative_path}/topic/{./slug}" class="speek-post-link">
+			<div class="speek-post-card-content">
 				<h3 component="topic/header" class="speek-post-title">{./title}</h3>
 				{{{ if ./mainPostPreview }}}
 				<p class="speek-post-preview">{./mainPostPreview}</p>
@@ -31,8 +31,8 @@
 					<p class="speek-post-preview">{./teaser.content}</p>
 					{{{ end }}}
 				{{{ end }}}
-			</a>
-		</div>
+			</div>
+		</a>
 
         		<div class="speek-post-card-footer">
         			<div class="speek-reaction-item">
