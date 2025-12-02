@@ -109,6 +109,15 @@ define('forum/topic/postTools', [
 
 			dropdownMenu.attr('data-loaded', 'true').html(html);
 
+			// Initialize Lucide icons in the dropdown menu
+			if (window.lucide && window.lucide.createIcons) {
+				window.lucide.createIcons({
+					icons: window.lucide.icons,
+					nameAttr: 'data-lucide',
+					attrs: {},
+				});
+			}
+
 			// Check if dropdown has any visible menu items
 			const visibleItems = dropdownMenu.find('li').filter(function() {
 				return $(this).is(':visible') && !$(this).hasClass('hidden');
