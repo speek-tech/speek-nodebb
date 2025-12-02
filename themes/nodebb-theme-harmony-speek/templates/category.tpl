@@ -51,6 +51,10 @@
 		<!-- IMPORT partials/topics_list.tpl -->
 		{{{ end }}}
 
+		{{{ if config.usePagination }}}
+		<!-- IMPORT partials/paginator.tpl -->
+		{{{ end }}}
+
 		<!-- Recent Conversations Carousel -->
 		<!-- Recent Conversations Carousel hidden for now -->
 		<!-- Other Spaces Carousel hidden for now -->
