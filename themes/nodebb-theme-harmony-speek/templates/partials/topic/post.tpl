@@ -45,6 +45,11 @@
 				{{{ end }}}
 			</div>
 		</div>
+		
+		{{{ if config.loggedIn }}}
+		<!-- 3-dot menu in header - right aligned -->
+		<!-- IMPORT partials/topic/post-menu.tpl -->
+		{{{ end }}}
 	</div>
 
 	<!-- Content Container -->
@@ -108,7 +113,6 @@
 		</a>
 		{{{ end }}}
 		<meta itemprop="downvoteCount" content="{posts.downvotes}">
-		<!-- IMPORT partials/topic/post-menu.tpl -->
 	</div>
 	{{{ end }}}
 

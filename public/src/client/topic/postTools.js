@@ -522,7 +522,29 @@ define('forum/topic/postTools', [
 			}
 
 			// Permanent delete
-			api.del(`/posts/${encodeURIComponent(pid)}`).catch(alerts.error);
+			api.del(`/posts/${encodeURIComponent(pid)}`).then(() => {
+				// Send postMessage to parent window on successful delete
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'success',
+						isComment: !isMainPost,
+					}, '*');
+				}
+			}).catch((err) => {
+				// Send error message to parent window
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'error',
+						message: err.message || 'An error occurred',
+						isComment: !isMainPost,
+					}, '*');
+				}
+				alerts.error(err);
+			});
 		});
 	}
 
