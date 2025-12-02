@@ -42,11 +42,5 @@
 				<span class="category-pill__option-icon" aria-hidden="true">{buildLucideIcon("check", 16, "category-pill__option-icon-svg")}</span>
 			</a>
 		</li>
-		<li>
-			<a class="dropdown-item category-pill__option category-sort__option" href="#" data-sort="most_views" role="menuitem">
-				<span class="category-pill__option-label">[[topic:most-views]]</span>
-				<span class="category-pill__option-icon" aria-hidden="true">{buildLucideIcon("check", 16, "category-pill__option-icon-svg")}</span>
-			</a>
-		</li>
 	</ul>
 </div>
