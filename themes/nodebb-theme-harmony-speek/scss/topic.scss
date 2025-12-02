@@ -704,7 +704,7 @@ body.template-topic {
 				.dropdown-toggle {
 					padding: 4px 8px;
 					background: transparent !important;
-					border: none;
+					border: none !important;
 
 					i {
 						color: #525252 !important;
@@ -712,7 +712,7 @@ body.template-topic {
 					}
 
 					&:hover i {
-						color: #355E66;
+						color: #355E66 !important;
 					}
 				}
 
