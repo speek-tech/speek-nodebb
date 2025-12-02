@@ -309,7 +309,7 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	body = posts.relativeToAbsolute(body, posts.imgRegex);
 	let errorLogged = false;
 
-	// Check if this is a new-reply notification with topic ID for unfollow link
+	// Check if this is a new-reply notification with topic ID for reply-specific unsubscribe options
 	const isReplyNotification = notification.type === 'new-reply' && notification.tid;
 
 	await async.eachLimit(uids, 3, async (uid) => {
@@ -323,8 +323,12 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 			showUnsubscribe: true,
 		};
 
-		// Generate topic unfollow URL for reply notifications
+		// Generate reply-specific unsubscribe options for reply notifications
 		if (isReplyNotification) {
+			// Flag for templates so we only show reply-specific unsubscribe UI
+			emailParams.isReplyNotification = true;
+
+			// Per-topic: "unsubscribe from replies to this post only"
 			try {
 				emailParams.topicUnfollowUrl = UnfollowToken.generateUrl(uid, notification.tid);
 			} catch (err) {

@@ -192,6 +192,21 @@ define('quickreply', [
 				storage.removeItem(qrDraftId);
 				QuickReply._autocomplete.hide();
 				hooks.fire('action:quickreply.success', { data });
+
+				// After successful reply, scroll back to the quick reply textarea
+				const quickReplyTextarea = components.get('topic/quickreply/text');
+				const quickReplyContainer = components.get('topic/quickreply/container');
+				if (quickReplyContainer.length) {
+					const offset = quickReplyContainer.offset();
+					if (offset) {
+						$('html, body').stop(true, false).animate({
+							scrollTop: offset.top - 100,
+						}, 300);
+					}
+				}
+				if (quickReplyTextarea.length) {
+					quickReplyTextarea.focus();
+				}
 			});
 		});
 

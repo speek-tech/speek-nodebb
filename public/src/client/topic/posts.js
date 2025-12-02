@@ -44,10 +44,16 @@ define('forum/topic/posts', [
 		ajaxify.data.replyCount = Math.max(ajaxify.data.postcount - 1, 0);
 		postTools.updatePostCount(ajaxify.data.postcount);
 
-		if (config.usePagination) {
-			onNewPostPagination(data);
-		} else {
-			onNewPostInfiniteScroll(data);
+		// Detect replies (posts with toPid) and avoid main topic list scroll for them.
+		// Replies are rendered via forum/topic/replies and should not change page scroll position.
+		const isReply = data.posts[0].toPid && parseInt(data.posts[0].toPid, 10) > 0;
+
+		if (!isReply) {
+			if (config.usePagination) {
+				onNewPostPagination(data);
+			} else {
+				onNewPostInfiniteScroll(data);
+			}
 		}
 
 		require(['forum/topic/replies'], function (replies) {

@@ -45,7 +45,13 @@
 					<span class="speek-topic-badge__icon">
 						{buildLucideIcon("message-square", 12, "speek-topic-badge__icon-svg")}
 					</span>
-					<span class="speek-topic-badge__text" component="topic/post-count" data-total-posts="{postcount}" data-reply-count="{replyCount}">
+					<span
+						class="speek-topic-badge__text"
+						component="topic/post-count"
+						data-total-posts="{postcount}"
+						data-reply-count="{replyCount}"
+						title="replies"
+					>
 						{humanReadableNumber(replyCount)}
 					</span>
 				</span>
