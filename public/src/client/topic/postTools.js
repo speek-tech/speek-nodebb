@@ -104,17 +104,17 @@ define('forum/topic/postTools', [
 				}
 				data.posts.display_move_tools = data.posts.display_move_tools && index !== 0;
 
-				const html = await app.parseAndTranslate('partials/topic/post-menu-list', data);
-				const clipboard = require('clipboard');
+			const html = await app.parseAndTranslate('partials/topic/post-menu-list', data);
+			const clipboard = require('clipboard');
 
-				dropdownMenu.attr('data-loaded', 'true').html(html);
+			dropdownMenu.attr('data-loaded', 'true').html(html);
 
-				new clipboard('[data-clipboard-text]');
+			new clipboard('[data-clipboard-text]');
 
-				hooks.fire('action:post.tools.load', {
-					element: dropdownMenu,
-				});
+			hooks.fire('action:post.tools.load', {
+				element: dropdownMenu,
 			});
+		});
 		});
 	}
 
@@ -522,7 +522,29 @@ define('forum/topic/postTools', [
 			}
 
 			// Permanent delete
-			api.del(`/posts/${encodeURIComponent(pid)}`).catch(alerts.error);
+			api.del(`/posts/${encodeURIComponent(pid)}`).then(() => {
+				// Send postMessage to parent window on successful delete
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'success',
+						isComment: !isMainPost,
+					}, '*');
+				}
+			}).catch((err) => {
+				// Send error message to parent window
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'error',
+						message: err.message || 'An error occurred',
+						isComment: !isMainPost,
+					}, '*');
+				}
+				alerts.error(err);
+			});
 		});
 	}
 

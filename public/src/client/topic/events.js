@@ -166,6 +166,18 @@ define('forum/topic/events', [
 					images.wrapImageInLink($(this));
 				});
 			}
+
+			// Send postMessage to parent window on successful edit
+			const postIndex = parseInt(postContainer.attr('data-index'), 10);
+			const isMainPost = postIndex === 0;
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'post-action',
+					action: 'edit',
+					status: 'success',
+					isComment: !isMainPost,
+				}, '*');
+			}
 		} else {
 			hooks.fire('action:posts.edited', data);
 		}
