@@ -17,11 +17,5 @@
 				<i class="flex-shrink-0 fa fa-fw text-secondary"></i>
 			</a>
 		</li>
-		<li>
-			<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" href="#" class="most_votes" data-sort="most_votes" role="menuitem">
-				<span class="flex-grow-1">[[topic:most-votes]]</span>
-				<i class="flex-shrink-0 fa fa-fw text-secondary"></i>
-			</a>
-		</li>
 	</ul>
 </div>
