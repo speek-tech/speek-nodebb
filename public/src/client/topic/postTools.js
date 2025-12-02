@@ -104,17 +104,36 @@ define('forum/topic/postTools', [
 				}
 				data.posts.display_move_tools = data.posts.display_move_tools && index !== 0;
 
-				const html = await app.parseAndTranslate('partials/topic/post-menu-list', data);
-				const clipboard = require('clipboard');
+			const html = await app.parseAndTranslate('partials/topic/post-menu-list', data);
+			const clipboard = require('clipboard');
 
-				dropdownMenu.attr('data-loaded', 'true').html(html);
+			dropdownMenu.attr('data-loaded', 'true').html(html);
 
-				new clipboard('[data-clipboard-text]');
-
-				hooks.fire('action:post.tools.load', {
-					element: dropdownMenu,
+			// Initialize Lucide icons in the dropdown menu
+			if (window.lucide && window.lucide.createIcons) {
+				window.lucide.createIcons({
+					icons: window.lucide.icons,
+					nameAttr: 'data-lucide',
+					attrs: {},
 				});
+			}
+
+			// Check if dropdown has any visible menu items
+			const visibleItems = dropdownMenu.find('li').filter(function() {
+				return $(this).is(':visible') && !$(this).hasClass('hidden');
 			});
+			
+			// Hide the 3-dot menu button if there are no visible items
+			if (visibleItems.length === 0) {
+				$this.addClass('hidden');
+			}
+
+			new clipboard('[data-clipboard-text]');
+
+			hooks.fire('action:post.tools.load', {
+				element: dropdownMenu,
+			});
+		});
 		});
 	}
 
@@ -250,10 +269,12 @@ define('forum/topic/postTools', [
 
 		postContainer.on('click', '[component="post/flagUser"]', function () {
 			const uid = getData($(this), 'data-uid');
+			const username = getData($(this), 'data-username');
 			require(['flags'], function (flags) {
 				flags.showFlagModal({
 					type: 'user',
 					id: uid,
+					username: username,
 				});
 			});
 		});
@@ -522,7 +543,29 @@ define('forum/topic/postTools', [
 			}
 
 			// Permanent delete
-			api.del(`/posts/${encodeURIComponent(pid)}`).catch(alerts.error);
+			api.del(`/posts/${encodeURIComponent(pid)}`).then(() => {
+				// Send postMessage to parent window on successful delete
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'success',
+						isComment: !isMainPost,
+					}, '*');
+				}
+			}).catch((err) => {
+				// Send error message to parent window
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'post-action',
+						action: 'delete',
+						status: 'error',
+						message: err.message || 'An error occurred',
+						isComment: !isMainPost,
+					}, '*');
+				}
+				alerts.error(err);
+			});
 		});
 	}
 

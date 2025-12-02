@@ -540,3 +540,401 @@ body:has(#speek-new-post-modal.showing) {
 	}
 }
 
+// Bootbox Dialog Styling (Delete Confirmation, etc.)
+.bootbox,
+.bootbox.modal {
+	.modal-dialog {
+		max-width: 480px;
+		margin: 1.75rem auto;
+	}
+
+	.modal-content {
+		background: #FFFFFF !important;
+		border: 1px solid #F1EDE2 !important;
+		border-radius: 24px !important;
+		box-shadow: 0px 24px 60px rgba(15, 23, 42, 0.12) !important;
+		padding: 0;
+	}
+
+	.modal-header {
+		border-bottom: none !important;
+		padding: 32px 32px 16px 32px;
+
+		.modal-title {
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+			font-size: 18px !important;
+			font-weight: 600 !important;
+			line-height: 1.5555555555555556em !important;
+			color: #122023 !important;
+			margin: 0;
+		}
+
+		.btn-close {
+			opacity: 1;
+			background: transparent;
+			border: none;
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	.modal-body {
+		padding: 0 32px 24px 32px !important;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+		font-size: 15px !important;
+		font-weight: 400 !important;
+		line-height: 1.6em !important;
+		color: #525252 !important;
+	}
+
+	.modal-footer {
+		border-top: none !important;
+		padding: 0 32px 32px 32px !important;
+		display: flex !important;
+		flex-direction: row !important;
+		justify-content: flex-end !important;
+		align-items: center !important;
+		gap: 12px !important;
+
+		.btn,
+		button {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 8px !important;
+			padding: 0 32px !important;
+			border-radius: 9999px !important;
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+			font-size: 14px !important;
+			font-weight: 700 !important;
+			line-height: 1.4285714285714286em !important;
+			text-decoration: none !important;
+			border: none !important;
+			cursor: pointer !important;
+			transition: all 0.2s ease !important;
+			height: 44px !important;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+			min-width: 120px !important;
+			white-space: nowrap !important;
+
+			&:focus {
+				outline: none !important;
+			}
+
+			&:focus-visible {
+				outline: none !important;
+				box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5) !important;
+			}
+		}
+
+		// Cancel/Secondary button (left button)
+		.btn-secondary,
+		.btn-default,
+		button[data-bb-handler="cancel"] {
+			background: #FCFBF9 !important;
+			color: #355E66 !important;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+
+			&:hover {
+				background: rgba(252, 251, 249, 0.9) !important;
+				color: #355E66 !important;
+				text-decoration: none !important;
+			}
+
+			&:active {
+				opacity: 0.6 !important;
+			}
+
+			&:focus-visible {
+				outline: none !important;
+				box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5) !important;
+			}
+		}
+
+		// Confirm/Primary button (right button) - For delete actions
+		.btn-primary,
+		.btn-danger,
+		button[data-bb-handler="confirm"] {
+			background: #DC2626 !important;
+			color: #FEF2F2 !important;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+
+			&:hover {
+				background: rgba(220, 38, 38, 0.9) !important;
+				color: #FEF2F2 !important;
+				text-decoration: none !important;
+			}
+
+			&:active {
+				opacity: 0.6 !important;
+			}
+
+			&:focus,
+			&:focus-visible {
+				outline: none !important;
+				background: rgba(220, 38, 38, 0.9) !important;
+				box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.2) !important;
+			}
+		}
+
+		// Non-destructive confirm buttons (if needed)
+		.btn-success {
+			background: #E6FF00 !important;
+			color: #27454B !important;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+
+			&:hover {
+				background: rgba(230, 255, 0, 0.9) !important;
+				color: #27454B !important;
+				text-decoration: none !important;
+			}
+
+			&:active {
+				opacity: 0.6 !important;
+			}
+
+			&:focus-visible {
+				outline: none !important;
+				box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5) !important;
+			}
+		}
+	}
+
+	@include mobile {
+		.modal-dialog {
+			margin: 1rem;
+			max-width: calc(100vw - 2rem);
+		}
+
+		.modal-header {
+			padding: 24px 24px 12px 24px;
+		}
+
+		.modal-body {
+			padding: 0 24px 20px 24px;
+		}
+
+		.modal-footer {
+			padding: 0 24px 24px 24px;
+			flex-direction: column-reverse;
+			gap: 12px;
+
+			.btn {
+				width: 100%;
+			}
+		}
+	}
+}
+
+// Flag Modal Styling
+.modal:has([id^="flag-"]),
+div.modal[class*="flag"] {
+	.modal-dialog {
+		max-width: 520px;
+		margin: 1.75rem auto;
+	}
+
+	.modal-content {
+		background: #FFFFFF !important;
+		border: 1px solid #F1EDE2 !important;
+		border-radius: 24px !important;
+		box-shadow: 0px 24px 60px rgba(15, 23, 42, 0.12) !important;
+		padding: 0;
+	}
+
+	.modal-header {
+		border-bottom: none !important;
+		padding: 32px 32px 16px 32px;
+
+		.modal-title {
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+			font-size: 18px !important;
+			font-weight: 600 !important;
+			line-height: 1.5555555555555556em !important;
+			color: #122023 !important;
+			margin: 0;
+		}
+
+		.btn-close {
+			opacity: 1;
+			background: transparent;
+			border: none;
+			padding: 0;
+			margin: 0;
+		}
+	}
+
+	.modal-body {
+		padding: 0 32px 32px 32px !important;
+		font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+
+		.lead {
+			font-size: 15px !important;
+			font-weight: 400 !important;
+			line-height: 1.6em !important;
+			color: #525252 !important;
+			margin-bottom: 24px;
+		}
+
+		// Radio button styling
+		.radio {
+			margin-bottom: 12px;
+
+			label {
+				display: flex;
+				align-items: center;
+				gap: 12px;
+				font-size: 15px;
+				font-weight: 400;
+				line-height: 1.6em;
+				color: #122023;
+				cursor: pointer;
+				padding: 8px 0;
+
+				input[type="radio"] {
+					width: 20px;
+					height: 20px;
+					margin: 0;
+					cursor: pointer;
+					accent-color: #355E66;
+				}
+			}
+		}
+
+		// Textarea styling
+		#flag-reason-custom {
+			width: 100% !important;
+			min-height: 100px !important;
+			padding: 12px 16px !important;
+			border: 1px solid #D4D4D4 !important;
+			border-radius: 8px !important;
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+			font-size: 14px !important;
+			font-weight: 400 !important;
+			line-height: 1.5em !important;
+			color: #122023 !important;
+			background: #FFFFFF !important;
+			resize: vertical;
+			transition: border-color 0.2s ease;
+
+			&::placeholder {
+				color: #8B8F96;
+			}
+
+			&:focus {
+				outline: none !important;
+				border-color: #A59884 !important;
+				box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5) !important;
+			}
+
+			&:disabled {
+				background: #F9F8F4 !important;
+				cursor: not-allowed;
+				opacity: 0.6;
+			}
+		}
+
+		// Checkbox styling
+		.form-check {
+			margin-bottom: 16px;
+
+			.form-check-input {
+				width: 20px;
+				height: 20px;
+				margin-top: 0;
+				border: 1px solid #D4D4D4;
+				border-radius: 4px;
+				background-color: #FFFFFF;
+				cursor: pointer;
+
+				&:checked {
+					background-color: #355E66;
+					border-color: #355E66;
+				}
+
+				&:focus {
+					border-color: #A59884;
+					box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5);
+				}
+			}
+
+			.form-check-label {
+				font-size: 14px;
+				font-weight: 400;
+				line-height: 1.5em;
+				color: #525252;
+				margin-left: 8px;
+				cursor: pointer;
+			}
+		}
+
+		// Submit button styling
+		.btn-primary,
+		#flag-post-commit {
+			display: inline-flex !important;
+			align-items: center !important;
+			justify-content: center !important;
+			gap: 8px !important;
+			padding: 0 32px !important;
+			border-radius: 9999px !important;
+			font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif !important;
+			font-size: 14px !important;
+			font-weight: 700 !important;
+			line-height: 1.4285714285714286em !important;
+			text-decoration: none !important;
+			border: none !important;
+			cursor: pointer !important;
+			transition: all 0.2s ease !important;
+			height: 44px !important;
+			box-shadow: 0 2px 4px -2px rgba(0, 0, 0, 0.05), 0 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+			min-width: 120px !important;
+			white-space: nowrap !important;
+			background: #E6FF00 !important;
+			color: #27454B !important;
+			margin-top: 16px;
+
+			&:hover:not(:disabled) {
+				background: rgba(230, 255, 0, 0.9) !important;
+				color: #27454B !important;
+				text-decoration: none !important;
+			}
+
+			&:active:not(:disabled) {
+				opacity: 0.6 !important;
+			}
+
+			&:focus,
+			&:focus-visible {
+				outline: none !important;
+				box-shadow: 0 0 0 2px rgba(164, 149, 91, 0.5) !important;
+			}
+
+			&:disabled {
+				opacity: 0.5 !important;
+				cursor: not-allowed !important;
+				background: #E6FF00 !important;
+			}
+		}
+	}
+
+	@include mobile {
+		.modal-dialog {
+			margin: 1rem;
+			max-width: calc(100vw - 2rem);
+		}
+
+		.modal-header {
+			padding: 24px 24px 12px 24px;
+		}
+
+		.modal-body {
+			padding: 0 24px 24px 24px !important;
+
+			.btn-primary,
+			#flag-post-commit {
+				width: 100%;
+			}
+		}
+	}
+}
+

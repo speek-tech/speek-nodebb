@@ -8,7 +8,7 @@
 {{{ if (./parent && !hideParent) }}}
 <!-- IMPORT partials/topic/post-parent.tpl -->
 {{{ end }}}
-<div class="speek-post-card speek-topic-post-card{{{ if ./parent }}} speek-reply-card{{{ end }}}{{{ if ./index }}} speek-reply-card{{{ end }}}" component="post" data-pid="{./pid}" data-uid="{./uid}" itemprop="author" itemscope itemtype="https://schema.org/Person">
+<div class="speek-post-card speek-topic-post-card{{{ if ./parent }}} speek-reply-card{{{ end }}}{{{ if ./index }}} speek-reply-card{{{ end }}}" component="post" data-pid="{./pid}" data-uid="{./uid}" data-username="{./user.displayname}" itemprop="author" itemscope itemtype="https://schema.org/Person">
 	<meta itemprop="name" content="{./user.displayname}">
 	{{{ if ./user.userslug }}}<meta itemprop="url" content="{config.relative_path}/user/{./user.userslug}">{{{ end }}}
 	
@@ -45,6 +45,11 @@
 				{{{ end }}}
 			</div>
 		</div>
+		
+		{{{ if config.loggedIn }}}
+		<!-- 3-dot menu in header - right aligned -->
+		<!-- IMPORT partials/topic/post-menu.tpl -->
+		{{{ end }}}
 	</div>
 
 	<!-- Content Container -->
@@ -108,7 +113,6 @@
 		</a>
 		{{{ end }}}
 		<meta itemprop="downvoteCount" content="{posts.downvotes}">
-		<!-- IMPORT partials/topic/post-menu.tpl -->
 	</div>
 	{{{ end }}}
 
