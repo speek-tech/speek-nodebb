@@ -695,26 +695,26 @@ body.template-topic {
 					}
 				}
 
-				// 3-dot menu in header
-				[component="post/tools"] {
-					margin-left: auto;
-					flex-shrink: 0;
-					align-self: flex-start;
+			// 3-dot menu in header
+			[component="post/tools"] {
+				margin-left: auto;
+				flex-shrink: 0;
+				align-self: flex-start;
 
-					.dropdown-toggle {
-						padding: 4px 8px;
-						background: transparent !important;
-						border: none;
+				.dropdown-toggle {
+					padding: 4px 8px;
+					background: transparent !important;
+					border: none;
 
-						i {
-							color: #525252;
-							font-size: 18px;
-						}
-
-						&:hover i {
-							color: #355E66;
-						}
+					i {
+						color: #525252 !important;
+						font-size: 18px;
 					}
+
+					&:hover i {
+						color: #355E66;
+					}
+				}
 
 				.dropdown-menu {
 					background-color: #FCF9ECFA !important;
