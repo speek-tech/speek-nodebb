@@ -28,8 +28,10 @@
 					<!-- IMPORT partials/category/watch.tpl -->
 					{{{ end }}}
 					{{{ if (template.category || template.world) }}}
-					<!-- Tags filter hidden for Speek design -->
-					<!-- IMPORT partials/category/sort.tpl -->
+						{{{ if topics.length }}}
+						<!-- Tags filter hidden for Speek design -->
+						<!-- IMPORT partials/category/sort.tpl -->
+						{{{ end }}}
 					{{{ end }}}
 					{{{ if (template.popular || template.top)}}}
 					<!-- IMPORT partials/topic-terms.tpl -->
