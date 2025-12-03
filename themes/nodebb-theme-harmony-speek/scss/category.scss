@@ -763,10 +763,29 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 
 		[component="category/controls"] {
 			gap: 16px !important;
+			overflow: visible !important; // Allow dropdowns to overflow
+			position: relative;
+			z-index: 1; // Ensure proper stacking context
+		}
+		
+		// Ensure category sort dropdown menu is visible
+		.category-pill.category-sort {
+			.category-pill__menu,
+			.dropdown-menu {
+				position: absolute !important;
+				top: calc(100% + 8px) !important;
+				left: 0 !important;
+				z-index: 1050 !important;
+				overflow: visible !important;
+			}
 		}
 
 		// Style category pills (watch, sort dropdowns)
 		.category-pill {
+			position: relative !important; // Ensure dropdown positioning works
+			overflow: visible !important; // Allow dropdown menu to overflow
+			z-index: 1; // Ensure proper stacking context
+			
 			.category-pill__trigger {
 				background: $speek-ghost-bg;  // Figma: rgba(230, 226, 210, 0.9)
 				backdrop-filter: blur(12px);
