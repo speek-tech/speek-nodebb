@@ -8,7 +8,7 @@
 		</h3>
 		{{{ if privileges.topics:create }}}
 		<p class="speek-empty-state__description mb-4" style="color: var(--muted-foreground, #666); font-size: 0.95rem; max-width: 400px; margin: 0 auto;">
-			Be the first to start a conversation in this space. Share your thoughts, ask questions, or connect with others.
+			No conversations here yet. Be the first to share support, questions, or experiences — your voice could help another parent.
 		</p>
 		{{{ else }}}
 		<p class="speek-empty-state__description mb-4" style="color: var(--muted-foreground, #666); font-size: 0.95rem; max-width: 400px; margin: 0 auto;">
