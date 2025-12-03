@@ -13,6 +13,9 @@ $(document).ready(function () {
 	disableSystemAlerts();
 	setupNewPostModal();
 	initializeTopicSortDropdown();
+	
+	// Ensure NProgress is cleared on pagination clicks
+	setupPaginationProgressHandler();
 
 	function setupSkinSwitcher() {
 		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
@@ -214,12 +217,124 @@ $(document).ready(function () {
 		require(['nprogress'], function (NProgress) {
 			window.nprogress = NProgress;
 			if (NProgress) {
+				let progressTimeout = null;
+				let contentCheckInterval = null;
+				let domObserver = null;
+				let lastContentHash = null;
+				let isFirstPagination = true;
+				
+				function clearProgress() {
+					if (progressTimeout) {
+						clearTimeout(progressTimeout);
+						progressTimeout = null;
+					}
+					if (contentCheckInterval) {
+						clearInterval(contentCheckInterval);
+						contentCheckInterval = null;
+					}
+					if (domObserver) {
+						domObserver.disconnect();
+						domObserver = null;
+					}
+					NProgress.done(true);
+				}
+				
+				function getContentHash() {
+					const content = document.getElementById('content');
+					if (!content) return null;
+					// Create a simple hash of visible content
+					const text = content.innerText || content.textContent || '';
+					const children = content.children.length;
+					return text.length + '-' + children;
+				}
+				
+				function checkContentLoaded() {
+					const currentHash = getContentHash();
+					// If content has changed and is not empty, consider it loaded
+					if (currentHash && currentHash !== lastContentHash && currentHash !== '0-0') {
+						lastContentHash = currentHash;
+						// Content has loaded, clear progress
+						clearProgress();
+						if (isFirstPagination) {
+							isFirstPagination = false;
+						}
+						return true;
+					}
+					return false;
+				}
+				
 				$(window).on('action:ajaxify.start', function () {
+					// Reset state
+					lastContentHash = getContentHash();
+					
+					// Clear any existing timeouts/observers
+					clearProgress();
+					
 					NProgress.set(0.7);
+					
+					// Start checking for content changes immediately
+					let checkCount = 0;
+					contentCheckInterval = setInterval(function () {
+						checkCount++;
+						if (checkContentLoaded()) {
+							return; // Content loaded, interval will be cleared
+						}
+						// Stop checking after 3 seconds (60 checks at 50ms intervals)
+						if (checkCount > 60) {
+							clearInterval(contentCheckInterval);
+							contentCheckInterval = null;
+						}
+					}, 50); // Check every 50ms
+					
+					// Also use MutationObserver for more efficient detection
+					if (window.MutationObserver) {
+						const contentEl = document.getElementById('content');
+						if (contentEl) {
+							domObserver = new MutationObserver(function (mutations) {
+								// If we see significant mutations, check if content is loaded
+								if (mutations.length > 0) {
+									setTimeout(function () {
+										checkContentLoaded();
+									}, 100);
+								}
+							});
+							
+							domObserver.observe(contentEl, {
+								childList: true,
+								subtree: true
+							});
+						}
+					}
+					
+					// Fallback timeout - more aggressive for first pagination
+					const timeoutDuration = isFirstPagination ? 1000 : 2500;
+					progressTimeout = setTimeout(function () {
+						console.warn('NProgress: Force clearing progress bar (timeout)', { 
+							isFirstPagination, 
+							contentHash: getContentHash() 
+						});
+						clearProgress();
+						isFirstPagination = false;
+					}, timeoutDuration);
 				});
 
 				$(window).on('action:ajaxify.end', function () {
-					NProgress.done(true);
+					clearProgress();
+					isFirstPagination = false;
+				});
+				
+				// Clear when content is loaded (fires before scripts finish)
+				$(window).on('action:ajaxify.contentLoaded', function () {
+					// Update content hash
+					lastContentHash = getContentHash();
+					
+					// Clear progress with a small delay to ensure DOM is ready
+					setTimeout(function () {
+						clearProgress();
+						if (isFirstPagination) {
+							isFirstPagination = false;
+						}
+					}, 150);
 				});
 			}
 		});
@@ -324,20 +439,46 @@ $(document).ready(function () {
 			});
 		});
 	}
+	
+	// Direct handler for pagination clicks to ensure progress bar clears
+	function setupPaginationProgressHandler() {
+		require(['nprogress'], function (NProgress) {
+			if (NProgress && window.nprogress) {
+				// Intercept pagination link clicks
+				$(document).on('click', '.pagination .page-link:not(.disabled)', function (e) {
+					// Set a safety timeout to clear progress if it gets stuck
+					setTimeout(function () {
+						if (NProgress && NProgress.status !== null && NProgress.status < 1) {
+							console.warn('NProgress: Force clearing on pagination click timeout');
+							NProgress.done(true);
+						}
+					}, 2000);
+				});
+			}
+		});
+	}
 
-	// Initialize Bootstrap dropdowns for topic sort
+	// Initialize Bootstrap dropdowns for topic and category sort
 	function initializeTopicSortDropdown() {
 		require(['bootstrap'], function (bootstrap) {
 			// Initialize dropdown when page loads
 			const initDropdown = function () {
-				const dropdownElement = document.querySelector('[component="thread/sort"] .dropdown-toggle');
-				if (dropdownElement) {
-					// Check if already initialized
-					if (!bootstrap.Dropdown.getInstance(dropdownElement)) {
-						// Initialize Bootstrap dropdown
-						new bootstrap.Dropdown(dropdownElement);
+				// Initialize all sort dropdowns (both topic and category)
+				const dropdownElements = document.querySelectorAll('[component="thread/sort"] .dropdown-toggle, [component="thread/sort"] button[data-bs-toggle="dropdown"]');
+				dropdownElements.forEach(function (dropdownElement) {
+					if (dropdownElement) {
+						// Check if already initialized
+						if (!bootstrap.Dropdown.getInstance(dropdownElement)) {
+							// Initialize Bootstrap dropdown
+							try {
+								new bootstrap.Dropdown(dropdownElement);
+								console.log('Initialized sort dropdown:', dropdownElement);
+							} catch (e) {
+								console.error('Error initializing dropdown:', e);
+							}
+						}
 					}
-				}
+				});
 			};
 
 			// Initialize on page load
@@ -346,6 +487,11 @@ $(document).ready(function () {
 			// Re-initialize after ajaxify (page navigation)
 			$(window).on('action:ajaxify.end', function () {
 				setTimeout(initDropdown, 100); // Small delay to ensure DOM is ready
+			});
+			
+			// Also initialize on category page load
+			hooks.on('action:category.loaded', function () {
+				setTimeout(initDropdown, 100);
 			});
 		});
 	}
