@@ -39,7 +39,9 @@
 </div>
 {{{ end }}}
 
+{{{ if topics.length }}}
 <!-- IMPORT partials/category-specific-search.tpl -->
+{{{ end }}}
 
 <div class="row flex-fill">
 	<div class="category d-flex flex-column col-12">
@@ -49,6 +51,8 @@
 
 		{{{ if topics.length }}}
 		<!-- IMPORT partials/topics_list.tpl -->
+		{{{ else }}}
+		<!-- IMPORT partials/category/empty-state.tpl -->
 		{{{ end }}}
 
 		<!-- Recent Conversations Carousel -->

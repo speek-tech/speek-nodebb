@@ -17,6 +17,11 @@ require('./sockets');
 require('./overrides');
 require('./ajaxify');
 
+// Initialize modal backdrop communication with parent window
+require(['modalBackdrop'], function (modalBackdrop) {
+	modalBackdrop.init();
+});
+
 app = window.app || {};
 
 Object.defineProperty(app, 'isFocused', {

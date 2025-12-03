@@ -7,7 +7,15 @@
 			</div>
 			<div class="modal-body">
 				<p class="lead">
-					[[flags:modal-body, {type}, {id}]]
+					{{{ if username }}}
+						{{{ if (type == "user") }}}
+							Please specify your reason for flagging <strong>{username}</strong> for review. Alternatively, use one of the quick report buttons if applicable.
+						{{{ else }}}
+							[[flags:modal-body, {type}, {id}]]
+						{{{ end }}}
+					{{{ else }}}
+						[[flags:modal-body, {type}, {id}]]
+					{{{ end }}}
 				</p>
 				<div>
 					<div class="radio mb-2">
