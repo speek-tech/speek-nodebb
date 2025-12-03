@@ -11,10 +11,10 @@
 						{{{ if (type == "user") }}}
 							Please specify your reason for flagging <strong>{username}</strong> for review. Alternatively, use one of the quick report buttons if applicable.
 						{{{ else }}}
-							[[flags:modal-body, {type}, {id}]]
+							Please specify your reason for flagging this content for review. Alternatively, use one of the quick report buttons if applicable.
 						{{{ end }}}
 					{{{ else }}}
-						[[flags:modal-body, {type}, {id}]]
+						Please specify your reason for flagging this content for review. Alternatively, use one of the quick report buttons if applicable.
 					{{{ end }}}
 				</p>
 				<div>
