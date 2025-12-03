@@ -1,4 +1,6 @@
+{{{ if hasTopics }}}
 <!-- IMPORT partials/category-global-search.tpl -->
+{{{ end }}}
 
 <div data-widget-area="header">
 	{{{ each widgets.header }}}

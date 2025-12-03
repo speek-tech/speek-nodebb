@@ -44,6 +44,27 @@ categoriesController.list = async function (req, res) {
 		pagination: pagination.create(page, pageCount, req.query),
 	};
 
+	// Determine if there are any topics across all root categories and their visible children.
+	// This is used by the theme to decide whether to show the global search box.
+	function categoryHasTopics(category) {
+		if (!category) {
+			return false;
+		}
+
+		const ownTopics = parseInt(category.totalTopicCount, 10) || 0;
+		if (ownTopics > 0) {
+			return true;
+		}
+
+		if (Array.isArray(category.children) && category.children.length) {
+			return category.children.some(child => categoryHasTopics(child));
+		}
+
+		return false;
+	}
+
+	data.hasTopics = Array.isArray(data.categories) && data.categories.some(categoryHasTopics);
+
 	data.categories.forEach((category) => {
 		if (category) {
 			helpers.trimChildren(category);
