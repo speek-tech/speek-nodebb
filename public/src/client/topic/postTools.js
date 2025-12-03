@@ -247,22 +247,28 @@ define('forum/topic/postTools', [
 
 		postContainer.on('click', '[component="post/flag"]', function () {
 			const pid = getData($(this), 'data-pid');
+			const postEl = $(this).closest('[data-pid]');
+			const postIndex = parseInt(postEl.attr('data-index'), 10);
+			const isComment = postIndex > 0;
+			
 			require(['flags'], function (flags) {
 				flags.showFlagModal({
 					type: 'post',
 					id: pid,
+					isComment: isComment,
 				});
 			});
 		});
 
 		postContainer.on('click', '[component="post/already-flagged"]', function () {
 			const flagId = $(this).data('flag-id');
+			const pid = getData($(this), 'data-pid');
 			require(['flags'], function (flags) {
 				bootbox.confirm('[[flags:modal-confirm-rescind]]', function (confirm) {
 					if (!confirm) {
 						return;
 					}
-					flags.rescind(flagId);
+					flags.rescind(flagId, pid);
 				});
 			});
 		});

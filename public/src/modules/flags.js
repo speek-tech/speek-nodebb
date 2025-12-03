@@ -68,10 +68,17 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 	};
 
 
-	Flag.rescind = function (flagId) {
+	Flag.rescind = function (flagId, pid) {
 		api.del(`/flags/${flagId}/report`).then(() => {
 			alerts.success('[[flags:report-rescinded]]');
 			hooks.fire('action:flag.rescinded', { flagId: flagId });
+			
+			// Update UI: show flag button, hide already-flagged button
+			if (pid) {
+				const postEl = components.get('post', 'pid', pid);
+				postEl.find('[component="post/flag"]').removeClass('hidden').parent().attr('hidden', null);
+				postEl.find('[component="post/already-flagged"]').addClass('hidden').parent().attr('hidden', '');
+			}
 			
 			// Send postMessage to parent window on successful rescind
 			if (window.parent && window.parent !== window) {
