@@ -72,7 +72,28 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 		api.del(`/flags/${flagId}/report`).then(() => {
 			alerts.success('[[flags:report-rescinded]]');
 			hooks.fire('action:flag.rescinded', { flagId: flagId });
-		}).catch(alerts.error);
+			
+			// Send postMessage to parent window on successful rescind
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'flag-action',
+					action: 'rescind',
+					status: 'success',
+				}, '*');
+			}
+		}).catch((err) => {
+			alerts.error(err);
+			
+			// Send error message to parent window
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'flag-action',
+					action: 'rescind',
+					status: 'error',
+					message: err.message || 'An error occurred',
+				}, '*');
+			}
+		});
 	};
 
 	Flag.purge = function (flagId) {
@@ -89,7 +110,19 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 		const data = { type: type, id: id, reason: reason, notifyRemote: notifyRemote };
 		api.post('/flags', data, function (err, flagId) {
 			if (err) {
-				return alerts.error(err);
+				alerts.error(err);
+				
+				// Send error message to parent window
+				if (window.parent && window.parent !== window) {
+					window.parent.postMessage({
+						type: 'flag-action',
+						action: 'create',
+						status: 'error',
+						flagType: type,
+						message: err.message || 'An error occurred',
+					}, '*');
+				}
+				return;
 			}
 
 			flagModal.modal('hide');
@@ -100,6 +133,16 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 				postEl.find('[component="post/already-flagged"]').removeClass('hidden').parent().attr('hidden', null);
 			}
 			hooks.fire('action:flag.create', { flagId: flagId, data: data });
+			
+			// Send postMessage to parent window on successful flag creation
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'flag-action',
+					action: 'create',
+					status: 'success',
+					flagType: type,
+				}, '*');
+			}
 		});
 	}
 
