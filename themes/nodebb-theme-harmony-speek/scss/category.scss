@@ -1436,11 +1436,10 @@ $speek-badge-outline: rgba(255, 255, 255, 0.5); // Badge bg
 				display: flex;
 				gap: 24px;
 				align-items: center;
-				border-top: 1px solid #E0DBC7;
+				border-top: 1px solid #EAE4D3;
 				padding-top: 16px;
 				margin-top: 16px;
 				position: relative;
-				z-index: 1;
 				pointer-events: auto;
 
 				.speek-reaction-item {
