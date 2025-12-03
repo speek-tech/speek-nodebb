@@ -49,6 +49,8 @@
 
 		{{{ if topics.length }}}
 		<!-- IMPORT partials/topics_list.tpl -->
+		{{{ else }}}
+		<!-- IMPORT partials/category/empty-state.tpl -->
 		{{{ end }}}
 
 		<!-- Recent Conversations Carousel -->
