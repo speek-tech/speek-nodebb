@@ -4,13 +4,14 @@ define('admin/manage/category', [
 	'uploader',
 	'lucideIconSelect',
 	'lucideIconData',
+	'lucideInit',
 	'categorySelector',
 	'benchpress',
 	'api',
 	'bootbox',
 	'alerts',
 	'admin/settings',
-], function (uploader, lucideIconSelect, lucideIconData, categorySelector, Benchpress, api, bootbox, alerts, settings) {
+], function (uploader, lucideIconSelect, lucideIconData, lucideInit, categorySelector, Benchpress, api, bootbox, alerts, settings) {
 	const Category = {};
 	let updateHash = {};
 
@@ -251,12 +252,8 @@ define('admin/manage/category', [
 		if (iconName && lucideIconData && lucideIconData.createIconSvg) {
 			existingIcon.html(lucideIconData.createIconSvg(iconName, 24));
 		}
-		// Also try Lucide CDN
-		setTimeout(function() {
-			if (window.lucide && typeof window.lucide.createIcons === 'function') {
-				window.lucide.createIcons();
-			}
-		}, 200);
+		// Also try Lucide initialization
+		lucideInit.initDelayed(200);
 
 		$('button[data-action="toggle"]').on('click', function () {
 			const $this = $(this);

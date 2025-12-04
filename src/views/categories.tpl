@@ -6,7 +6,7 @@
 		{{{ if !categories.disabled }}}
 		<div class="category-card" data-cid="{categories.cid}">
 			<div class="category-icon-container">
-				{buildLucideIcon(getCategoryIconName(categories.cid), 24)}
+				{buildCategoryIcon(categories, "40px", "rounded-1")}
 			</div>
 			
 			<div class="category-content">

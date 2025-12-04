@@ -22,15 +22,10 @@
         $(document).ready(function () {
             app.coldLoad();
             
-            // Initialize Lucide icons
-            if (window.lucide && window.lucide.createIcons) {
-                window.lucide.createIcons();
-                
-                // Re-initialize icons when new content is loaded dynamically
-                $(window).on('action:ajaxify.end action:posts.loaded action:chat.received', function() {
-                    window.lucide.createIcons();
-                });
-            }
+            // Initialize Lucide icons using the lucideInit module
+            require(['lucideInit'], function(lucideInit) {
+                lucideInit.init();
+            });
         });
     }
 </script>

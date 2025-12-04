@@ -20,12 +20,8 @@
 				<article component="categories/category" data-cid="{./cid}" class="category-card category-{./cid} {./unread-class}" itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
 					<meta itemprop="name" content="{./name}">
 
-					<div class="category-icon-container">
-						{{{ if getCategoryIconName(./cid) }}}
-						{buildLucideIcon(getCategoryIconName(./cid), 24)}
-						{{{ else }}}
+						<div class="category-icon-container">
 						{buildCategoryIcon(@value, "40px", "rounded-1")}
-						{{{ end }}}
 					</div>
 
 					<div class="category-content">
