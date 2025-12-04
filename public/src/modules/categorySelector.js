@@ -1,8 +1,8 @@
 'use strict';
 
 define('categorySelector', [
-	'categorySearch', 'bootbox', 'hooks', 'translator',
-], function (categorySearch, bootbox, hooks, translator) {
+	'categorySearch', 'bootbox', 'hooks', 'translator', 'lucideInit',
+], function (categorySearch, bootbox, hooks, translator, lucideInit) {
 	const categorySelector = {};
 
 	categorySelector.init = function (el, options) {
@@ -53,6 +53,9 @@ define('categorySelector', [
 					defaultSelectHtml
 				);
 			}
+
+			// Initialize Lucide icons in the selected category display
+			lucideInit.initDelayed(50, selector.el.find('[component="category-selector-selected"]')[0]);
 		};
 		selector.getSelectedCategory = function () {
 			return selector.selectedCategory;
@@ -66,6 +69,8 @@ define('categorySelector', [
 				selector.el.find('[component="category-selector-selected"]').html(
 					html.find('[component="category-selector-selected"]').html()
 				);
+				// Initialize Lucide icons in the selected category display
+				lucideInit.initDelayed(50, selector.el.find('[component="category-selector-selected"]')[0]);
 			});
 		}
 		return selector;

@@ -8,7 +8,8 @@ define('admin/manage/categories', [
 	'Sortable',
 	'bootbox',
 	'alerts',
-], function (translator, Benchpress, categorySelector, api, Sortable, bootbox, alerts) {
+	'lucideInit',
+], function (translator, Benchpress, categorySelector, api, Sortable, bootbox, alerts, lucideInit) {
 	Sortable = Sortable.default;
 	const Categories = {};
 	let newCategoryId = -1;
@@ -318,6 +319,9 @@ define('admin/manage/categories', [
 				} else {
 					container.append(html);
 				}
+
+				// Initialize Lucide icons for newly added categories
+				lucideInit.initDelayed(50);
 
 				// Disable expand toggle
 				if (!categories.length) {

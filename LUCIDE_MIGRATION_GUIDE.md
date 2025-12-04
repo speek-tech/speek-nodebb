@@ -39,6 +39,13 @@ This document explains the migration from FontAwesome to Lucide icons in the Nod
 - Replaced: `<i class="fa fa-arrow-right"></i>`
 - With: `{buildLucideIcon("arrow-right", 16, "ms-1")}`
 
+### 6. ✅ Category Icon Migration (January 2025)
+- **Admin Panel**: New Lucide icon picker for category management
+- **Database Migration**: Automatic conversion of existing FA icons to Lucide
+- **Templates**: Category icons now use `buildLucideIcon()` via `buildCategoryIcon()`
+- **Web Integration**: Dynamic icon loading from API using `lucideIconMapper`
+- **Documentation**: See `CATEGORY_ICON_MIGRATION.md` for details
+
 ## How to Use
 
 ### In Templates (.tpl files)
