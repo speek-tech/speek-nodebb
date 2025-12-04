@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Lucide Icon Test</title>
+    <style>
+        .icon-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            padding: 20px;
+        }
+        .icon-item {
+            width: 48px;
+            height: 48px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ccc;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .icon-item:hover {
+            border-color: #007bff;
+            background-color: #f0f0f0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Lucide Icon Test</h1>
+    <p>If icons appear below, Lucide is working:</p>
+    
+    <div class="icon-grid">
+        <div class="icon-item" data-lucide="home" title="home"></div>
+        <div class="icon-item" data-lucide="users" title="users"></div>
+        <div class="icon-item" data-lucide="message-square" title="message-square"></div>
+        <div class="icon-item" data-lucide="heart" title="heart"></div>
+        <div class="icon-item" data-lucide="star" title="star"></div>
+        <div class="icon-item" data-lucide="bell" title="bell"></div>
+        <div class="icon-item" data-lucide="search" title="search"></div>
+        <div class="icon-item" data-lucide="settings" title="settings"></div>
+    </div>
+
+    <!-- Load Lucide from CDN -->
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+    
+    <script>
+        // Initialize icons after page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            console.log('Lucide object:', window.lucide);
+            
+            if (window.lucide) {
+                if (typeof window.lucide.createIcons === 'function') {
+                    console.log('Calling lucide.createIcons()');
+                    window.lucide.createIcons();
+                } else {
+                    console.log('createIcons not found, trying direct call');
+                    if (typeof window.lucide === 'function') {
+                        window.lucide();
+                    }
+                }
+            } else {
+                console.error('Lucide not loaded!');
+            }
+        });
+    </script>
+</body>
+</html>
+

@@ -2,14 +2,15 @@
 
 define('admin/manage/category', [
 	'uploader',
-	'iconSelect',
+	'lucideIconSelect',
+	'lucideIconData',
 	'categorySelector',
 	'benchpress',
 	'api',
 	'bootbox',
 	'alerts',
 	'admin/settings',
-], function (uploader, iconSelect, categorySelector, Benchpress, api, bootbox, alerts, settings) {
+], function (uploader, lucideIconSelect, lucideIconData, categorySelector, Benchpress, api, bootbox, alerts, settings) {
 	const Category = {};
 	let updateHash = {};
 
@@ -226,8 +227,36 @@ define('admin/manage/category', [
 		});
 
 		previewEl.on('click', function () {
-			iconSelect.init($(this).find('i'), modified);
+			lucideIconSelect.init($(this).find('i'), function(el, iconName) {
+				// Update the preview with the selected icon
+				if (iconName && lucideIconData && lucideIconData.createIconSvg) {
+					el.html(lucideIconData.createIconSvg(iconName, 24));
+				}
+				
+				// Also try Lucide CDN as fallback
+				setTimeout(function() {
+					if (window.lucide && typeof window.lucide.createIcons === 'function') {
+						window.lucide.createIcons();
+					}
+				}, 100);
+				
+				// Call the original modified callback
+				modified(el[0]);
+			});
 		});
+		
+		// Initialize existing icon on page load
+		const existingIcon = previewEl.find('i');
+		const iconName = existingIcon.attr('data-lucide') || existingIcon.attr('value');
+		if (iconName && lucideIconData && lucideIconData.createIconSvg) {
+			existingIcon.html(lucideIconData.createIconSvg(iconName, 24));
+		}
+		// Also try Lucide CDN
+		setTimeout(function() {
+			if (window.lucide && typeof window.lucide.createIcons === 'function') {
+				window.lucide.createIcons();
+			}
+		}, 200);
 
 		$('button[data-action="toggle"]').on('click', function () {
 			const $this = $(this);
