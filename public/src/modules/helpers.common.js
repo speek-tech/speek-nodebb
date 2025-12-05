@@ -101,7 +101,37 @@ module.exports = function (utils, Benchpress, relative_path) {
 			return '';
 		}
 
-		return `<span class="icon d-inline-flex justify-content-center align-items-center align-middle ${rounded}" style="${generateCategoryBackground(category)} width:${size}; height: ${size}; font-size: ${parseInt(size, 10) / 2}px;">${category.icon ? `<i class="fa fa-fw ${category.icon}"></i>` : ''}</span>`;
+		let iconHtml = '';
+		if (category.icon) {
+			// Convert FA icon names to Lucide if needed
+			let iconName = category.icon;
+			if (iconName.startsWith('fa-')) {
+				// Get first class in case multiple are stored
+				const iconClass = iconName.split(' ')[0];
+				// Convert using faToLucideMap (defined in buildLucideIcon)
+				const faToLucideMap = {
+					'fa-home': 'home',
+					'fa-user': 'user',
+					'fa-users': 'users',
+					'fa-comments': 'messages-square',
+					'fa-comment': 'message-circle',
+					'fa-heart': 'heart',
+					'fa-building': 'building',
+					'fa-building-columns': 'building-2',
+					'fa-graduation-cap': 'graduation-cap',
+					'fa-nbb-none': 'circle-dot',
+					'fa-none': 'circle-dot',
+					'fa-circle-dot': 'circle-dot',
+				};
+				iconName = faToLucideMap[iconClass] || iconClass.replace(/^fa-/, '');
+			}
+			
+			// Use buildLucideIcon with category colors
+			const iconSize = parseInt(size, 10) / 2;
+			iconHtml = buildLucideIcon(iconName, iconSize, '', category.color || 'currentColor', 2);
+		}
+
+		return `<span class="icon d-inline-flex justify-content-center align-items-center align-middle ${rounded}" style="${generateCategoryBackground(category)} width:${size}; height: ${size};">${iconHtml}</span>`;
 	}
 
 	function buildCategoryLabel(category, tag = 'a', className = '') {
@@ -109,9 +139,33 @@ module.exports = function (utils, Benchpress, relative_path) {
 			return '';
 		}
 
+		let iconHtml = '';
+		if (category.icon && category.icon !== 'fa-nbb-none' && category.icon !== 'circle-dot') {
+			// Convert FA icon names to Lucide if needed
+			let iconName = category.icon;
+			if (iconName.startsWith('fa-')) {
+				const iconClass = iconName.split(' ')[0];
+				const faToLucideMap = {
+					'fa-home': 'home',
+					'fa-user': 'user',
+					'fa-users': 'users',
+					'fa-comments': 'messages-square',
+					'fa-comment': 'message-circle',
+					'fa-heart': 'heart',
+					'fa-building': 'building',
+					'fa-building-columns': 'building-2',
+					'fa-graduation-cap': 'graduation-cap',
+					'fa-nbb-none': 'circle-dot',
+					'fa-none': 'circle-dot',
+				};
+				iconName = faToLucideMap[iconClass] || iconClass.replace(/^fa-/, '');
+			}
+			iconHtml = buildLucideIcon(iconName, 14, '', category.color || 'currentColor', 2);
+		}
+
 		const href = tag === 'a' ? `href="${relative_path}/category/${category.slug}"` : '';
 		return `<${tag} ${href} class="badge px-1 text-truncate text-decoration-none ${className}" style="color: ${category.color};background-color: ${category.bgColor};border-color: ${category.bgColor}!important; max-width: 70vw;">
-			${category.icon && category.icon !== 'fa-nbb-none' ? `<i class="fa fa-fw ${category.icon}"></i>` : ''}
+			${iconHtml}
 			${category.name}
 		</${tag}>`;
 	}

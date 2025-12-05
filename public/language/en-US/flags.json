@@ -88,7 +88,7 @@
 	"modal-submit": "Submit Report",
 	"modal-submit-success": "Content has been flagged for moderation.",
 
-	"modal-confirm-rescind": "Rescind Report?",
+	"modal-confirm-rescind": "Remove your flag?",
 
 	"bulk-actions": "Bulk Actions",
 	"bulk-resolve": "Resolve Flag(s)",

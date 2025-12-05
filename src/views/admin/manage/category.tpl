@@ -138,7 +138,7 @@
 							width: 40px; height: 40px; font-size: 20px;
 						">
 							<div class="icon">
-								<i data-name="icon" value="{category.icon}" class="fa {category.icon}"></i>
+								<i data-name="icon" value="{category.icon}" data-lucide="{category.icon}" style="display: inline-flex; align-items: center; justify-content: center;"></i>
 							</div>
 						</div>
 

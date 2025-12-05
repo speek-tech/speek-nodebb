@@ -1,9 +1,13 @@
-{{{ if posts.display_moderator_tools }}}
+{{{ if posts.display_edit_tools }}}
+{{{ if posts.selfPost }}}
 <li>
 	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/edit" role="menuitem" href="#">
 		<span class="menu-icon">{buildLucideIcon("pencil", 16, "")}</span> [[topic:edit]]
 	</a>
 </li>
+{{{ end }}}
+{{{ end }}}
+
 {{{ if posts.display_delete_tools }}}
 <li>
 	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/delete" role="menuitem" href="#">
@@ -11,24 +15,21 @@
 	</a>
 </li>
 {{{ end }}}
-{{{ end }}}
-
-{{{ if !posts.deleted }}}
-	{{{ if config.loggedIn }}}
-	<li>
-		<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/bookmark" role="menuitem" href="#" data-bookmarked="{posts.bookmarked}">
-			<span class="menu-icon">
-				<span component="post/bookmark/on" class="{{{ if !posts.bookmarked }}}hidden{{{ end }}}">{buildLucideIcon("bookmark-check", 16, "")}</span>
-				<span component="post/bookmark/off" class="{{{ if posts.bookmarked }}}hidden{{{ end }}}">{buildLucideIcon("bookmark-plus", 16, "")}</span>
-			</span>
-			<span class="bookmark-text">[[topic:bookmark]]</span>
-			<span component="post/bookmark-count" class="bookmarkCount badge bg-secondary" data-bookmarks="{posts.bookmarks}">{posts.bookmarks}</span>&nbsp;
-		</a>
-	</li>
-	{{{ end }}}
-{{{ end }}}
 
 {{{ if posts.display_flag_tools }}}
+{{{ if !posts.selfPost }}}
+<li {{{ if posts.flags.flagged }}}hidden{{{ end }}}>
+	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/flag" role="menuitem" href="#">
+		<span class="menu-icon">{buildLucideIcon("flag", 16, "")}</span> [[topic:flag-content]]
+	</a>
+</li>
+<li {{{ if !posts.flags.flagged }}}hidden{{{ end }}} class="disabled text-secondary">
+	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/already-flagged" role="menuitem" href="#" data-flag-id="{posts.flags.flagId}">
+		<span class="menu-icon">{buildLucideIcon("flag", 16, "")}</span> [[topic:already-flagged]]
+	</a>
+</li>
+{{{ end }}}
+
 {{{ if (!posts.selfPost && posts.uid) }}}
 <li>
 	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/flagUser" role="menuitem" href="#">

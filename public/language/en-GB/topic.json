@@ -77,7 +77,7 @@
 
 	"bookmark-instructions" : "Click here to return to the last read comment in this thread.",
 
-	"flag-post": "Flag this comment",
+	"flag-content": "Flag this content",
 	"flag-user": "Flag this user",
 	"already-flagged": "Already Flagged",
 	"view-flag-report": "View Flag Report",

@@ -1,6 +1,6 @@
 'use strict';
 
-define('categorySearch', ['alerts', 'bootstrap', 'api'], function (alerts, bootstrap, api) {
+define('categorySearch', ['alerts', 'bootstrap', 'api', 'lucideInit'], function (alerts, bootstrap, api, lucideInit) {
 	const categorySearch = {};
 
 	categorySearch.init = function (el, options) {
@@ -103,6 +103,9 @@ define('categorySearch', ['alerts', 'bootstrap', 'api'], function (alerts, boots
 				if (bsDropdown) {
 					bsDropdown.update();
 				}
+
+				// Initialize Lucide icons in the dropdown
+				lucideInit.initDelayed(50, el.find('[component="category/list"]')[0]);
 			});
 		}
 	};

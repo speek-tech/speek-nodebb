@@ -70,7 +70,7 @@
     "user-forked-topic-ago": "%1 <a href=\"%2\">forked</a> this post %3",
     "user-forked-topic-on": "%1 <a href=\"%2\">forked</a> this post on %3",
     "bookmark-instructions": "Click here to return to the last read comment in this thread.",
-    "flag-post": "Flag this comment",
+    "flag-content": "Flag this content",
     "flag-user": "Flag this user",
     "already-flagged": "Already Flagged",
     "view-flag-report": "View Flag Report",
