@@ -310,6 +310,29 @@
     // MutationObserver disabled - was causing input lag
     // Relying on event-based detection (hooks + jQuery) instead
 
+    // Direct pagination click listener (backup)
+    document.addEventListener('click', function(e) {
+        var target = e.target;
+        // Check if clicked element or its parent is a pagination link
+        while (target && target !== document) {
+            if (target.classList && (
+                target.classList.contains('page-link') || 
+                target.closest('.pagination') ||
+                target.closest('[component="pagination"]')
+            )) {
+                // Schedule height updates after content loads with extended retries
+                // Important for pages with less content that need iframe to shrink
+                setTimeout(forceSendHeight, 300);
+                setTimeout(forceSendHeight, 600);
+                setTimeout(forceSendHeight, 1000);
+                setTimeout(forceSendHeight, 1500);
+                setTimeout(forceSendHeight, 2000);
+                break;
+            }
+            target = target.parentElement;
+        }
+    });
+
     // Monitor for images loading (throttled)
     var imageLoadTimer = null;
     var lastImageLoad = 0;
