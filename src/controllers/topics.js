@@ -86,9 +86,37 @@ topicsController.get = async function getTopic(req, res, next) {
 			postIndex = top;
 		}
 	}
-	const { start, stop } = calculateStartStop(currentPage, postIndex, settings);
+	let { start, stop } = calculateStartStop(currentPage, postIndex, settings);
+	
+	// Make the main post ADDITIONAL to page size on all pages
+	// Page 1: main post + 10 replies = 11 total
+	// Page 2+: main post + 10 replies = 11 total
+	if (settings.usePagination) {
+		if (currentPage === 1 && start === 0) {
+			// On page 1, increase stop by 1 to get one extra reply (main post + full page of replies)
+			stop = stop + 1;
+		}
+	}
+	
+	// Always include the first post (main post) on paginated pages (page 2+)
+	// This ensures the main post persists across all pages
+	const includeFirstPost = settings.usePagination && currentPage > 1 && start > 0;
 
 	await topics.getTopicWithPosts(topicData, set, req.uid, start, stop, reverse);
+	
+	// If we need to include the first post, fetch it and prepend to the posts array
+	if (includeFirstPost && topicData.posts && topicData.mainPid && !topicData.posts.some(p => parseInt(p.index, 10) === 0)) {
+		const firstPostData = await posts.getPostsByPids([topicData.mainPid], req.uid);
+		if (firstPostData && firstPostData.length > 0) {
+			firstPostData[0].index = 0;
+			// Enrich the first post with full user data (same as normal flow)
+			const enrichedFirstPost = await topics.addPostData(firstPostData, req.uid);
+			if (enrichedFirstPost && enrichedFirstPost.length > 0) {
+				// Prepend the first post to the posts array
+				topicData.posts.unshift(enrichedFirstPost[0]);
+			}
+		}
+	}
 
 	topics.modifyPostsByPrivilege(topicData, userPrivileges);
 	topicData.tagWhitelist = categories.filterTagWhitelist(topicData.tagWhitelist, userPrivileges.isAdminOrMod);
