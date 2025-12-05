@@ -2112,6 +2112,102 @@ body.template-topic {
 		opacity: 0 !important;
 		pointer-events: none !important;
 	}
+
+	// =====================================
+	// Edit Indicator Icon - Disabled with Tooltip
+	// =====================================
+	
+	[component="post/edit-indicator"].edit-icon {
+		cursor: default !important;
+		color: #000000 !important;
+		font-size: 0.875rem;
+		user-select: none !important;
+		
+		&:hover {
+			cursor: default !important;
+			color: #000000 !important;
+		}
+	}
+
+	// =====================================
+	// Inline Post Edit Styles
+	// =====================================
+
+	.speek-post-card.speek-post-editing {
+		position: relative;
+		
+		.speek-post-edit-container {
+			width: 100%;
+			margin-top: 8px;
+			
+			.speek-post-edit-textarea {
+				width: 100%;
+				min-height: 120px;
+				padding: 12px;
+				border: 1px solid #E0DBC7;
+				border-radius: 8px;
+				font-size: 14px;
+				line-height: 1.5;
+				resize: vertical;
+				font-family: inherit;
+				background-color: #FFFFFF;
+				color: var(--bs-body-color, #333);
+				
+				&:focus {
+					outline: none;
+					border-color: rgba(164, 149, 91, 0.5) !important;
+					border-width: 2px !important;
+					box-shadow: 0 0 0 0px rgba(164, 149, 91, 0) !important;
+				}
+			}
+			
+			.speek-post-edit-buttons {
+				justify-content: flex-end;
+				
+				.btn {
+					min-width: 80px;
+					font-size: 14px;
+					padding: 6px 16px;
+				}
+				
+				.speek-post-edit-save-btn {
+					background: #E6FF00 !important;
+					color: #27454B !important;
+					border: none !important;
+					border-radius: 9999px !important;
+					font-weight: 700 !important;
+					box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05) !important;
+					transition: all 0.2s ease !important;
+					
+					&:hover:not(:disabled) {
+						background: #D4E600 !important;
+						color: #27454B !important;
+						box-shadow: 0px 4px 6px -2px rgba(0, 0, 0, 0.1), 0px 6px 10px -1px rgba(0, 0, 0, 0.1) !important;
+					}
+					
+					&:active:not(:disabled) {
+						transform: translateY(0);
+					}
+					
+					&:disabled {
+						opacity: 0.6 !important;
+						cursor: not-allowed !important;
+						background: #E6FF00 !important;
+						color: #27454B !important;
+					}
+					
+					&:focus-visible {
+						outline: none !important;
+						box-shadow: 0 0 0 3px rgba(230, 255, 0, 0.3) !important;
+					}
+				}
+				
+				.speek-post-edit-cancel {
+					border-radius: 9999px !important;
+				}
+			}
+		}
+	}
 }
 
 @include media-breakpoint-up(lg) {

@@ -1,6 +1,9 @@
 'use strict';
 
 $(document).ready(function () {
+	// Setup edit indicator click prevention early, before other handlers
+	setupEditIndicatorPrevention();
+	
 	setupSkinSwitcher();
 	setupNProgress();
 	setupMobileMenu();
@@ -16,6 +19,41 @@ $(document).ready(function () {
 	
 	// Ensure NProgress is cleared on pagination clicks
 	setupPaginationProgressHandler();
+	
+	// Function to prevent clicks on edit indicator while allowing tooltip
+	function setupEditIndicatorPrevention() {
+		// Use capture phase to intercept before other handlers
+		document.addEventListener('click', function(e) {
+			const target = e.target.closest('[component="post/edit-indicator"]');
+			if (target) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				return false;
+			}
+		}, true); // true = capture phase
+		
+		// Also prevent mousedown and mouseup events in capture phase
+		document.addEventListener('mousedown', function(e) {
+			const target = e.target.closest('[component="post/edit-indicator"]');
+			if (target) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				return false;
+			}
+		}, true);
+		
+		document.addEventListener('mouseup', function(e) {
+			const target = e.target.closest('[component="post/edit-indicator"]');
+			if (target) {
+				e.preventDefault();
+				e.stopPropagation();
+				e.stopImmediatePropagation();
+				return false;
+			}
+		}, true);
+	}
 
 	function setupSkinSwitcher() {
 		$('[component="skinSwitcher"]').on('click', '.dropdown-item', function () {
@@ -1325,6 +1363,201 @@ $(document).ready(function () {
 		} catch (e) {
 			console.log('Could not send analytics view-post:', e);
 		}
+	}
+
+	// =====================================
+	// Inline Post Edit Functionality
+	// =====================================
+	setupInlinePostEdit();
+	
+		function setupInlinePostEdit() {
+		require(['api', 'hooks', 'alerts', 'translator'], function (api, hooks, alerts, translator) {
+			
+			// Intercept the edit button click before it triggers the composer
+			$(document).on('click', '[component="post/edit"]', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+				
+				const btn = $(this);
+				const postEl = btn.closest('[component="post"]');
+				const pid = postEl.attr('data-pid');
+				
+				if (!pid) {
+					return;
+				}
+				
+				// Check if already in edit mode
+				if (postEl.hasClass('speek-post-editing')) {
+					return;
+				}
+				
+				// Check edit duration if available
+				const timestamp = parseInt(btn.attr('data-timestamp'), 10);
+				const postEditDuration = parseInt(ajaxify.data.postEditDuration, 10);
+				
+				if (postEditDuration && timestamp) {
+					const now = Date.now();
+					const elapsed = now - timestamp;
+					const maxDuration = postEditDuration * 60 * 1000; // Convert minutes to milliseconds
+					
+					if (elapsed > maxDuration) {
+						alerts.error('[[error:post-edit-duration-expired]]');
+						return;
+					}
+				}
+				
+				// Start editing
+				startInlineEdit(postEl, pid);
+			});
+			
+			function startInlineEdit(postEl, pid) {
+				const contentEl = postEl.find('[component="post/content"]');
+				const originalContent = contentEl.html();
+				
+				// Mark post as editing
+				postEl.addClass('speek-post-editing');
+				
+				// Fetch raw content
+				api.get(`/posts/${pid}/raw`, {}, function (err, data) {
+					if (err) {
+						alerts.error(err);
+						postEl.removeClass('speek-post-editing');
+						return;
+					}
+					
+					const rawContent = data.content || '';
+					const originalRawContent = rawContent.trim();
+					
+					// Create edit container
+					const editContainer = $('<div class="speek-post-edit-container"></div>');
+					const textarea = $('<textarea class="speek-post-edit-textarea form-control" rows="6"></textarea>').val(rawContent);
+					const buttonContainer = $('<div class="speek-post-edit-buttons d-flex gap-2 mt-2"></div>');
+					const saveBtn = $('<button type="button" class="btn speek-post-edit-save speek-post-edit-save-btn" disabled>Save</button>');
+					const cancelBtn = $('<button type="button" class="btn btn-secondary btn-sm speek-post-edit-cancel">Cancel</button>');
+					
+					buttonContainer.append(saveBtn).append(cancelBtn);
+					editContainer.append(textarea).append(buttonContainer);
+					
+					// Hide original content and show edit container
+					contentEl.hide();
+					contentEl.after(editContainer);
+					
+					// Function to check if content has changed
+					function checkContentChanged() {
+						const currentContent = textarea.val().trim();
+						const hasChanged = currentContent !== originalRawContent && currentContent.length > 0;
+						saveBtn.prop('disabled', !hasChanged);
+					}
+					
+					// Check on input
+					textarea.on('input', checkContentChanged);
+					
+					// Initial check
+					checkContentChanged();
+					
+					// Focus textarea
+					setTimeout(function () {
+						textarea.focus();
+						// Move cursor to end
+						const len = textarea.val().length;
+						textarea[0].setSelectionRange(len, len);
+					}, 100);
+					
+					// Handle save
+					saveBtn.on('click', function () {
+						if (!saveBtn.prop('disabled')) {
+							saveEdit(postEl, pid, textarea.val().trim(), originalContent);
+						}
+					});
+					
+					// Handle cancel
+					cancelBtn.on('click', function () {
+						cancelEdit(postEl, contentEl, editContainer);
+					});
+					
+					// Handle ESC key
+					textarea.on('keydown', function (e) {
+						if (e.key === 'Escape') {
+							e.preventDefault();
+							cancelEdit(postEl, contentEl, editContainer);
+						}
+					});
+					
+					// Handle Enter+Ctrl/Cmd to save
+					textarea.on('keydown', function (e) {
+						if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+							e.preventDefault();
+							if (!saveBtn.prop('disabled')) {
+								saveEdit(postEl, pid, textarea.val().trim(), originalContent);
+							}
+						}
+					});
+				});
+			}
+			
+			function saveEdit(postEl, pid, newContent, originalContent) {
+				if (!newContent || newContent.trim() === '') {
+					alerts.error('[[error:content-too-short]]');
+					return;
+				}
+				
+				const saveBtn = postEl.find('.speek-post-edit-save');
+				const originalText = saveBtn.text();
+				saveBtn.prop('disabled', true).text('Saving...');
+				
+				api.put(`/posts/${pid}`, {
+					content: newContent,
+					_csrf: $('input[name="_csrf"]').val()
+				}, function (err, data) {
+					saveBtn.prop('disabled', false).text(originalText);
+					
+					if (err) {
+						alerts.error(err);
+						return;
+					}
+					
+					// Update the content
+					const contentEl = postEl.find('[component="post/content"]');
+					const editContainer = postEl.find('.speek-post-edit-container');
+					
+					// The API returns the parsed content - handle different response structures
+					let parsedContent = null;
+					if (data) {
+						// Try different possible response structures
+						parsedContent = data.content || 
+							(data.post && data.post.content) || 
+							(data.response && data.response.content) ||
+							(data.response && data.response.post && data.response.post.content);
+					}
+					
+					// Remove edit container and show content
+					editContainer.remove();
+					
+					// Update content if we have parsed HTML
+					if (parsedContent) {
+						contentEl.html(parsedContent);
+						// Re-initialize images and other post content
+						contentEl.find('img:not(.not-responsive)').addClass('img-fluid');
+						// The socket event will handle updating the edit indicator and other UI elements
+					} else {
+						// If we don't have parsed content, the socket event will handle it
+						// Just show the original content for now
+						contentEl.show();
+					}
+					
+					postEl.removeClass('speek-post-editing');
+					
+					// Show success message - the socket event will update the UI properly
+					alerts.success('[[topic:post-edited]]');
+				});
+			}
+			
+			function cancelEdit(postEl, contentEl, editContainer) {
+				editContainer.remove();
+				contentEl.show();
+				postEl.removeClass('speek-post-editing');
+			}
+		});
 	}
 });
 
