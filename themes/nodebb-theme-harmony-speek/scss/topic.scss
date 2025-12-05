@@ -51,7 +51,7 @@ body.template-topic {
 		// Prevent auto-scrolling when dropdown opens
 		scroll-behavior: auto;
 		position: relative !important; // Ensure proper stacking context
-		z-index: 1 !important; // Lower than dropdown
+		z-index: auto !important; // Don't create new stacking context
 		
 		// Ensure dropdown menus can overflow without affecting layout
 		* {
@@ -255,12 +255,15 @@ body.template-topic {
 			gap: 16px;
 			flex-wrap: nowrap; // Keep sort and reply button in same row on mobile
 			flex-shrink: 0;
+			position: relative; // Positioning context for dropdown
+			z-index: auto; // Don't create blocking stacking context
 			
 			// Sort dropdown takes natural width
 			.btn-group {
 				flex-shrink: 0;
 				white-space: nowrap;
 				position: relative !important; // Ensure dropdown positioning context
+				z-index: 10000 !important; // High z-index for dropdown container
 				
 				// Dropdown menu should overflow below content, not cause scrolling
 				.dropdown-menu {
@@ -268,7 +271,7 @@ body.template-topic {
 					top: calc(100% + 8px) !important; // Position below button with gap
 					left: 0 !important;
 					right: auto !important;
-					z-index: 999999 !important; // Extremely high z-index to ensure visibility
+					z-index: 10001 !important; // Higher than parent to ensure visibility
 					margin: 0 !important; // Remove all margins
 					padding: 8px !important; // Internal padding for menu items
 					min-width: 200px !important; // Minimum width for readability
@@ -624,7 +627,7 @@ body.template-topic {
 			border: none;
 			box-shadow: none;
 			position: relative;
-			z-index: 1; // Above timeline event pseudo elements
+			z-index: auto; // Don't create stacking context that blocks dropdown
 
 			// Admin action buttons
 		.speek-post-actions {
