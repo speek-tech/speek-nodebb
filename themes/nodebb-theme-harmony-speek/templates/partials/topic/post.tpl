@@ -40,7 +40,7 @@
 			<div class="speek-post-timestamp">
 				<span class="timeago" title="{./timestampISO}"></span>
 				{{{ if posts.editor.username }}}
-				<i component="post/edit-indicator" class="fa fa-edit text-muted ms-1{{{ if privileges.posts:history }}} pointer{{{ end }}} edit-icon" title="[[global:edited-timestamp, {isoTimeToLocaleString(./editedISO, config.userLang)}]]"></i>
+				<span component="post/edit-indicator" class="text-muted ms-1 edit-icon" title="[[global:edited-timestamp, {isoTimeToLocaleString(./editedISO, config.userLang)}]]">(edited)</span>
 				<span data-editor="{posts.editor.userslug}" component="post/editor" class="visually-hidden">[[global:last-edited-by, {posts.editor.username}]] <span class="timeago" title="{isoTimeToLocaleString(posts.editedISO, config.userLang)}"></span></span>
 				{{{ end }}}
 			</div>
