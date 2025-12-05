@@ -116,6 +116,11 @@ body.template-topic {
 		[component="post/replies/container"] [component="post/replies"]::before {
 			left: -16px; // Match mobile margin-left
 		}
+
+		// Adjust vertical line position for mobile on timeline events
+		.posts [component="topic/event"].timeline-event::after {
+			left: -16px !important; // Match mobile margin-left
+		}
 	}
 
 	@include tablet {
@@ -154,6 +159,11 @@ body.template-topic {
 		
 		[component="post/replies/container"] [component="post/replies"]::before {
 			left: -20px; // Match tablet margin-left
+		}
+
+		// Adjust vertical line position for tablet on timeline events
+		.posts [component="topic/event"].timeline-event::after {
+			left: -20px !important; // Match tablet margin-left
 		}
 
 		// .posts-container {
@@ -541,6 +551,34 @@ body.template-topic {
 				}
 			}
 
+			// Vertical line on the left side of timeline events (e.g., "13 DAYS LATER")
+			.timeline-event {
+				position: relative;
+				overflow: visible !important;
+				border-left: 2px solid #E0DBC7 !important;
+				padding-top: 15px;
+				margin-top: -15px !important;
+				margin-left: 0.5px;
+				z-index: 0; // Behind the main post card
+				
+				// Pseudo element for vertical line - behind main post
+				&::after {
+					content: '';
+					position: absolute;
+					left: -24px; // Position to the left of the event
+					top: -36px; // Extend upward
+					bottom: 0;
+					width: 2px;
+					height: calc(100% + 36px); // Full height plus extension
+					background-color: #E0DBC7 !important;
+					z-index: -1; // Behind the main post card
+					display: block !important;
+					visibility: visible !important;
+					opacity: 1 !important;
+					pointer-events: none; // Don't interfere with interactions
+				}
+			}
+
 		[component="post"] {
 			&.selected .post-container {
 				background-color: mix($body-bg, $body-color, 90%);
@@ -586,6 +624,7 @@ body.template-topic {
 			border: none;
 			box-shadow: none;
 			position: relative;
+			z-index: 1; // Above timeline event pseudo elements
 
 			// Admin action buttons
 		.speek-post-actions {
@@ -1445,7 +1484,7 @@ body.template-topic {
 			content: '';
 			position: absolute;
 			left: -24px; // Position to the left of the card (matching margin-left)
-			top: -34px; // Extend 24px upward
+			top: -36px; // Extend 24px upward
 			bottom: 0;
 			width: 2px;
 			height: calc(100%); // Explicit height calculation
