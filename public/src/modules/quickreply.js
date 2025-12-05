@@ -133,7 +133,12 @@ define('quickreply', [
 		}
 
 		let ready = true;
-		components.get('topic/quickreply/button').on('click', function (e) {
+		const submitButton = components.get('topic/quickreply/button');
+		const submitButtonText = submitButton.find('.speek-submit-text');
+		const originalButtonText = 'Submit reply';
+		const loadingButtonText = 'Submitting...';
+		
+		submitButton.on('click', function (e) {
 			e.preventDefault();
 			e.stopPropagation();
 			if (!ready) {
@@ -160,9 +165,16 @@ define('quickreply', [
 				return;
 			}
 
+			// Show loader and change button text
 			ready = false;
+			submitButton.addClass('is-loading');
+			submitButtonText.text(loadingButtonText);
+			
 			api.post(`/topics/${ajaxify.data.tid}`, replyData, function (err, data) {
+				// Hide loader and restore button text
 				ready = true;
+				submitButton.removeClass('is-loading');
+				submitButtonText.text(originalButtonText);
 				if (err) {
 					return alerts.error(err);
 				}

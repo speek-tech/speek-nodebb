@@ -1210,11 +1210,12 @@ body.template-topic {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
+			gap: 8px;
 			width: auto;
 			max-width: 121px;
 			box-shadow: 0px 2px 4px -2px rgba(0, 0, 0, 0.05), 0px 4px 6px -1px rgba(0, 0, 0, 0.05);
 			cursor: pointer;
-			transition: box-shadow 0.2s ease, transform 0.2s ease;
+			transition: box-shadow 0.2s ease, transform 0.2s ease, max-width 0.3s ease;
 
 			&:hover {
 				transform: none;
@@ -1235,6 +1236,37 @@ body.template-topic {
 				opacity: 0.6;
 				cursor: not-allowed;
 				transform: none;
+			}
+			
+			// Button content wrapper
+			.speek-submit-text {
+				white-space: nowrap;
+			}
+			
+			// Loader icon
+			.speek-submit-loader {
+				flex-shrink: 0;
+				color: #27454B;
+				animation: speek-spin 1s linear infinite;
+			}
+			
+			// Show loader state
+			&.is-loading {
+				max-width: 165px; // Allow space for "Submitting..." text + loader
+				
+				.speek-submit-loader {
+					display: block !important;
+				}
+			}
+		}
+		
+		// Loader spin animation
+		@keyframes speek-spin {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(360deg);
 			}
 		}
 	}
