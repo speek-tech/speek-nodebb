@@ -1552,7 +1552,31 @@ body.template-topic {
 			z-index: -100; // Behind the original card
 			display: block !important;
 			// Position duplicate slightly offset (e.g., to the right or down)
-			transform: translate(-24px, 0px);
+		}
+		
+		// Responsive transform values for duplicate copy
+		@include mobile {
+			&::before {
+				transform: translate(-8px, 0px) !important; // Mobile transform
+			}
+		}
+		
+		@include tablet {
+			&::before {
+				transform: translate(-8px, 0px) !important; // Tablet transform
+			}
+		}
+		@include tablet-up {
+			&::before {
+				transform: translate(-4px, 0px) !important; // Tablet transform
+			}
+		}
+		
+		// Desktop breakpoints (1024px and above) - use desktop-up to cover all desktop sizes
+		@include desktop-up {
+			&::before {
+				transform: translate(-24px, 0px) !important; // Desktop transform (1024px+)
+			}
 		}
 		
 		// Hide footer for reply cards
