@@ -51,7 +51,7 @@ body.template-topic {
 		// Prevent auto-scrolling when dropdown opens
 		scroll-behavior: auto;
 		position: relative !important; // Ensure proper stacking context
-		z-index: 1 !important; // Lower than dropdown
+		z-index: auto !important; // Don't create new stacking context
 		
 		// Ensure dropdown menus can overflow without affecting layout
 		* {
@@ -89,6 +89,38 @@ body.template-topic {
 		// 	padding-left: 16px !important;
 		// 	padding-right: 16px !important;
 		// }
+
+		// Reduce left margin for replies on mobile
+		.speek-post-replies-container .speek-topic-post-card,
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card .speek-topic-post-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			margin-left: 16px !important;
+			
+			// Adjust vertical line position for mobile
+			&::before {
+				left: -16px !important; // Match mobile margin-left
+			}
+		}
+		
+		// Adjust vertical line position for mobile on replies container
+		.speek-post-card-footer::after {
+			left: 16px !important; // Match mobile margin-left
+		}
+		
+		[component="post/replies/container"]::before {
+			left: 16px !important; // Match mobile margin-left
+		}
+		
+		[component="post/replies/container"] [component="post/replies"]::before {
+			left: -16px; // Match mobile margin-left
+		}
+
+		// Adjust vertical line position for mobile on timeline events
+		.posts [component="topic/event"].timeline-event::after {
+			left: -16px !important; // Match mobile margin-left
+		}
 	}
 
 	@include tablet {
@@ -100,6 +132,38 @@ body.template-topic {
 		.topic {
 			padding-left: 16px !important;
 			padding-right: 16px !important;
+		}
+
+		// Reduce left margin for replies on tablet
+		.speek-post-replies-container .speek-topic-post-card,
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card .speek-topic-post-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			margin-left: 20px !important;
+			
+			// Adjust vertical line position for tablet
+			&::before {
+				left: -20px !important; // Match tablet margin-left
+			}
+		}
+		
+		// Adjust vertical line position for tablet on replies container
+		.speek-post-card-footer::after {
+			left: 20px !important; // Match tablet margin-left
+		}
+		
+		[component="post/replies/container"]::before {
+			left: 20px !important; // Match tablet margin-left
+		}
+		
+		[component="post/replies/container"] [component="post/replies"]::before {
+			left: -20px; // Match tablet margin-left
+		}
+
+		// Adjust vertical line position for tablet on timeline events
+		.posts [component="topic/event"].timeline-event::after {
+			left: -20px !important; // Match tablet margin-left
 		}
 
 		// .posts-container {
@@ -191,12 +255,15 @@ body.template-topic {
 			gap: 16px;
 			flex-wrap: nowrap; // Keep sort and reply button in same row on mobile
 			flex-shrink: 0;
+			position: relative; // Positioning context for dropdown
+			z-index: auto; // Don't create blocking stacking context
 			
 			// Sort dropdown takes natural width
 			.btn-group {
 				flex-shrink: 0;
 				white-space: nowrap;
 				position: relative !important; // Ensure dropdown positioning context
+				z-index: 10000 !important; // High z-index for dropdown container
 				
 				// Dropdown menu should overflow below content, not cause scrolling
 				.dropdown-menu {
@@ -204,7 +271,7 @@ body.template-topic {
 					top: calc(100% + 8px) !important; // Position below button with gap
 					left: 0 !important;
 					right: auto !important;
-					z-index: 999999 !important; // Extremely high z-index to ensure visibility
+					z-index: 10001 !important; // Higher than parent to ensure visibility
 					margin: 0 !important; // Remove all margins
 					padding: 8px !important; // Internal padding for menu items
 					min-width: 200px !important; // Minimum width for readability
@@ -487,6 +554,34 @@ body.template-topic {
 				}
 			}
 
+			// Vertical line on the left side of timeline events (e.g., "13 DAYS LATER")
+			.timeline-event {
+				position: relative;
+				overflow: visible !important;
+				border-left: 2px solid #E0DBC7 !important;
+				padding-top: 15px;
+				margin-top: -15px !important;
+				margin-left: 0.5px;
+				z-index: 0; // Behind the main post card
+				
+				// Pseudo element for vertical line - behind main post
+				&::after {
+					content: '';
+					position: absolute;
+					left: -24px; // Position to the left of the event
+					top: -36px; // Extend upward
+					bottom: 0;
+					width: 2px;
+					height: calc(100% + 36px); // Full height plus extension
+					background-color: #E0DBC7 !important;
+					z-index: -1; // Behind the main post card
+					display: block !important;
+					visibility: visible !important;
+					opacity: 1 !important;
+					pointer-events: none; // Don't interfere with interactions
+				}
+			}
+
 		[component="post"] {
 			&.selected .post-container {
 				background-color: mix($body-bg, $body-color, 90%);
@@ -531,10 +626,12 @@ body.template-topic {
 			margin-bottom: 0;
 			border: none;
 			box-shadow: none;
+			position: relative;
+			z-index: auto; // Don't create stacking context that blocks dropdown
 
 			// Admin action buttons
 		.speek-post-actions {
-			display: flex;
+			display: none;
 			align-items: center;
 			gap: 8px;
 			margin-top: 8px;
@@ -829,6 +926,20 @@ body.template-topic {
 				border-top: none !important;
 				padding-top: 0 !important;
 				margin-top: 0 !important;
+				position: relative;
+				
+				// Vertical line starting from footer connecting to replies
+				// &::after {
+				// 	content: '';
+				// 	position: absolute;
+				// 	left: 24px; // Match the position where replies start
+				// 	bottom: -16px; // Extend below footer
+				// 	width: 2px;
+				// 	height: 16px; // Connect to replies container
+				// 	background-color: #E0DBC7;
+				// 	z-index: 0;
+				// 	display: block !important;
+				// }
 				
 				// Admin controls
 				.speek-admin-controls {
@@ -1177,6 +1288,51 @@ body.template-topic {
 	}
 
 	[component="post/replies/container"] {
+		position: relative;
+		overflow: visible !important; // Ensure lines are visible
+		
+		// Vertical line connecting main post to all replies - continuous line through container
+		&::before {
+			content: '';
+			position: absolute;
+			left: 24px; // Position at where replies start (matching margin-left)
+			top: -16px; // Start above container to connect with footer line
+			bottom: 0;
+			width: 2px;
+			background-color: #E0DBC7 !important;
+			z-index: 0;
+			display: block !important;
+			visibility: visible !important;
+			opacity: 1 !important;
+			pointer-events: none; // Don't interfere with interactions
+		}
+		
+		// Vertical line on the replies list
+		[component="post/replies"] {
+			position: relative;
+			overflow: visible !important;
+			
+			&::before {
+				content: '';
+				position: absolute;
+				left: -24px; // Position to the left of the replies (at the start of indentation)
+				top: 0;
+				width: 2px;
+				background-color: #E0DBC7 !important;
+				z-index: 0;
+				display: block !important;
+				visibility: visible !important;
+				opacity: 1 !important;
+				height: 100%; // Use 100% height
+				pointer-events: none; // Don't interfere with interactions
+			}
+			
+			// Adjust line height to stop before last reply
+			&:has(> li:last-child)::before {
+				height: calc(100% - 24px); // Subtract approximate height of last reply card
+			}
+		}
+		
 		.icon {
 			display: none !important;
 		}
@@ -1196,6 +1352,8 @@ body.template-topic {
 		[component="post"] {
 			padding-top: 0 !important;
 			padding-bottom: $spacer;
+			position: relative;
+			overflow: visible !important;
 			&:last-of-type {
 				padding-bottom: 0;
 				.post-footer {
@@ -1214,6 +1372,54 @@ body.template-topic {
 			padding: 16px;
 			gap: 12px;
 			margin-bottom: 24px;
+			margin-left: 24px; // Add left spacing for comment-like indentation
+			position: relative;
+			z-index: 2; // Ensure cards appear above the duplicate and vertical line
+			overflow: visible; // Ensure lines are visible
+			
+			// Vertical line on the left side of each reply
+			&::before {
+				content: '';
+				position: absolute;
+				left: -24px; // Position to the left of the card (matching margin-left)
+				top: -24px; // Extend 24px upward
+				bottom: 0;
+				width: 2px;
+				height: calc(100% + 24px); // Explicit height calculation
+				background-color: #E0DBC7 !important;
+				z-index: 10; // Ensure it's visible above other elements
+				display: block !important;
+				visibility: visible !important;
+				opacity: 1 !important;
+				pointer-events: none; // Don't interfere with interactions
+				// Add second line using box-shadow
+				box-shadow: 4px 0 0 0 #E0DBC7 !important;
+			}
+			
+			// Remove vertical line for last reply
+			&:last-child::before,
+			&:last-of-type::before {
+				display: none !important;
+			}
+			
+			// Duplicate copy of each reply - positioned behind
+			&::after {
+				content: '';
+				position: absolute;
+				top: 0;
+				left: 0;
+				right: 0;
+				bottom: 0;
+				background: transparent !important;
+				background-color: transparent !important;
+				border: 2px solid #E0DBC7 !important;
+				border-radius: 16px;
+				border-bottom-left-radius: 16px;
+				z-index: -1; // Behind the original card
+				display: block !important;
+				// Position duplicate slightly offset (e.g., to the right or down)
+				transform: translate(4px, 4px);
+			}
 
 			// Show footer for admin controls in replies
 			.speek-post-card-footer {
@@ -1303,7 +1509,79 @@ body.template-topic {
 		flex-direction: column !important;
 		gap: 10px !important;
 		margin-bottom: 0 !important;
-
+		margin-left: 24px !important; // Add left spacing for comment-like indentation
+		position: relative;
+		z-index: 2; // Ensure cards appear above the vertical line and duplicate
+		overflow: visible !important; // Ensure lines are visible
+		
+		// Vertical line on the left side of each reply
+		&::after {
+			content: '';
+			position: absolute;
+			left: -24px; // Position to the left of the card (matching margin-left)
+			top: -36px; // Extend 24px upward
+			bottom: 0;
+			width: 2px;
+			height: calc(100%); // Explicit height calculation
+			background-color: #E0DBC7 !important;
+			z-index: 10; // Ensure it's visible above other elements
+			display: block !important;
+			visibility: visible !important;
+			opacity: 1 !important;
+			pointer-events: none; // Don't interfere with interactions
+			// Add second line using box-shadow
+			// box-shadow: 4px 0 0 0 #E0DBC7 !important;
+		}
+		
+		// Remove vertical line for last reply
+		// &:last-child::before,
+		// &:last-of-type::after {
+		// 	display: none !important;
+		// }
+		
+		// Duplicate copy of each reply - positioned behind
+		&::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: transparent !important;
+			background-color: transparent !important;
+			border-left: 2px solid #E0DBC7 !important;
+			border-bottom: 2px solid #E0DBC7 !important;
+			border-bottom-left-radius: 16px !important;
+			z-index: -100; // Behind the original card
+			display: block !important;
+			// Position duplicate slightly offset (e.g., to the right or down)
+		}
+		
+		// Responsive transform values for duplicate copy
+		@include mobile {
+			&::before {
+				transform: translate(-8px, 0px) !important; // Mobile transform
+			}
+		}
+		
+		@include tablet {
+			&::before {
+				transform: translate(-8px, 0px) !important; // Tablet transform
+			}
+		}
+		@include tablet-up {
+			&::before {
+				transform: translate(-4px, 0px) !important; // Tablet transform
+			}
+		}
+		
+		// Desktop breakpoints (1024px and above) - use desktop-up to cover all desktop sizes
+		@include desktop-up {
+			&::before {
+				transform: translate(-24px, 0px) !important; // Desktop transform (1024px+)
+			}
+		}
+		
 		// Hide footer for reply cards
 		.speek-post-card-footer {
 			display: none !important;
