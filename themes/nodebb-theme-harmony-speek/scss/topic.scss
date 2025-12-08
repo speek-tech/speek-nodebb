@@ -1985,6 +1985,12 @@ body.template-topic {
 		margin-bottom: 0 !important;
 	}
 	
+	// Override py-3 class padding on timeline
+	.posts.timeline.py-3 {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
+	}
+	
 	// Remove bottom margin from last post
 	.posts.timeline > li:last-child {
 		margin-bottom: 0 !important;
@@ -2216,11 +2222,11 @@ body.template-topic {
 
 		.topic {
 			margin-bottom: 48px;
-			padding-bottom: 32px;
+			padding-bottom: 0;
 		}
 
 		.posts-container {
-			padding-bottom: 32px;
+			padding-bottom: 0;
 		}
 
 		.topic .posts {
