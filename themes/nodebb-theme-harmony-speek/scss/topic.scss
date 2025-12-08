@@ -342,13 +342,13 @@ body.template-topic {
 				white-space: nowrap;
 				position: relative !important; // Ensure dropdown positioning context
 				
-				// Dropdown menu should overflow below content, not cause scrolling
-				.dropdown-menu {
-					position: absolute !important;
-					top: calc(100% + 8px) !important; // Position below button with gap
-					left: 0 !important;
-					right: auto !important;
-					z-index: 999999 !important; // Extremely high z-index to ensure visibility
+			// Dropdown menu should overflow below content, not cause scrolling
+			.dropdown-menu {
+				position: absolute !important;
+				top: calc(100% + 4px) !important; // Position below button with smaller gap
+				left: 0 !important;
+				right: auto !important;
+				z-index: 999999 !important; // Extremely high z-index to ensure visibility
 					margin: 0 !important; // Remove all margins
 					padding: 8px !important; // Internal padding for menu items
 					min-width: 200px !important; // Minimum width for readability
@@ -2341,6 +2341,7 @@ body.template-topic {
 			padding: 6px !important; // Slightly more padding
 			min-width: 160px !important; // Bit wider
 			max-width: 220px !important; // Prevent too wide
+			top: calc(100% + 2px) !important; // Minimal gap on mobile
 			
 			.dropdown-item {
 				padding: 8px 12px !important; // More padding for better touch targets
@@ -2379,6 +2380,7 @@ body.template-topic {
 			padding: 6px !important; // Comfortable padding
 			min-width: 170px !important; // Comfortable width
 			max-width: 240px !important; // Prevent too wide
+			top: calc(100% + 3px) !important; // Small gap on tablet
 			
 			.dropdown-item {
 				padding: 8px 11px !important; // Comfortable padding
