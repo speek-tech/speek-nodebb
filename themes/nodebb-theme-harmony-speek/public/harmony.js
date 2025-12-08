@@ -1522,12 +1522,23 @@ $(document).ready(function () {
 					
 					// The API returns the parsed content - handle different response structures
 					let parsedContent = null;
+					let editedTimestamp = null;
+					let editorData = null;
+					let postData = null;
+					
 					if (data) {
 						// Try different possible response structures
+						postData = data.post || data.response?.post || data;
 						parsedContent = data.content || 
-							(data.post && data.post.content) || 
+							(postData && postData.content) || 
 							(data.response && data.response.content) ||
 							(data.response && data.response.post && data.response.post.content);
+						
+						// Get edited timestamp and editor info
+						if (postData) {
+							editedTimestamp = postData.edited || postData.editedISO;
+							editorData = data.editor || postData.editor;
+						}
 					}
 					
 					// Remove edit container and show content
@@ -1538,16 +1549,81 @@ $(document).ready(function () {
 						contentEl.html(parsedContent);
 						// Re-initialize images and other post content
 						contentEl.find('img:not(.not-responsive)').addClass('img-fluid');
-						// The socket event will handle updating the edit indicator and other UI elements
 					} else {
-						// If we don't have parsed content, the socket event will handle it
-						// Just show the original content for now
+						// If we don't have parsed content, just show the original content
 						contentEl.show();
+					}
+					
+					// Update edit indicator immediately after successful edit
+					// The API returns success, so the post was edited
+					const timestampEl = postEl.find('.speek-post-timestamp');
+					let editIndicator = timestampEl.find('[component="post/edit-indicator"]');
+					
+					// If edit indicator doesn't exist, create it
+					if (!editIndicator.length) {
+						editIndicator = $('<span component="post/edit-indicator" class="text-muted ms-1 edit-icon">(edited)</span>');
+						timestampEl.append(editIndicator);
+					}
+					
+					// Show the edit indicator immediately
+					editIndicator.removeClass('hidden').show();
+					
+					// Update tooltip and editor info if we have timestamp data
+					if (editedTimestamp) {
+						let editedISO = editedTimestamp;
+						if (typeof editedTimestamp === 'number') {
+							editedISO = new Date(editedTimestamp).toISOString();
+						} else if (typeof editedTimestamp !== 'string') {
+							editedISO = editedTimestamp.toISOString ? editedTimestamp.toISOString() : String(editedTimestamp);
+						}
+						
+						// Update tooltip - use current time if no timestamp provided
+						if (!editedISO) {
+							editedISO = new Date().toISOString();
+						}
+						
+						require(['helpers'], function (helpers) {
+							let formattedTime = editedISO;
+							if (helpers.isoTimeToLocaleString && config && config.userLang) {
+								formattedTime = helpers.isoTimeToLocaleString(editedISO, config.userLang);
+							}
+							// Set tooltip - NodeBB will handle translation
+							editIndicator.attr('title', `[[global:edited-timestamp, ${formattedTime}]]`);
+						});
+						
+						// Update editor element
+						if (editorData || app.user) {
+							require(['app'], function(app) {
+								app.parseAndTranslate('partials/topic/post-editor', {
+									editor: editorData || { username: app.user.username, userslug: app.user.userslug },
+									editedISO: editedISO
+								}, function(html) {
+									let editorEl = postEl.find('[component="post/editor"]');
+									if (!editorEl.length) {
+										editorEl = $(html);
+										timestampEl.after(editorEl);
+									} else {
+										editorEl.replaceWith(html);
+									}
+									postEl.find('[component="post/editor"] .timeago').timeago();
+								});
+							});
+						}
+					} else {
+						// If no timestamp, use current time
+						const nowISO = new Date().toISOString();
+						require(['helpers'], function (helpers) {
+							let formattedTime = nowISO;
+							if (helpers.isoTimeToLocaleString && config && config.userLang) {
+								formattedTime = helpers.isoTimeToLocaleString(nowISO, config.userLang);
+							}
+							editIndicator.attr('title', `[[global:edited-timestamp, ${formattedTime}]]`);
+						});
 					}
 					
 					postEl.removeClass('speek-post-editing');
 					
-					// Show success message - the socket event will update the UI properly
+					// Show success message
 					alerts.success('[[topic:post-edited]]');
 				});
 			}
