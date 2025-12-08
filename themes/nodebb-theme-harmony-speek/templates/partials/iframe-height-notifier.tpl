@@ -7,7 +7,24 @@
         return;
     }
 
-    // Function to disable scrolling
+    // Configuration
+    const CONFIG = {
+        minHeight: 100,
+        maxHeight: 100000,
+        minChange: 5,
+        debounceDelay: 150,
+        stableDelay: 300
+    };
+    
+    // State
+    let parentOrigin = null;
+    let lastSentHeight = 0;
+    let debounceTimer = null;
+    let stableTimer = null;
+    let observers = [];
+    let currentBreakpoint = null;
+    
+    // Disable iframe scrolling
     function disableScrolling() {
         if (document.body) {
             document.body.classList.add('in-iframe');
@@ -15,339 +32,301 @@
             document.body.style.overflow = 'hidden';
         }
     }
-
-    // Disable scrolling immediately if body exists, otherwise wait for DOM
-    if (document.body) {
-        disableScrolling();
-    } else {
-        document.addEventListener('DOMContentLoaded', disableScrolling);
-    }
-
-    let lastSentHeight = 0;
-    let stableHeight = 0;
-    let stableHeightTimer = null;
-    let pendingHeight = null;
-    let lastUpdateTime = 0;
-    let resizeObserver = null;
-    let currentBreakpoint = null;
     
-    const COOLDOWN_MS = 300;
-    const STABLE_DELAY_MS = 400;
-    const MAX_HEIGHT = 100000;
-    const MIN_HEIGHT = 100;
-    const MIN_CHANGE_PX = 5;
-
-    // Handle breakpoint change from parent window
-    function handleBreakpointChange(newBreakpoint) {
-        if (currentBreakpoint !== null && currentBreakpoint !== newBreakpoint) {
-            // Breakpoint changed - reset everything and force update
-            currentBreakpoint = newBreakpoint;
-            lastSentHeight = 0; // Reset to force update
-            stableHeight = 0;
-            pendingHeight = null;
-            clearTimeout(stableHeightTimer);
-            // Force immediate height update after breakpoint change
-            setTimeout(forceSendHeight, 150);
-            return true;
-        }
-        if (currentBreakpoint === null) {
-            currentBreakpoint = newBreakpoint;
-        }
-        return false;
-    }
-
-    // Listen for breakpoint change messages from parent
-    window.addEventListener('message', function(event) {
-        // Accept messages from any origin (parent window)
-        if (event.data && event.data.type === 'breakpointChange') {
-            handleBreakpointChange(event.data.breakpoint);
-        }
-    });
-
-    // Calculate height based on actual content
-    function getDocumentHeight() {
-        const body = document.body;
-        const html = document.documentElement;
+    // Calculate document height
+    function getHeight() {
+        if (!document.body || !document.documentElement) return 0;
         
-        if (!body || !html) {
-            return 0;
-        }
-
-        // Get all possible height measurements
-        const measurements = [
-            body.scrollHeight,
-            body.offsetHeight,
-            html.scrollHeight,
-            html.offsetHeight,
-            Math.max(body.scrollHeight, html.scrollHeight)
-        ].filter(h => h > 0);
-
-        if (measurements.length === 0) {
-            return 0;
-        }
-
-        // Use the maximum, but cap it
-        const height = Math.max(...measurements);
+        const height = Math.max(
+            document.body.scrollHeight,
+            document.body.offsetHeight,
+            document.documentElement.scrollHeight,
+            document.documentElement.offsetHeight
+        );
         
-        return Math.max(MIN_HEIGHT, Math.min(height, MAX_HEIGHT));
+        return Math.max(CONFIG.minHeight, Math.min(height, CONFIG.maxHeight));
     }
-
-    // Check if height is stable (hasn't changed recently)
-    function checkStableHeight() {
-        const currentHeight = getDocumentHeight();
-        
-        // If height changed, reset the timer
-        if (Math.abs(currentHeight - pendingHeight) > MIN_CHANGE_PX || pendingHeight === null) {
-            pendingHeight = currentHeight;
-            clearTimeout(stableHeightTimer);
-            stableHeightTimer = setTimeout(function() {
-                // Height has been stable, now we can send it
-                if (Math.abs(pendingHeight - stableHeight) > MIN_CHANGE_PX || stableHeight === 0) {
-                    sendHeight(pendingHeight);
-                    stableHeight = pendingHeight;
-                }
-            }, STABLE_DELAY_MS);
-        }
-    }
-
+    
     // Send height to parent
-    function sendHeight(height, force) {
-        const now = Date.now();
+    function sendHeight(force = false) {
+        if (!parentOrigin) {
+            console.warn('[iframe-height-notifier] Parent origin not set yet, skipping height update');
+            return;
+        }
         
-        // Cooldown check (skip if forced)
-        if (!force && now - lastUpdateTime < COOLDOWN_MS) {
+        const height = getHeight();
+        
+        // Check if change is significant
+        if (!force && Math.abs(height - lastSentHeight) < CONFIG.minChange) {
+            console.log('[iframe-height-notifier] Height change too small, skipping:', height, 'vs', lastSentHeight);
             return;
         }
-
-        // Validate height
-        if (height < MIN_HEIGHT || height > MAX_HEIGHT) {
-            return;
-        }
-
-        // Check if change is significant (skip check if forced)
-        if (!force) {
-            const heightDiff = Math.abs(height - lastSentHeight);
-            if (heightDiff < MIN_CHANGE_PX && lastSentHeight > 0) {
-                return; // Not significant enough
-            }
-        }
-
+        
         lastSentHeight = height;
-        lastUpdateTime = now;
-
-        // Send message to parent window
-        if (window.parent && window.parent !== window) {
+        console.log('[iframe-height-notifier] Sending height to parent:', height, 'force:', force);
+        
+        try {
             window.parent.postMessage({
                 type: 'iframeHeight',
-                height: height
-            }, '*');
+                height: height,
+                timestamp: Date.now()
+            }, parentOrigin);
+        } catch (error) {
+            console.error('[iframe-height-notifier] Failed to send height:', error);
         }
     }
-
-    // Force send height (for initial load, navigation, breakpoint changes)
-    function forceSendHeight() {
-        const height = getDocumentHeight();
-        if (height >= MIN_HEIGHT) {
-            sendHeight(height, true); // Force send
-            stableHeight = height;
-            pendingHeight = height;
-        }
-    }
-
-    // Debounced height check
-    let debounceTimer = null;
-    function debouncedHeightCheck(force) {
-        if (debounceTimer) {
-            clearTimeout(debounceTimer);
-        }
-        const delay = force ? 50 : 100;
-        debounceTimer = setTimeout(function() {
-            if (force) {
-                forceSendHeight();
-            } else {
-                checkStableHeight();
-            }
-        }, delay);
-    }
-
-    // Send initial height after page load
-    function sendInitialHeight() {
-        if (document.readyState === 'complete') {
-            setTimeout(forceSendHeight, 300);
-        } else {
-            window.addEventListener('load', function() {
-                setTimeout(forceSendHeight, 500);
-            });
-        }
-    }
-
-    // ResizeObserver - throttled but responsive
-    var resizeObserverTimer = null;
-    if (window.ResizeObserver && document.body) {
-        resizeObserver = new ResizeObserver(function(entries) {
-            // Throttle with debounce
-            if (resizeObserverTimer) clearTimeout(resizeObserverTimer);
-            resizeObserverTimer = setTimeout(function() {
-                var height = getDocumentHeight();
-                // Only update if significant change (>50px)
-                if (Math.abs(height - lastSentHeight) > 50) {
-                    forceSendHeight();
-                }
-            }, 300);
-        });
+    
+    // Debounced height update
+    function updateHeight(force = false) {
+        clearTimeout(debounceTimer);
+        clearTimeout(stableTimer);
         
-        resizeObserver.observe(document.body);
-    }
-
-    // Window resize handler - for content changes (breakpoint changes handled by parent)
-    let windowResizeTimer = null;
-    window.addEventListener('resize', function() {
-        clearTimeout(windowResizeTimer);
-        // Wait for layout to stabilize after resize
-        windowResizeTimer = setTimeout(function() {
-            debouncedHeightCheck();
-        }, 500);
-    });
-
-    // Listen to NodeBB's ajaxify events for navigation
-    if (window.app && window.app.ajaxify) {
-        if (window.$(document)) {
-            window.$(document).on('action:ajaxify.contentLoaded', function() {
-                setTimeout(forceSendHeight, 400);
-            });
-
-            window.$(document).on('action:ajaxify.end', function() {
-                setTimeout(forceSendHeight, 600);
-            });
+        if (force) {
+            debounceTimer = setTimeout(() => sendHeight(true), 50);
+        } else {
+            // Wait for stable height
+            debounceTimer = setTimeout(() => {
+                const currentHeight = getHeight();
+                stableTimer = setTimeout(() => {
+                    if (Math.abs(getHeight() - currentHeight) < CONFIG.minChange) {
+                        sendHeight();
+                    }
+                }, CONFIG.stableDelay);
+            }, CONFIG.debounceDelay);
         }
     }
-
-    // Height update for post events - single delayed call to avoid scroll issues
-    var heightUpdateTimer = null;
-    function debouncedForceSendHeight(delay) {
-        clearTimeout(heightUpdateTimer);
-        heightUpdateTimer = setTimeout(function() {
-            forceSendHeight();
-            // Do a second update after more time to catch any layout settling
-            setTimeout(forceSendHeight, 300);
-        }, delay || 400);
+    
+    // Handle messages from parent
+    function handleParentMessage(event) {
+        const data = event.data;
+        
+        // Initialize parent origin from handshake
+        if (data?.type === 'parentOrigin' && data?.origin) {
+            if (!parentOrigin) {
+                parentOrigin = data.origin;
+                console.log('[iframe-height-notifier] Parent origin set to:', parentOrigin);
+                // Send initial height now that we have parent origin
+                setTimeout(() => updateHeight(true), 100);
+            }
+            return;
+        }
+        
+        // Only accept messages from known parent origin
+        if (!parentOrigin || event.origin !== parentOrigin) {
+            return;
+        }
+        
+        // Handle breakpoint changes
+        if (data?.type === 'breakpointChange') {
+            if (currentBreakpoint !== null && currentBreakpoint !== data.breakpoint) {
+                // Breakpoint changed - force height update
+                currentBreakpoint = data.breakpoint;
+                lastSentHeight = 0; // Reset to force update
+                setTimeout(() => updateHeight(true), 150);
+            } else if (currentBreakpoint === null) {
+                currentBreakpoint = data.breakpoint;
+            }
+            return;
+        }
+        
+        // Handle force height update requests
+        if (data?.type === 'forceHeightUpdate') {
+            lastSentHeight = 0; // Reset to force update
+            updateHeight(true);
+            return;
+        }
     }
-
-    // Function to register hooks when available
-    function registerHooks() {
-        if (window.hooks && window.hooks.on) {
-            window.hooks.on('action:ajaxify.contentLoaded', function() {
-                debouncedForceSendHeight(400);
+    
+    // Initialize observers
+    function initObservers() {
+        // 1. ResizeObserver for content size changes
+        if (window.ResizeObserver && document.body) {
+            const resizeObserver = new ResizeObserver((entries) => {
+                console.log('[iframe-height-notifier] ResizeObserver triggered');
+                updateHeight();
             });
-
-            window.hooks.on('action:ajaxify.end', function() {
-                debouncedForceSendHeight(600);
-            });
-
-            // Listen for new posts being added (replies, real-time updates)
-            window.hooks.on('action:posts.loaded', function() {
-                debouncedForceSendHeight(500);
-            });
-
-            // Listen for quickreply success
-            window.hooks.on('action:quickreply.success', function() {
-                debouncedForceSendHeight(500);
+            resizeObserver.observe(document.body);
+            if (document.documentElement) {
+                resizeObserver.observe(document.documentElement);
+            }
+            observers.push(resizeObserver);
+            console.log('[iframe-height-notifier] ResizeObserver initialized');
+        }
+        
+        // 2. MutationObserver for DOM changes (throttled)
+        if (window.MutationObserver && document.body) {
+            let mutationTimer = null;
+            const mutationObserver = new MutationObserver((mutations) => {
+                console.log('[iframe-height-notifier] MutationObserver triggered, mutations:', mutations.length);
+                clearTimeout(mutationTimer);
+                mutationTimer = setTimeout(() => updateHeight(true), 200);
             });
             
+            mutationObserver.observe(document.body, {
+                childList: true,
+                subtree: true,
+                attributes: true,
+                attributeFilter: ['style', 'class']
+            });
+            observers.push(mutationObserver);
+            console.log('[iframe-height-notifier] MutationObserver initialized');
+        }
+    }
+    
+    // Setup NodeBB hooks
+    function setupNodeBBHooks() {
+        const events = [
+            'action:ajaxify.contentLoaded',
+            'action:ajaxify.end',
+            'action:posts.loaded',
+            'action:quickreply.success'
+        ];
+        
+        if (window.hooks?.on) {
+            console.log('[iframe-height-notifier] Setting up NodeBB hooks');
+            events.forEach(event => {
+                window.hooks.on(event, () => {
+                    console.log('[iframe-height-notifier] Hook fired:', event);
+                    updateHeight(true);
+                });
+            });
             return true;
         }
         return false;
     }
-
-    // Try to register hooks immediately, or wait for them to be available
-    if (!registerHooks()) {
-        // Poll for hooks to become available (NodeBB initializes them later)
-        var hookCheckInterval = setInterval(function() {
-            if (registerHooks()) {
-                clearInterval(hookCheckInterval);
-            }
-        }, 100);
-        
-        // Stop checking after 10 seconds
-        setTimeout(function() {
-            clearInterval(hookCheckInterval);
-        }, 10000);
-    }
-
-    // jQuery-based fallback for post events (more reliable timing)
+    
+    // Setup jQuery listeners as fallback
     function setupJQueryListeners() {
         if (window.jQuery || window.$) {
-            var $ = window.jQuery || window.$;
-            $(document).on('action:posts.loaded', function() {
-                debouncedForceSendHeight(500);
+            const $ = window.jQuery || window.$;
+            console.log('[iframe-height-notifier] Setting up jQuery listeners');
+            
+            $(document).on('action:ajaxify.contentLoaded', () => {
+                console.log('[iframe-height-notifier] jQuery: contentLoaded');
+                updateHeight(true);
             });
-            $(document).on('action:quickreply.success', function() {
-                debouncedForceSendHeight(500);
+            
+            $(document).on('action:ajaxify.end', () => {
+                console.log('[iframe-height-notifier] jQuery: ajaxify.end');
+                updateHeight(true);
             });
-            $(window).on('action:posts.loaded', function() {
-                debouncedForceSendHeight(500);
+            
+            $(document).on('action:posts.loaded', () => {
+                console.log('[iframe-height-notifier] jQuery: posts.loaded');
+                updateHeight(true);
             });
-            $(window).on('action:quickreply.success', function() {
-                debouncedForceSendHeight(500);
-            });
+            
             return true;
         }
         return false;
     }
-
-    // Try jQuery listeners immediately or wait
-    if (!setupJQueryListeners()) {
-        var jqCheckInterval = setInterval(function() {
-            if (setupJQueryListeners()) {
-                clearInterval(jqCheckInterval);
-            }
-        }, 100);
-        setTimeout(function() {
-            clearInterval(jqCheckInterval);
-        }, 10000);
+    
+    // Try to setup NodeBB hooks with timeout
+    function initNodeBBHooks() {
+        if (!setupNodeBBHooks()) {
+            let attempts = 0;
+            const maxAttempts = 25; // 5 seconds
+            const interval = setInterval(() => {
+                attempts++;
+                if (setupNodeBBHooks() || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
+        
+        // Also setup jQuery listeners as fallback
+        if (!setupJQueryListeners()) {
+            let attempts = 0;
+            const maxAttempts = 25;
+            const interval = setInterval(() => {
+                attempts++;
+                if (setupJQueryListeners() || attempts >= maxAttempts) {
+                    clearInterval(interval);
+                }
+            }, 200);
+        }
     }
-
-    // MutationObserver disabled - was causing input lag
-    // Relying on event-based detection (hooks + jQuery) instead
-
-    // Direct pagination click listener (backup)
-    document.addEventListener('click', function(e) {
-        var target = e.target;
-        // Check if clicked element or its parent is a pagination link
-        while (target && target !== document) {
-            if (target.classList && (
-                target.classList.contains('page-link') || 
-                target.closest('.pagination') ||
-                target.closest('[component="pagination"]')
-            )) {
-                // Schedule height updates after content loads with extended retries
-                // Important for pages with less content that need iframe to shrink
-                setTimeout(forceSendHeight, 300);
-                setTimeout(forceSendHeight, 600);
-                setTimeout(forceSendHeight, 1000);
-                setTimeout(forceSendHeight, 1500);
-                setTimeout(forceSendHeight, 2000);
-                break;
+    
+    // Handle image loading
+    function initImageLoadListener() {
+        document.addEventListener('load', (e) => {
+            if (e.target.tagName === 'IMG') {
+                console.log('[iframe-height-notifier] Image loaded');
+                updateHeight();
             }
-            target = target.parentElement;
+        }, true);
+    }
+    
+    // Handle pagination and navigation clicks
+    function initClickListener() {
+        document.addEventListener('click', (e) => {
+            let target = e.target;
+            // Check if clicked element or its parent is a pagination link or navigation element
+            while (target && target !== document) {
+                if (target.classList && (
+                    target.classList.contains('page-link') || 
+                    target.closest('.pagination') ||
+                    target.closest('[component="pagination"]') ||
+                    target.closest('[component="category"]') ||
+                    target.closest('[component="topic"]')
+                )) {
+                    console.log('[iframe-height-notifier] Navigation click detected');
+                    // Schedule multiple height updates to catch content loading
+                    setTimeout(() => updateHeight(true), 300);
+                    setTimeout(() => updateHeight(true), 600);
+                    setTimeout(() => updateHeight(true), 1000);
+                    setTimeout(() => updateHeight(true), 1500);
+                    break;
+                }
+                target = target.parentElement;
+            }
+        });
+    }
+    
+    // Initialize everything
+    function init() {
+        console.log('[iframe-height-notifier] Initializing...');
+        disableScrolling();
+        
+        // Listen for messages from parent
+        window.addEventListener('message', handleParentMessage);
+        
+        // Initialize observers
+        initObservers();
+        
+        // Setup NodeBB hooks
+        initNodeBBHooks();
+        
+        // Listen for image loads
+        initImageLoadListener();
+        
+        // Listen for navigation clicks
+        initClickListener();
+        
+        // Initial height (will only send after parent origin is received)
+        if (document.readyState === 'complete') {
+            setTimeout(() => updateHeight(true), 200);
+        } else {
+            window.addEventListener('load', () => {
+                setTimeout(() => updateHeight(true), 300);
+            });
         }
+    }
+    
+    // Cleanup on unload
+    window.addEventListener('beforeunload', () => {
+        observers.forEach(observer => {
+            if (observer.disconnect) observer.disconnect();
+        });
+        clearTimeout(debounceTimer);
+        clearTimeout(stableTimer);
     });
-
-    // Monitor for images loading (throttled)
-    var imageLoadTimer = null;
-    var lastImageLoad = 0;
-    document.addEventListener('load', function(e) {
-        if (e.target.tagName === 'IMG') {
-            var now = Date.now();
-            if (now - lastImageLoad < 1000) return; // Max once per second
-            lastImageLoad = now;
-            
-            clearTimeout(imageLoadTimer);
-            imageLoadTimer = setTimeout(forceSendHeight, 500);
-        }
-    }, true);
-
-    // Send initial height
-    sendInitialHeight();
+    
+    // Start initialization
+    if (document.body) {
+        init();
+    } else {
+        document.addEventListener('DOMContentLoaded', init);
+    }
 })();
 </script>
