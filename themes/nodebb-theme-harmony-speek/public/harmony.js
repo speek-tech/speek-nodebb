@@ -4,6 +4,9 @@ $(document).ready(function () {
 	// Setup edit indicator click prevention early, before other handlers
 	setupEditIndicatorPrevention();
 	
+	// Fix empty space on topic pages - run immediately
+	fixTopicPageEmptySpaceOnReady();
+	
 	setupSkinSwitcher();
 	setupNProgress();
 	setupMobileMenu();
@@ -19,6 +22,64 @@ $(document).ready(function () {
 	
 	// Ensure NProgress is cleared on pagination clicks
 	setupPaginationProgressHandler();
+	
+	// Function to fix empty space on topic pages - runs on DOM ready
+	function fixTopicPageEmptySpaceOnReady() {
+		// Check if we're on a topic page
+		if ($('body').hasClass('template-topic')) {
+			function removeSpacing() {
+				$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3, .row.mb-4, body.template-topic').css({
+					'padding-bottom': '0',
+					'margin-bottom': '0',
+					'min-height': 'auto',
+					'height': 'auto'
+				});
+				
+				// Force iframe height recalculation
+				if (window.self !== window.top) {
+					window.dispatchEvent(new Event('resize'));
+					if (typeof window.forceSendHeight === 'function') {
+						window.forceSendHeight();
+					}
+				}
+			}
+			
+			// Run immediately
+			removeSpacing();
+			
+			// Run multiple times to catch different load stages
+			setTimeout(removeSpacing, 50);
+			setTimeout(removeSpacing, 200);
+			setTimeout(removeSpacing, 500);
+			setTimeout(removeSpacing, 1000);
+			setTimeout(removeSpacing, 1500);
+			
+			// Use MutationObserver to continuously watch for spacing changes
+			if (window.MutationObserver) {
+				const observer = new MutationObserver(function() {
+					removeSpacing();
+				});
+				
+				// Observe the posts container and body
+				const postsContainer = document.querySelector('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3');
+				if (postsContainer) {
+					observer.observe(postsContainer, {
+						attributes: true,
+						attributeFilter: ['style', 'class'],
+						childList: true,
+						subtree: true
+					});
+				}
+				
+				observer.observe(document.body, {
+					attributes: true,
+					attributeFilter: ['style', 'class'],
+					childList: true,
+					subtree: false
+				});
+			}
+		}
+	}
 	
 	// Function to prevent clicks on edit indicator while allowing tooltip
 	function setupEditIndicatorPrevention() {
@@ -85,6 +146,40 @@ $(document).ready(function () {
 			// disables chat modals & goes straight to chat page based on user setting
 			hookData.modal = config.theme.chatModals && !utils.isMobile();
 			return hookData;
+		});
+
+		// Fix empty space on first load - run early
+		hooks.on('action:ajaxify.end', function () {
+			// Check if we're on a topic page
+			if (ajaxify.data && ajaxify.data.template && ajaxify.data.template.topic) {
+				// Remove spacing immediately
+				setTimeout(function() {
+					$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3, .row.mb-4').css({
+						'padding-bottom': '0',
+						'margin-bottom': '0',
+						'min-height': 'auto',
+						'height': 'auto'
+					});
+					
+					// Force iframe height recalculation
+					if (window.self !== window.top) {
+						window.dispatchEvent(new Event('resize'));
+						// Try multiple times to ensure it works
+						setTimeout(function() {
+							window.dispatchEvent(new Event('resize'));
+							if (typeof window.forceSendHeight === 'function') {
+								window.forceSendHeight();
+							}
+						}, 300);
+						setTimeout(function() {
+							window.dispatchEvent(new Event('resize'));
+							if (typeof window.forceSendHeight === 'function') {
+								window.forceSendHeight();
+							}
+						}, 800);
+					}
+				}, 100);
+			}
 		});
 
 		// Hook for topic/post page mount
@@ -1365,12 +1460,14 @@ $(document).ready(function () {
 		}
 		
 		// Fix empty space issue on first load by recalculating iframe height
-		// Wait for all content to be fully rendered
-		setTimeout(function() {
+		// Run multiple times to catch different load stages
+		function fixEmptySpace() {
 			// Remove any unwanted bottom spacing
-			$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3').css({
+			$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3, .row.mb-4, body.template-topic').css({
 				'padding-bottom': '0',
-				'margin-bottom': '0'
+				'margin-bottom': '0',
+				'min-height': 'auto',
+				'height': 'auto'
 			});
 			
 			// Force iframe height recalculation if in iframe
@@ -1380,30 +1477,26 @@ $(document).ready(function () {
 				
 				// Also try to call forceSendHeight if available
 				if (typeof window.forceSendHeight === 'function') {
-					setTimeout(function() {
-						window.forceSendHeight();
-					}, 100);
+					window.forceSendHeight();
 				}
 			}
-		}, 500);
+		}
+		
+		// Run immediately
+		fixEmptySpace();
+		
+		// Run after short delay
+		setTimeout(fixEmptySpace, 100);
+		
+		// Run after longer delay to catch late-loading content
+		setTimeout(fixEmptySpace, 500);
+		setTimeout(fixEmptySpace, 1000);
+		setTimeout(fixEmptySpace, 1500);
 		
 		// Also fix after images load
 		$(window).on('load', function() {
-			setTimeout(function() {
-				$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3').css({
-					'padding-bottom': '0',
-					'margin-bottom': '0'
-				});
-				
-				if (window.self !== window.top && typeof window.parent.postMessage === 'function') {
-					window.dispatchEvent(new Event('resize'));
-					if (typeof window.forceSendHeight === 'function') {
-						setTimeout(function() {
-							window.forceSendHeight();
-						}, 100);
-					}
-				}
-			}, 200);
+			setTimeout(fixEmptySpace, 200);
+			setTimeout(fixEmptySpace, 500);
 		});
 	}
 
