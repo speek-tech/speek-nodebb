@@ -153,6 +153,9 @@
             pendingHeight = height;
         }
     }
+    
+    // Expose forceSendHeight globally so it can be called from other scripts
+    window.forceSendHeight = forceSendHeight;
 
     // Debounced height check
     let debounceTimer = null;
@@ -173,10 +176,16 @@
     // Send initial height after page load
     function sendInitialHeight() {
         if (document.readyState === 'complete') {
-            setTimeout(forceSendHeight, 300);
+            // Delay longer on first load to allow spacing fixes to run first
+            setTimeout(forceSendHeight, 800);
+            // Also send again after more delay to catch late fixes
+            setTimeout(forceSendHeight, 1500);
+            setTimeout(forceSendHeight, 2500);
         } else {
             window.addEventListener('load', function() {
-                setTimeout(forceSendHeight, 500);
+                setTimeout(forceSendHeight, 800);
+                setTimeout(forceSendHeight, 1500);
+                setTimeout(forceSendHeight, 2500);
             });
         }
     }
@@ -213,11 +222,16 @@
     if (window.app && window.app.ajaxify) {
         if (window.$(document)) {
             window.$(document).on('action:ajaxify.contentLoaded', function() {
-                setTimeout(forceSendHeight, 400);
+                // Delay to allow spacing fixes to run first
+                setTimeout(forceSendHeight, 800);
+                setTimeout(forceSendHeight, 1500);
             });
 
             window.$(document).on('action:ajaxify.end', function() {
-                setTimeout(forceSendHeight, 600);
+                // Delay to allow spacing fixes to run first
+                setTimeout(forceSendHeight, 800);
+                setTimeout(forceSendHeight, 1500);
+                setTimeout(forceSendHeight, 2500);
             });
         }
     }
@@ -237,11 +251,16 @@
     function registerHooks() {
         if (window.hooks && window.hooks.on) {
             window.hooks.on('action:ajaxify.contentLoaded', function() {
-                debouncedForceSendHeight(400);
+                // Delay to allow spacing fixes to run first
+                debouncedForceSendHeight(800);
+                debouncedForceSendHeight(1500);
             });
 
             window.hooks.on('action:ajaxify.end', function() {
-                debouncedForceSendHeight(600);
+                // Delay to allow spacing fixes to run first
+                debouncedForceSendHeight(800);
+                debouncedForceSendHeight(1500);
+                debouncedForceSendHeight(2500);
             });
 
             // Listen for new posts being added (replies, real-time updates)
@@ -310,28 +329,6 @@
     // MutationObserver disabled - was causing input lag
     // Relying on event-based detection (hooks + jQuery) instead
 
-    // Direct pagination click listener (backup)
-    document.addEventListener('click', function(e) {
-        var target = e.target;
-        // Check if clicked element or its parent is a pagination link
-        while (target && target !== document) {
-            if (target.classList && (
-                target.classList.contains('page-link') || 
-                target.closest('.pagination') ||
-                target.closest('[component="pagination"]')
-            )) {
-                // Schedule height updates after content loads with extended retries
-                // Important for pages with less content that need iframe to shrink
-                setTimeout(forceSendHeight, 300);
-                setTimeout(forceSendHeight, 600);
-                setTimeout(forceSendHeight, 1000);
-                setTimeout(forceSendHeight, 1500);
-                setTimeout(forceSendHeight, 2000);
-                break;
-            }
-            target = target.parentElement;
-        }
-    });
 
     // Monitor for images loading (throttled)
     var imageLoadTimer = null;
