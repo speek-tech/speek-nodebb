@@ -1363,6 +1363,48 @@ $(document).ready(function () {
 		} catch (e) {
 			console.log('Could not send analytics view-post:', e);
 		}
+		
+		// Fix empty space issue on first load by recalculating iframe height
+		// Wait for all content to be fully rendered
+		setTimeout(function() {
+			// Remove any unwanted bottom spacing
+			$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3').css({
+				'padding-bottom': '0',
+				'margin-bottom': '0'
+			});
+			
+			// Force iframe height recalculation if in iframe
+			if (window.self !== window.top && typeof window.parent.postMessage === 'function') {
+				// Trigger height recalculation by dispatching a resize event
+				window.dispatchEvent(new Event('resize'));
+				
+				// Also try to call forceSendHeight if available
+				if (typeof window.forceSendHeight === 'function') {
+					setTimeout(function() {
+						window.forceSendHeight();
+					}, 100);
+				}
+			}
+		}, 500);
+		
+		// Also fix after images load
+		$(window).on('load', function() {
+			setTimeout(function() {
+				$('.posts-container, .posts.timeline, .d-flex.flex-column.gap-3').css({
+					'padding-bottom': '0',
+					'margin-bottom': '0'
+				});
+				
+				if (window.self !== window.top && typeof window.parent.postMessage === 'function') {
+					window.dispatchEvent(new Event('resize'));
+					if (typeof window.forceSendHeight === 'function') {
+						setTimeout(function() {
+							window.forceSendHeight();
+						}, 100);
+					}
+				}
+			}, 200);
+		});
 	}
 
 	// =====================================
