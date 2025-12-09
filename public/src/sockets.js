@@ -136,9 +136,8 @@ app = window.app || {};
 		}
 
 		socket.disconnect();
-		require(['messages'], function (messages) {
-			messages.showSessionMismatch();
-		});
+		// Automatically refresh page to sync session without showing modal
+		window.location.reload();
 	}
 
 	async function onConnect() {
