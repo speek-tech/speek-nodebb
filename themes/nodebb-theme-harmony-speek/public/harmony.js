@@ -1705,8 +1705,8 @@ $(document).ready(function () {
 			return;
 		}
 
-		// Intercept clicks on links within post content
-		document.addEventListener('click', function(e) {
+		// Helper function to check if link is external
+		function handleLinkEvent(e) {
 			// Find if the clicked element is a link or inside a link
 			let target = e.target;
 			while (target && target !== document) {
@@ -1716,17 +1716,13 @@ $(document).ready(function () {
 					if (postContent) {
 						const href = target.href;
 						const currentOrigin = window.location.origin;
-						const currentHost = window.location.hostname;
 						
 						// Determine if this is an external link
 						let isExternal = false;
 						try {
 							const linkUrl = new URL(href);
-							const linkHost = linkUrl.hostname;
 							
-							// External if:
-							// 1. Different origin (protocol + host)
-							// 2. Or if it's not a relative link starting with /
+							// External if different origin (protocol + host)
 							isExternal = linkUrl.origin !== currentOrigin;
 						} catch (err) {
 							// If URL parsing fails, treat as internal/relative
@@ -1737,15 +1733,19 @@ $(document).ready(function () {
 						if (isExternal) {
 							e.preventDefault();
 							e.stopPropagation();
+							e.stopImmediatePropagation(); // Stop ALL other handlers
 							
-							// Send message to parent window to open the link
-							if (window.parent && window.parent !== window) {
-								window.parent.postMessage({
-									type: 'openExternalLink',
-									url: href
-								}, '*');
-								
-								console.log('External link clicked in post content:', href);
+							// Only send the postMessage once (on click, not mousedown)
+							if (e.type === 'click') {
+								// Send message to parent window to open the link
+								if (window.parent && window.parent !== window) {
+									window.parent.postMessage({
+										type: 'openExternalLink',
+										url: href
+									}, '*');
+									
+									console.log('External link clicked in post content:', href);
+								}
 							}
 							return false;
 						}
@@ -1755,6 +1755,16 @@ $(document).ready(function () {
 				}
 				target = target.parentElement;
 			}
-		}, false);
+		}
+
+		// Intercept clicks on links within post content
+		// Use capture phase (true) to intercept BEFORE other handlers
+		document.addEventListener('click', handleLinkEvent, true);
+		
+		// Also intercept mousedown to prevent navigation from starting
+		document.addEventListener('mousedown', handleLinkEvent, true);
+		
+		// Also intercept mouseup for completeness
+		document.addEventListener('mouseup', handleLinkEvent, true);
 	}
 });
