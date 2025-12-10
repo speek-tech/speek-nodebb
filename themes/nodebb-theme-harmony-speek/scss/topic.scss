@@ -93,7 +93,7 @@ body.template-topic {
 		// Mobile-specific: Ensure main post card has MUCH higher z-index than reply cards
 		.speek-topic-post-card {
 			&:not(.speek-reply-card) {
-				z-index: 100 !important; // Main post WAY above reply cards (z-index: 1)
+				z-index: 0 !important; // Main post WAY above reply cards (z-index: 1)
 			}
 		}
 
@@ -177,7 +177,7 @@ body.template-topic {
 		// Tablet-specific: Ensure main post card has MUCH higher z-index than reply cards
 		.speek-topic-post-card {
 			&:not(.speek-reply-card) {
-				z-index: 100 !important; // Main post WAY above reply cards (z-index: 1)
+				z-index: 0 !important; // Main post WAY above reply cards (z-index: 1)
 			}
 		}
 
@@ -762,7 +762,7 @@ body.template-topic {
 			
 			// Main post (not a reply) - transparent background
 			&:not(.speek-reply-card) {
-				z-index: 3; // Above reply cards (z-index: 1) to prevent overlap
+				z-index: 0; // Above reply cards (z-index: 1) to prevent overlap
 			}
 			
 			// Override for reply cards
