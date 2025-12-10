@@ -80,6 +80,7 @@
 	"flag-content": "Flag this content",
 	"flag-user": "Flag this user",
 	"already-flagged": "Already Flagged",
+    "already-flagged-user": "Already Flagged User",
 	"view-flag-report": "View Flag Report",
 	"resolve-flag": "Resolve Flag",
 

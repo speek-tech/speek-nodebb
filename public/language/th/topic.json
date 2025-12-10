@@ -73,6 +73,7 @@
     "flag-post": "รายงานโพสต์นี้",
     "flag-user": "รายงานผู้ใช้นี้",
     "already-flagged": "ถูกรายงานอยู่แล้ว",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "ดูข้อมูลการรายงาน",
     "resolve-flag": "จัดการรายงาน",
     "merged-message": "กระทู้นี้ถูกรวมเข้าไปใน <a href=\"%1\">%2</a>",

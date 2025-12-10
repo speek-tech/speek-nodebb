@@ -51,6 +51,18 @@ module.exports = function (SocketPosts) {
 		postData.display_ip_ban = (results.isAdmin || results.isGlobalMod) && !postData.selfPost;
 		postData.display_history = results.history && results.canViewHistory;
 		postData.display_original_url = !utils.isNumber(data.pid);
+
+		// Check if the current user has flagged the post author
+		postData.userFlagged = postData.uid && socket.uid ? await flags.exists('user', postData.uid, socket.uid) : false;
+
+		// DEBUG: Log the flag check
+		console.log('[DEBUG loadPostTools] Checking user flag:', {
+			postAuthorUid: postData.uid,
+			currentUserUid: socket.uid,
+			userFlagged: postData.userFlagged,
+			checkKey: `user:${postData.uid}:${socket.uid}`,
+		});
+
 		postData.flags = {
 			flagId: parseInt(results.posts.flagId, 10) || null,
 			can: results.canFlag.flag,
@@ -70,6 +82,15 @@ module.exports = function (SocketPosts) {
 		});
 		postData.tools = tools;
 
+		results.posts = postData;
+		
+		// DEBUG: Log what we're returning
+		console.log('[DEBUG loadPostTools] Returning data:', {
+			'results.posts.userFlagged': results.posts.userFlagged,
+			'results.posts.uid': results.posts.uid,
+			'results.posts.flags.flagged': results.posts.flags.flagged,
+		});
+		
 		return results;
 	};
 

@@ -73,6 +73,7 @@
     "flag-post": "Liputa viesti",
     "flag-user": "Liputa käyttäjä",
     "already-flagged": "Already Flagged",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "View Flag Report",
     "resolve-flag": "Resolve Flag",
     "merged-message": "This topic has been merged into <a href=\"%1\">%2</a>",

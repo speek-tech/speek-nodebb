@@ -73,6 +73,7 @@
     "flag-post": "Դրոշակել այց գրառումը",
     "flag-user": "Դրոշակել այս օգտատերին",
     "already-flagged": "Արդեն դրոշշված",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Դիտել դրոշի հաշվետվությունը",
     "resolve-flag": "Լուծել դրոշը",
     "merged-message": "Այս թեման միավորվել է %2-ում",

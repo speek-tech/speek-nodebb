@@ -274,19 +274,31 @@ define('forum/topic/postTools', [
 			});
 		});
 
-		postContainer.on('click', '[component="post/flagUser"]', function () {
-			const uid = getData($(this), 'data-uid');
-			const username = getData($(this), 'data-username');
-			require(['flags'], function (flags) {
-				flags.showFlagModal({
-					type: 'user',
-					id: uid,
-					username: username,
-				});
+	postContainer.on('click', '[component="post/flagUser"]', function () {
+		const uid = getData($(this), 'data-uid');
+		const username = getData($(this), 'data-username');
+		require(['flags'], function (flags) {
+			flags.showFlagModal({
+				type: 'user',
+				id: uid,
+				username: username,
 			});
 		});
+	});
 
-		postContainer.on('click', '[component="post/flagResolve"]', function () {
+	postContainer.on('click', '[component="post/already-flagged-user"]', function () {
+		const uid = getData($(this), 'data-uid');
+		require(['flags'], function (flags) {
+			bootbox.confirm('[[flags:modal-confirm-rescind]]', function (confirm) {
+				if (!confirm) {
+					return;
+				}
+				flags.rescindUser(uid);
+			});
+		});
+	});
+
+	postContainer.on('click', '[component="post/flagResolve"]', function () {
 			const flagId = $(this).attr('data-flagId');
 			require(['flags'], function (flags) {
 				flags.resolve(flagId);

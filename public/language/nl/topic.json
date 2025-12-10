@@ -73,6 +73,7 @@
     "flag-post": "Rapporteer dit bericht",
     "flag-user": "Rapporteer deze gebruiker",
     "already-flagged": "Al gerapporteerd",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Rapportage inzien",
     "resolve-flag": "Resolve Flag",
     "merged-message": "Dit onderwerp is samengevoegd met <a href=\"%1\">%2</a>",

@@ -73,6 +73,7 @@
     "flag-post": "檢舉此貼文",
     "flag-user": "檢舉此用戶",
     "already-flagged": "已檢舉",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "查看檢舉報告",
     "resolve-flag": "處理檢舉",
     "merged-message": "此話題已合併到 <a href=\"%1\">%2</a>",

@@ -73,6 +73,7 @@
     "flag-post": "Flag this post",
     "flag-user": "Flag this user",
     "already-flagged": "Already Flagged",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "View Flag Report",
     "resolve-flag": "Resolve Flag",
     "merged-message": "Este tópico foi fundido com <a href=\"%1\">%2</a>",

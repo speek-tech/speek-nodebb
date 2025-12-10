@@ -73,6 +73,7 @@
     "flag-post": "Rapporter dette innlegget",
     "flag-user": "Rapporter denne brukaren",
     "already-flagged": "Allereie rapportert",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Vis rapport",
     "resolve-flag": "Løys rapport",
     "merged-message": "Dette emnet har blitt slått saman med <a href=\"%1\">%2</a>",

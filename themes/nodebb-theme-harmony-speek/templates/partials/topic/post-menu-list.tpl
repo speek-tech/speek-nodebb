@@ -31,11 +31,19 @@
 {{{ end }}}
 
 {{{ if (!posts.selfPost && posts.uid) }}}
+{{{ if posts.userFlagged }}}
+<li class="disabled text-secondary">
+	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/already-flagged-user" role="menuitem" href="#" data-uid="{posts.uid}">
+		<span class="menu-icon">{buildLucideIcon("flag", 16, "")}</span> [[topic:already-flagged-user]]
+	</a>
+</li>
+{{{ else }}}
 <li>
-	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/flagUser" role="menuitem" href="#">
+	<a class="dropdown-item rounded-1 d-flex align-items-center gap-2" component="post/flagUser" role="menuitem" href="#" data-uid="{posts.uid}" data-username="{posts.user.username}">
 		<span class="menu-icon">{buildLucideIcon("flag", 16, "")}</span> [[topic:flag-user]]
 	</a>
 </li>
+{{{ end }}}
 {{{ end }}}
 {{{ end }}}
 

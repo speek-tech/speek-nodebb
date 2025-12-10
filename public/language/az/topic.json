@@ -73,6 +73,7 @@
     "flag-post": "Bu postu işarələ",
     "flag-user": "Bu istifadəçini qeyd et",
     "already-flagged": "Artıq işarələnib",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Bayraq hesabatına bax",
     "resolve-flag": "Bayrağı həll et",
     "merged-message": "Bu mövzu <a href=\"%1\">%2</a> ilə birləşdirilib",
