@@ -87,12 +87,13 @@ define('forum/topic/postTools', [
 			const { top } = this.getBoundingClientRect();
 			$this.toggleClass('dropup', top > window.innerHeight / 2);
 
-			if (dropdownMenu.attr('data-loaded')) {
-				return;
-			}
-			dropdownMenu.html(helpers.generatePlaceholderWave([
-				3, 5, 9, 7, 10, 'divider', 10,
-			]));
+		if (dropdownMenu.attr('data-loaded')) {
+			return;
+		}
+		// SPEEK CUSTOM: Single skeleton loader line while menu loads
+		dropdownMenu.html(helpers.generatePlaceholderWave([
+			8,
+		]));
 
 			const postEl = $this.parents('[data-pid]');
 			const pid = postEl.attr('data-pid');

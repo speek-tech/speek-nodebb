@@ -153,9 +153,6 @@
             pendingHeight = height;
         }
     }
-    
-    // Expose forceSendHeight globally so it can be called from other scripts
-    window.forceSendHeight = forceSendHeight;
 
     // Debounced height check
     let debounceTimer = null;
@@ -176,16 +173,10 @@
     // Send initial height after page load
     function sendInitialHeight() {
         if (document.readyState === 'complete') {
-            // Delay longer on first load to allow spacing fixes to run first
-            setTimeout(forceSendHeight, 800);
-            // Also send again after more delay to catch late fixes
-            setTimeout(forceSendHeight, 1500);
-            setTimeout(forceSendHeight, 2500);
+            setTimeout(forceSendHeight, 300);
         } else {
             window.addEventListener('load', function() {
-                setTimeout(forceSendHeight, 800);
-                setTimeout(forceSendHeight, 1500);
-                setTimeout(forceSendHeight, 2500);
+                setTimeout(forceSendHeight, 500);
             });
         }
     }
@@ -222,16 +213,11 @@
     if (window.app && window.app.ajaxify) {
         if (window.$(document)) {
             window.$(document).on('action:ajaxify.contentLoaded', function() {
-                // Delay to allow spacing fixes to run first
-                setTimeout(forceSendHeight, 800);
-                setTimeout(forceSendHeight, 1500);
+                setTimeout(forceSendHeight, 400);
             });
 
             window.$(document).on('action:ajaxify.end', function() {
-                // Delay to allow spacing fixes to run first
-                setTimeout(forceSendHeight, 800);
-                setTimeout(forceSendHeight, 1500);
-                setTimeout(forceSendHeight, 2500);
+                setTimeout(forceSendHeight, 600);
             });
         }
     }
@@ -251,16 +237,11 @@
     function registerHooks() {
         if (window.hooks && window.hooks.on) {
             window.hooks.on('action:ajaxify.contentLoaded', function() {
-                // Delay to allow spacing fixes to run first
-                debouncedForceSendHeight(800);
-                debouncedForceSendHeight(1500);
+                debouncedForceSendHeight(400);
             });
 
             window.hooks.on('action:ajaxify.end', function() {
-                // Delay to allow spacing fixes to run first
-                debouncedForceSendHeight(800);
-                debouncedForceSendHeight(1500);
-                debouncedForceSendHeight(2500);
+                debouncedForceSendHeight(600);
             });
 
             // Listen for new posts being added (replies, real-time updates)
@@ -329,6 +310,52 @@
     // MutationObserver disabled - was causing input lag
     // Relying on event-based detection (hooks + jQuery) instead
 
+    // Check if we're on a topic/post page (not category listing)
+    function isOnTopicPage() {
+        // Check URL pattern for topic pages
+        if (window.location && window.location.pathname) {
+            if (window.location.pathname.includes('/topic/')) {
+                return true;
+            }
+        }
+        
+        // Check for topic-specific elements
+        var topicElement = document.querySelector('[component="topic"]');
+        var postsElement = document.querySelector('[component="topic/posts"]');
+        
+        return !!(topicElement || postsElement);
+    }
+
+    // Pagination click listener - different handling for topic vs category pages
+    document.addEventListener('click', function(e) {
+        var target = e.target;
+        
+        // Check if clicked element or its parent is a pagination link
+        while (target && target !== document) {
+            if (target.classList && (
+                target.classList.contains('page-link') || 
+                target.closest('.pagination') ||
+                target.closest('[component="pagination"]')
+            )) {
+                if (isOnTopicPage()) {
+                    // Topic page (replies pagination): Aggressive height updates
+                    // Multiple checks to handle content shrinking/growing accurately
+                    setTimeout(forceSendHeight, 300);
+                    setTimeout(forceSendHeight, 600);
+                    setTimeout(forceSendHeight, 1000);
+                    setTimeout(forceSendHeight, 1500);
+                    setTimeout(forceSendHeight, 2000);
+                } else {
+                    // Category page (post listing pagination): Basic height updates
+                    // Fewer checks since posts are usually consistent size
+                    setTimeout(forceSendHeight, 400);
+                    setTimeout(forceSendHeight, 1000);
+                }
+                break;
+            }
+            target = target.parentElement;
+        }
+    });
 
     // Monitor for images loading (throttled)
     var imageLoadTimer = null;

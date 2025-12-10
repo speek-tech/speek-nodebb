@@ -133,6 +133,14 @@ module.exports = function (Topics) {
 			Topics.addParentPosts(postData, uid),
 		]);
 
+		// SPEEK CUSTOM: Check if post authors are administrators
+		const postAuthorUids = postData.filter(p => p && p.uid).map(p => p.uid);
+		const uniquePostAuthorUids = _.uniq(postAuthorUids);
+		const adminChecks = await Promise.all(
+			uniquePostAuthorUids.map(authorUid => user.isAdministrator(authorUid))
+		);
+		const adminStatusMap = _.zipObject(uniquePostAuthorUids, adminChecks);
+
 		postData.forEach((postObj, i) => {
 			if (postObj) {
 				postObj.user = postObj.uid ? userData[postObj.uid] : { ...userData[postObj.uid] };
@@ -143,6 +151,8 @@ module.exports = function (Topics) {
 				postObj.votes = postObj.votes || 0;
 				postObj.replies = replies[i];
 				postObj.selfPost = parseInt(uid, 10) > 0 && parseInt(uid, 10) === postObj.uid;
+				// SPEEK CUSTOM: Add isAdministrator flag to post for later use
+				postObj.authorIsAdmin = adminStatusMap[postObj.uid] || false;
 
 				// Username override for guests, if enabled
 				if (meta.config.allowGuestHandles && postObj.uid === 0 && postObj.handle) {
@@ -168,10 +178,20 @@ module.exports = function (Topics) {
 				post.display_delete_tools = topicPrivileges.isAdminOrMod || (post.selfPost && topicPrivileges['posts:delete']);
 				post.display_moderator_tools = post.display_edit_tools || post.display_delete_tools;
 				post.display_move_tools = topicPrivileges.isAdminOrMod && post.index !== 0;
-				post.display_post_menu = topicPrivileges.isAdminOrMod ||
-					(post.selfPost && !topicData.locked && !post.deleted) ||
-					(post.selfPost && post.deleted && parseInt(post.deleterUid, 10) === parseInt(topicPrivileges.uid, 10)) ||
-					((loggedIn || topicData.postSharing.length) && !post.deleted);
+				
+				// SPEEK CUSTOM: Hide three-dot menu when normal users view admin posts
+				// Normal users cannot edit, delete, or flag admin posts, so no menu is needed
+				// Use the authorIsAdmin flag set in addPostData
+				if (post.authorIsAdmin && !topicPrivileges.isAdminOrMod) {
+					post.display_post_menu = false;
+				} else {
+					// Original logic for non-admin posts
+					post.display_post_menu = topicPrivileges.isAdminOrMod ||
+						(post.selfPost && !topicData.locked && !post.deleted) ||
+						(post.selfPost && post.deleted && parseInt(post.deleterUid, 10) === parseInt(topicPrivileges.uid, 10)) ||
+						(loggedIn && !post.selfPost && !post.deleted); // Show menu for flagging other users' posts
+				}
+				
 				post.ip = topicPrivileges.isAdminOrMod ? post.ip : undefined;
 
 				posts.modifyPostByPrivilege(post, topicPrivileges);

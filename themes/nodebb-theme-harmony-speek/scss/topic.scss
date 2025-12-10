@@ -90,6 +90,46 @@ body.template-topic {
 		// 	padding-right: 16px !important;
 		// }
 
+		// Mobile-specific: Ensure main post card has MUCH higher z-index than reply cards
+		.speek-topic-post-card {
+			&:not(.speek-reply-card) {
+				z-index: 100 !important; // Main post WAY above reply cards (z-index: 1)
+			}
+		}
+
+		// Mobile-specific: Ensure post card headers and dropdowns have proper stacking
+		.speek-topic-post-card .speek-post-card-header {
+			position: relative !important;
+			z-index: 10 !important; // Header within main post card
+			
+			[component="post/tools"] {
+				position: relative !important;
+				z-index: 20 !important; // Tools higher than header
+				
+				.dropdown-menu {
+					z-index: 999 !important; // Dropdown menu way above everything
+					position: absolute !important;
+				}
+			}
+		}
+		
+		// Mobile-specific: Ensure reply cards stay below main post
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			z-index: 1 !important; // Keep reply cards at lower z-index than main post (z-index: 100)
+		}
+		
+		// Mobile-specific: Ensure replies container stays below main post
+		[component="post/replies/container"] {
+			z-index: 1 !important; // Lower than main post (z-index: 100)
+		}
+		
+		// Mobile-specific: Ensure individual reply post containers stay below main post
+		[component="post/replies/container"] [component="post"] {
+			z-index: 1 !important; // Lower than main post
+		}
+
 		// Reduce left margin for replies on mobile
 		.speek-post-replies-container .speek-topic-post-card,
 		.speek-topic-post-card.speek-reply-card,
@@ -132,6 +172,46 @@ body.template-topic {
 		.topic {
 			padding-left: 16px !important;
 			padding-right: 16px !important;
+		}
+
+		// Tablet-specific: Ensure main post card has MUCH higher z-index than reply cards
+		.speek-topic-post-card {
+			&:not(.speek-reply-card) {
+				z-index: 100 !important; // Main post WAY above reply cards (z-index: 1)
+			}
+		}
+
+		// Tablet-specific: Ensure post card headers and dropdowns have proper stacking
+		.speek-topic-post-card .speek-post-card-header {
+			position: relative !important;
+			z-index: 10 !important; // Header within main post card
+			
+			[component="post/tools"] {
+				position: relative !important;
+				z-index: 20 !important; // Tools higher than header
+				
+				.dropdown-menu {
+					z-index: 999 !important; // Dropdown menu way above everything
+					position: absolute !important;
+				}
+			}
+		}
+		
+		// Tablet-specific: Ensure reply cards stay below main post
+		.speek-topic-post-card.speek-reply-card,
+		[component="post"].speek-reply-card,
+		.speek-post-card.speek-reply-card {
+			z-index: 1 !important; // Keep reply cards at lower z-index than main post (z-index: 100)
+		}
+		
+		// Tablet-specific: Ensure replies container stays below main post
+		[component="post/replies/container"] {
+			z-index: 1 !important; // Lower than main post (z-index: 100)
+		}
+		
+		// Tablet-specific: Ensure individual reply post containers stay below main post
+		[component="post/replies/container"] [component="post"] {
+			z-index: 1 !important; // Lower than main post
 		}
 
 		// Reduce left margin for replies on tablet
@@ -262,13 +342,13 @@ body.template-topic {
 				white-space: nowrap;
 				position: relative !important; // Ensure dropdown positioning context
 				
-				// Dropdown menu should overflow below content, not cause scrolling
-				.dropdown-menu {
-					position: absolute !important;
-					top: calc(100% + 8px) !important; // Position below button with gap
-					left: 0 !important;
-					right: auto !important;
-					z-index: 999999 !important; // Extremely high z-index to ensure visibility
+			// Dropdown menu should overflow below content, not cause scrolling
+			.dropdown-menu {
+				position: absolute !important;
+				top: calc(100% + 4px) !important; // Position below button with smaller gap
+				left: 0 !important;
+				right: auto !important;
+				z-index: 999999 !important; // Extremely high z-index to ensure visibility
 					margin: 0 !important; // Remove all margins
 					padding: 8px !important; // Internal padding for menu items
 					min-width: 200px !important; // Minimum width for readability
@@ -624,7 +704,7 @@ body.template-topic {
 			border: none;
 			box-shadow: none;
 			position: relative;
-			z-index: 1; // Above timeline event pseudo elements
+			z-index: 3; // Above reply cards (z-index: 1) to prevent overlap
 			// Admin action buttons
 		.speek-post-actions {
 			display: none;
@@ -655,6 +735,7 @@ body.template-topic {
 				.dropdown-menu {
 					background-color: #FCF9ECFA !important;
 					background: #FCF9ECFA !important;
+					z-index: 999 !important; // Very high z-index to appear above all content
 				}
 			}
 		}
@@ -666,6 +747,7 @@ body.template-topic {
 					.dropdown-menu {
 						background-color: #FCF9ECFA !important;
 						background: #FCF9ECFA !important;
+						z-index: 999 !important; // Very high z-index to appear above all content
 					}
 				}
 			}
@@ -680,7 +762,7 @@ body.template-topic {
 			
 			// Main post (not a reply) - transparent background
 			&:not(.speek-reply-card) {
-				z-index: 0;
+				z-index: 3; // Above reply cards (z-index: 1) to prevent overlap
 			}
 			
 			// Override for reply cards
@@ -823,6 +905,7 @@ body.template-topic {
 					right: 0 !important;
 					left: auto !important;
 					min-width: 200px !important;
+					z-index: 999 !important; // Very high z-index to appear above all content
 
 					.dropdown-item {
 						color: #122023 !important;
@@ -1292,6 +1375,7 @@ body.template-topic {
 	[component="post/replies/container"] {
 		position: relative;
 		overflow: visible !important; // Ensure lines are visible
+		z-index: 1 !important; // Lower than main post (z-index: 3 or 100) so dropdown appears above
 		
 		// Vertical line connecting main post to all replies - continuous line through container
 		&::before {
@@ -1356,6 +1440,7 @@ body.template-topic {
 			padding-bottom: $spacer;
 			position: relative;
 			overflow: visible !important;
+			z-index: 1 !important; // Lower than main post so dropdown appears above
 			&:last-of-type {
 				padding-bottom: 0;
 				.post-footer {
@@ -1376,7 +1461,7 @@ body.template-topic {
 			margin-bottom: 24px;
 			margin-left: 24px; // Add left spacing for comment-like indentation
 			position: relative;
-			z-index: 2; // Ensure cards appear above the duplicate and vertical line
+			z-index: 1 !important; // Lower than main post to stay below dropdowns
 			overflow: visible; // Ensure lines are visible
 			
 			// Vertical line on the left side of each reply
@@ -1513,7 +1598,7 @@ body.template-topic {
 		margin-bottom: 0 !important;
 		margin-left: 24px !important; // Add left spacing for comment-like indentation
 		position: relative;
-		z-index: 2; // Ensure cards appear above the vertical line and duplicate
+		z-index: 1 !important; // Lower than main post (z-index: 3/100) to stay below dropdowns
 		overflow: visible !important; // Ensure lines are visible
 		
 		// Vertical line on the left side of each reply
@@ -1693,6 +1778,7 @@ body.template-topic {
 				right: 0 !important;
 				left: auto !important;
 				min-width: 200px !important;
+				z-index: 999 !important; // Very high z-index to appear above all content
 
 				.dropdown-item {
 					color: #122023 !important;
@@ -1983,8 +2069,12 @@ body.template-topic {
 		padding-top: 0 !important;
 		padding-bottom: 0 !important;
 		margin-bottom: 0 !important;
-		min-height: auto !important;
-		height: auto !important;
+	}
+	
+	// Override py-3 class padding on timeline
+	.posts.timeline.py-3 {
+		padding-top: 0 !important;
+		padding-bottom: 0 !important;
 	}
 	
 	// Remove bottom margin from last post
@@ -1997,20 +2087,10 @@ body.template-topic {
 	.d-flex.flex-column.gap-3 {
 		margin-bottom: 0 !important;
 		padding-bottom: 0 !important;
-		min-height: auto !important;
-		height: auto !important;
 	}
 	
 	.row.mb-4 {
 		margin-bottom: 0 !important;
-		min-height: auto !important;
-		height: auto !important;
-	}
-	
-	// Ensure no min-height on body that could cause empty space on first load
-	body.template-topic {
-		min-height: auto !important;
-		height: auto !important;
 	}
 	
 	// Remove bottom margin from quick reply
@@ -2072,6 +2152,7 @@ body.template-topic {
 			.dropdown-menu {
 				background-color: #FCF9ECFA !important;
 				background: #FCF9ECFA !important;
+				z-index: 999 !important; // Very high z-index to appear above all content
 			}
 		}
 	}
@@ -2083,6 +2164,7 @@ body.template-topic {
 				.dropdown-menu {
 					background-color: #FCF9ECFA !important;
 					background: #FCF9ECFA !important;
+					z-index: 999 !important; // Very high z-index to appear above all content
 				}
 			}
 		}
@@ -2098,6 +2180,8 @@ body.template-topic {
 		background: #FCF9ECFA !important;
 		border: 1px solid rgba(0, 0, 0, 0.1) !important;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
+		z-index: 999 !important; // Very high z-index to appear above all content (main posts z-index: 3/100, reply cards: 1)
+		position: absolute !important;
 		
 		.dropdown-item {
 			color: #122023 !important;
@@ -2228,17 +2312,123 @@ body.template-topic {
 
 		.topic {
 			margin-bottom: 48px;
-			padding-bottom: 32px;
+			padding-bottom: 0;
 		}
 
 		.posts-container {
-			padding-bottom: 32px;
+			padding-bottom: 0;
 		}
 
 		.topic .posts {
 			[component="post"] {
 				[component="post/actions"] {
 					opacity: 1;
+				}
+			}
+		}
+	}
+}
+
+// =====================================
+// MOBILE-SPECIFIC COMPACT DROPDOWN MENU (MUST BE LAST TO OVERRIDE)
+// =====================================
+@include mobile {
+	body.template-topic {
+		// Compact dropdown menu for all three-dot menus on mobile
+		.dropdown-menu,
+		[component="post/tools"] .dropdown-menu,
+		.speek-topic-post-card [component="post/tools"] .dropdown-menu {
+			padding: 6px !important; // Slightly more padding
+			min-width: 160px !important; // Bit wider
+			max-width: 220px !important; // Prevent too wide
+			top: calc(100% + 2px) !important; // Minimal gap on mobile
+			
+			.dropdown-item {
+				padding: 8px 12px !important; // More padding for better touch targets
+				font-size: 13px !important; // Readable font size
+				line-height: 1.35 !important; // Better line height
+				margin: 2px 0 !important; // Small margin between items
+				gap: 8px !important; // Better gap between icon and text
+				
+				// Target all icon types (FontAwesome, Lucide, etc.)
+				i,
+				.fa,
+				.fas,
+				.far,
+				.fab,
+				svg {
+					font-size: 15px !important; // Larger, more visible icon
+					width: 16px !important;
+					height: 16px !important;
+					min-width: 16px !important;
+					max-width: 16px !important;
+				}
+			}
+		}
+	}
+}
+
+// =====================================
+// TABLET-SPECIFIC COMPACT DROPDOWN MENU (MUST BE LAST TO OVERRIDE)
+// =====================================
+@include tablet {
+	body.template-topic {
+		// Compact dropdown menu for all three-dot menus on tablet
+		.dropdown-menu,
+		[component="post/tools"] .dropdown-menu,
+		.speek-topic-post-card [component="post/tools"] .dropdown-menu {
+			padding: 6px !important; // Comfortable padding
+			min-width: 170px !important; // Comfortable width
+			max-width: 240px !important; // Prevent too wide
+			top: calc(100% + 3px) !important; // Small gap on tablet
+			
+			.dropdown-item {
+				padding: 8px 11px !important; // Comfortable padding
+				font-size: 13px !important; // Readable font
+				line-height: 1.35 !important; // Better line height
+				margin: 2px 0 !important; // Small margin between items
+				gap: 7px !important; // Comfortable gap between icon and text
+				
+				// Target all icon types (FontAwesome, Lucide, etc.)
+				i,
+				.fa,
+				.fas,
+				.far,
+				.fab,
+				svg {
+					font-size: 14px !important; // Readable icon size
+					width: 14px !important;
+					height: 14px !important;
+					min-width: 14px !important;
+					max-width: 14px !important;
+				}
+			}
+		}
+	}
+}
+
+// =====================================
+// DESKTOP-SPECIFIC DROPDOWN MENU (MUST BE LAST TO OVERRIDE)
+// =====================================
+@include desktop-up {
+	body.template-topic {
+		// Slightly smaller icons for desktop dropdown menus
+		.dropdown-menu,
+		[component="post/tools"] .dropdown-menu,
+		.speek-topic-post-card [component="post/tools"] .dropdown-menu {
+			.dropdown-item {
+				// Target all icon types (FontAwesome, Lucide, etc.)
+				i,
+				.fa,
+				.fas,
+				.far,
+				.fab,
+				svg {
+					font-size: 13px !important; // Slightly smaller than default 16px
+					width: 14px !important;
+					height: 14px !important;
+					min-width: 14px !important;
+					max-width: 14px !important;
 				}
 			}
 		}
