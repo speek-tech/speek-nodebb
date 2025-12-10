@@ -30,12 +30,16 @@
     let lastUpdateTime = 0;
     let resizeObserver = null;
     let currentBreakpoint = null;
+    let paginationInProgress = false;
+    let paginationTimeouts = [];
+    let paginationVerificationTimer = null;
     
     const COOLDOWN_MS = 300;
     const STABLE_DELAY_MS = 400;
     const MAX_HEIGHT = 100000;
     const MIN_HEIGHT = 100;
     const MIN_CHANGE_PX = 5;
+    const PAGINATION_VERIFICATION_DELAY_MS = 1500;
 
     // Handle breakpoint change from parent window
     function handleBreakpointChange(newBreakpoint) {
@@ -64,7 +68,7 @@
         }
     });
 
-    // Calculate height based on actual content
+    // Calculate height based on actual visible content
     function getDocumentHeight() {
         const body = document.body;
         const html = document.documentElement;
@@ -73,20 +77,63 @@
             return 0;
         }
 
-        // Get all possible height measurements
+        // Helper to check if element is visible
+        function isElementVisible(element) {
+            if (!element) return false;
+            const style = window.getComputedStyle(element);
+            return style.display !== 'none' && 
+                   style.visibility !== 'hidden' && 
+                   style.opacity !== '0' &&
+                   element.offsetHeight > 0;
+        }
+
+        // Get the main content container (topic posts area)
+        var topicPosts = document.querySelector('[component="topic/posts"]');
+        if (!topicPosts) {
+            var firstPost = document.querySelector('[component="post"]');
+            topicPosts = firstPost ? firstPost.parentElement : null;
+        }
+        if (!topicPosts) {
+            topicPosts = body;
+        }
+        
+        // Calculate height from visible content
+        let contentHeight = 0;
+        
+        // Method 1: Use getBoundingClientRect for more accurate measurement
+        if (topicPosts && topicPosts !== body) {
+            const rect = topicPosts.getBoundingClientRect();
+            const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+            contentHeight = rect.bottom + scrollTop;
+        }
+        
+        // Method 2: Get height from last visible element
+        const allElements = document.querySelectorAll('body > *');
+        let lastVisibleBottom = 0;
+        for (let i = 0; i < allElements.length; i++) {
+            const el = allElements[i];
+            if (isElementVisible(el)) {
+                const rect = el.getBoundingClientRect();
+                const bottom = rect.bottom + (window.pageYOffset || document.documentElement.scrollTop);
+                if (bottom > lastVisibleBottom) {
+                    lastVisibleBottom = bottom;
+                }
+            }
+        }
+        
+        // Method 3: Traditional scrollHeight measurements (fallback)
         const measurements = [
             body.scrollHeight,
-            body.offsetHeight,
             html.scrollHeight,
-            html.offsetHeight,
-            Math.max(body.scrollHeight, html.scrollHeight)
-        ].filter(h => h > 0);
+            contentHeight,
+            lastVisibleBottom
+        ].filter(h => h > 0 && h < MAX_HEIGHT);
 
         if (measurements.length === 0) {
             return 0;
         }
 
-        // Use the maximum, but cap it
+        // Use the maximum of valid measurements, but prefer content-based measurements
         const height = Math.max(...measurements);
         
         return Math.max(MIN_HEIGHT, Math.min(height, MAX_HEIGHT));
@@ -209,15 +256,59 @@
         }, 500);
     });
 
+    // Clear all pagination-related timeouts
+    function clearPaginationTimeouts() {
+        paginationTimeouts.forEach(function(timeoutId) {
+            clearTimeout(timeoutId);
+        });
+        paginationTimeouts = [];
+        if (paginationVerificationTimer) {
+            clearTimeout(paginationVerificationTimer);
+            paginationVerificationTimer = null;
+        }
+    }
+
+    // Handle pagination completion with verification
+    function handlePaginationComplete() {
+        paginationInProgress = false;
+        clearPaginationTimeouts();
+        
+        // Initial height update after pagination
+        debouncedForceSendHeight(400);
+        
+        // Final verification after content fully stabilizes
+        paginationVerificationTimer = setTimeout(function() {
+            forceSendHeight();
+            // One more check to catch any late-loading content
+            setTimeout(function() {
+                const currentHeight = getDocumentHeight();
+                const lastHeight = lastSentHeight;
+                // Only update if there's a significant difference (content might have loaded)
+                if (Math.abs(currentHeight - lastHeight) > MIN_CHANGE_PX) {
+                    forceSendHeight();
+                }
+            }, 300);
+        }, PAGINATION_VERIFICATION_DELAY_MS);
+    }
+
     // Listen to NodeBB's ajaxify events for navigation
     if (window.app && window.app.ajaxify) {
         if (window.$(document)) {
             window.$(document).on('action:ajaxify.contentLoaded', function() {
-                setTimeout(forceSendHeight, 400);
+                if (paginationInProgress) {
+                    // Clear any pending pagination timeouts
+                    clearPaginationTimeouts();
+                }
+                debouncedForceSendHeight(400);
             });
 
             window.$(document).on('action:ajaxify.end', function() {
-                setTimeout(forceSendHeight, 600);
+                if (paginationInProgress) {
+                    // Pagination completed - use specialized handler
+                    handlePaginationComplete();
+                } else {
+                    debouncedForceSendHeight(600);
+                }
             });
         }
     }
@@ -237,11 +328,18 @@
     function registerHooks() {
         if (window.hooks && window.hooks.on) {
             window.hooks.on('action:ajaxify.contentLoaded', function() {
+                if (paginationInProgress) {
+                    clearPaginationTimeouts();
+                }
                 debouncedForceSendHeight(400);
             });
 
             window.hooks.on('action:ajaxify.end', function() {
-                debouncedForceSendHeight(600);
+                if (paginationInProgress) {
+                    handlePaginationComplete();
+                } else {
+                    debouncedForceSendHeight(600);
+                }
             });
 
             // Listen for new posts being added (replies, real-time updates)
@@ -310,23 +408,7 @@
     // MutationObserver disabled - was causing input lag
     // Relying on event-based detection (hooks + jQuery) instead
 
-    // Check if we're on a topic/post page (not category listing)
-    function isOnTopicPage() {
-        // Check URL pattern for topic pages
-        if (window.location && window.location.pathname) {
-            if (window.location.pathname.includes('/topic/')) {
-                return true;
-            }
-        }
-        
-        // Check for topic-specific elements
-        var topicElement = document.querySelector('[component="topic"]');
-        var postsElement = document.querySelector('[component="topic/posts"]');
-        
-        return !!(topicElement || postsElement);
-    }
-
-    // Pagination click listener - different handling for topic vs category pages
+    // Pagination click listener - event-driven approach
     document.addEventListener('click', function(e) {
         var target = e.target;
         
@@ -337,20 +419,19 @@
                 target.closest('.pagination') ||
                 target.closest('[component="pagination"]')
             )) {
-                if (isOnTopicPage()) {
-                    // Topic page (replies pagination): Aggressive height updates
-                    // Multiple checks to handle content shrinking/growing accurately
-                    setTimeout(forceSendHeight, 300);
-                    setTimeout(forceSendHeight, 600);
-                    setTimeout(forceSendHeight, 1000);
-                    setTimeout(forceSendHeight, 1500);
-                    setTimeout(forceSendHeight, 2000);
-                } else {
-                    // Category page (post listing pagination): Basic height updates
-                    // Fewer checks since posts are usually consistent size
-                    setTimeout(forceSendHeight, 400);
-                    setTimeout(forceSendHeight, 1000);
-                }
+                // Mark pagination as in progress
+                paginationInProgress = true;
+                
+                // Clear any existing pagination timeouts
+                clearPaginationTimeouts();
+                
+                // Reset height tracking to allow fresh calculation
+                lastSentHeight = 0;
+                stableHeight = 0;
+                pendingHeight = null;
+                
+                // Let ajaxify events handle the actual height updates
+                // The ajaxify.end event will trigger handlePaginationComplete()
                 break;
             }
             target = target.parentElement;
