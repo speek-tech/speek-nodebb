@@ -73,6 +73,7 @@
     "flag-post": "Jelöld meg ezt a bejegyzést",
     "flag-user": "Jelöld meg ezt a felhasználót",
     "already-flagged": "Már meg lett jelölve",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Jelölésekről szóló jelentés megtekintése",
     "resolve-flag": "Megjelölés megoldása",
     "merged-message": "Ezt a témát beolvasztották <a href=\"%1\">%2</a>",

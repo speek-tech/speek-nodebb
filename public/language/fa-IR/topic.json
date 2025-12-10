@@ -73,6 +73,7 @@
     "flag-post": "گزارش این پست",
     "flag-user": "گزارش این کاربر",
     "already-flagged": "قبلا گزارش شده",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "View Flag Report",
     "resolve-flag": "Resolve Flag",
     "merged-message": "این تاپیک با <a href=\"%1\">%2</a> ادغام شد",

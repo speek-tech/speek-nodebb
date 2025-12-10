@@ -73,6 +73,7 @@
     "flag-post": "اس پوسٹ کی رپورٹ کریں",
     "flag-user": "اس صارف کی رپورٹ کریں",
     "already-flagged": "پہلے سے رپورٹ کیا جا چکا ہے",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "رپورٹ دیکھیں",
     "resolve-flag": "رپورٹ حل کریں",
     "merged-message": "یہ موضوع <a href=\"%1\">%2</a> میں ضم کر دیا گیا",

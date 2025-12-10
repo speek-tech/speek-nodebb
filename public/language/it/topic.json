@@ -73,6 +73,7 @@
     "flag-post": "Segnala questo post",
     "flag-user": "Segnala questo utente",
     "already-flagged": "Già segnalato",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Visualizza rapporto segnalazione",
     "resolve-flag": "Risolvi segnalazione",
     "merged-message": "Questa discussione è stata unita a <a href=\"%1\">%2</a>",

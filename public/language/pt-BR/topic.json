@@ -73,6 +73,7 @@
     "flag-post": "Marque este post",
     "flag-user": "Marque este usuário",
     "already-flagged": "Já marcado",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Ver Relatório da Sinalização",
     "resolve-flag": "Resolver marcação",
     "merged-message": "Este tópico foi mesclado com <a href=\"%1\">%2</a>",

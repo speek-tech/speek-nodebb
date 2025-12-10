@@ -73,6 +73,7 @@
     "flag-post": "Gắn cờ bài đăng này",
     "flag-user": "Gắn cờ người dùng này",
     "already-flagged": "Đã Được Gắn Cờ",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Xem Báo Cáo Gắn Cờ",
     "resolve-flag": "Xử Lý Cờ",
     "merged-message": "Chủ đề này đã gộp chung thành <a href=\"%1\">%2</a>",

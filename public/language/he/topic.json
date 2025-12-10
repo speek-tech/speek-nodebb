@@ -73,6 +73,7 @@
     "flag-post": "דיווח על פוסט זה",
     "flag-user": "דיווח על משתמש זה",
     "already-flagged": "דווח כבר",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "הצגת דוח דיווחים",
     "resolve-flag": "השלמת דיווח",
     "merged-message": "נושא זה מוזג בתוך <a href=\"%1\">%2</a>",

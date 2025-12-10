@@ -103,6 +103,50 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 		});
 	};
 
+	Flag.rescindUser = function (uid) {
+		api.del(`/flags/user/${uid}/report`).then(() => {
+			alerts.success('[[flags:report-rescinded]]');
+			hooks.fire('action:flag.rescinded-user', { uid: uid });
+			
+			// Update UI: show flag user button, hide already-flagged-user button
+			// Find all post containers with this uid and clear their menu caches
+			if (uid) {
+				$('[component="post"][data-uid="' + uid + '"]').each(function () {
+					const postEl = $(this);
+					
+					// Update the flag buttons if menu is currently loaded
+					postEl.find('[component="post/flagUser"]').removeClass('hidden').parent().attr('hidden', null);
+					postEl.find('[component="post/already-flagged-user"]').addClass('hidden').parent().attr('hidden', '');
+					
+					// Remove cached menu to force reload with updated data next time it opens
+					const dropdownMenu = postEl.find('[component="post/tools"] .dropdown-menu');
+					dropdownMenu.removeAttr('data-loaded').html('');
+				});
+			}
+			
+			// Send postMessage to parent window on successful rescind
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'flag-action',
+					action: 'rescind-user',
+					status: 'success',
+				}, '*');
+			}
+		}).catch((err) => {
+			alerts.error(err);
+			
+			// Send error message to parent window
+			if (window.parent && window.parent !== window) {
+				window.parent.postMessage({
+					type: 'flag-action',
+					action: 'rescind-user',
+					status: 'error',
+					message: err.message || 'An error occurred',
+				}, '*');
+			}
+		});
+	};
+
 	Flag.purge = function (flagId) {
 		api.del(`/flags/${flagId}`).then(() => {
 			alerts.success('[[flags:purged]]');
@@ -117,6 +161,7 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 		const data = { type: type, id: id, reason: reason, notifyRemote: notifyRemote };
 		api.post('/flags', data, function (err, flagId) {
 			if (err) {
+				flagModal.modal('hide');
 				alerts.error(err);
 				
 				// Send error message to parent window
@@ -132,14 +177,28 @@ define('flags', ['hooks', 'components', 'api', 'alerts'], function (hooks, compo
 				return;
 			}
 
-			flagModal.modal('hide');
-			alerts.success('[[flags:modal-submit-success]]');
-			if (type === 'post') {
-				const postEl = components.get('post', 'pid', id);
-				postEl.find('[component="post/flag"]').addClass('hidden').parent().attr('hidden', '');
-				postEl.find('[component="post/already-flagged"]').removeClass('hidden').parent().attr('hidden', null);
-			}
-			hooks.fire('action:flag.create', { flagId: flagId, data: data });
+		flagModal.modal('hide');
+		alerts.success('[[flags:modal-submit-success]]');
+		if (type === 'post') {
+			const postEl = components.get('post', 'pid', id);
+			postEl.find('[component="post/flag"]').addClass('hidden').parent().attr('hidden', '');
+			postEl.find('[component="post/already-flagged"]').removeClass('hidden').parent().attr('hidden', null);
+	} else if (type === 'user') {
+		// Update UI for all posts by this user
+		// Find all post containers with this uid and clear their menu caches
+		$('[component="post"][data-uid="' + id + '"]').each(function () {
+			const postEl = $(this);
+			
+			// Update the flag buttons if menu is currently loaded
+			postEl.find('[component="post/flagUser"]').addClass('hidden').parent().attr('hidden', '');
+			postEl.find('[component="post/already-flagged-user"]').removeClass('hidden').parent().attr('hidden', null);
+			
+			// Remove cached menu to force reload with updated data next time it opens
+			const dropdownMenu = postEl.find('[component="post/tools"] .dropdown-menu');
+			dropdownMenu.removeAttr('data-loaded').html('');
+		});
+	}
+		hooks.fire('action:flag.create', { flagId: flagId, data: data });
 			
 			// Send postMessage to parent window on successful flag creation
 			if (window.parent && window.parent !== window) {

@@ -73,6 +73,7 @@
     "flag-post": "이 게시물 신고",
     "flag-user": "이 사용자 신고",
     "already-flagged": "이미 신고함",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "신고 보고서 보기",
     "resolve-flag": "신고 해결",
     "merged-message": "이 토픽이 <a href=\"%1\">%2</a>에 병합되었습니다",

@@ -73,6 +73,7 @@
     "flag-post": "Raporto këtë postim",
     "flag-user": "Raporto këtë përdorues",
     "already-flagged": "Raportuar më parë",
+    "already-flagged-user": "Already Flagged User",
     "view-flag-report": "Shiko analizën e raportimeve",
     "resolve-flag": "Zgjidh raportimin",
     "merged-message": "Kjo temë është bashkuar në <a href=\"%1\">%2</a>",
