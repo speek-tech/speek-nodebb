@@ -594,6 +594,15 @@ $(document).ready(function () {
 				return;
 			}
 
+			try {
+				window.parent.postMessage({
+					type: 'posthog_analytics',
+					action: 'write_post'
+				}, '*');
+			} catch (e) {
+				console.log('Could not send analytics write_post:', e);
+			}
+
 			var activeCategoryId = null;
 
 			function normalizeCategoryId(value) {
