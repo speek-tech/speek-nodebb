@@ -1686,4 +1686,66 @@ $(document).ready(function () {
 			}
 		});
 	}
+
+	// Setup link click handler for post content
+	setupPostContentLinkHandler();
+
+	function setupPostContentLinkHandler() {
+		// Only run if we're in an iframe
+		if (window.self === window.top) {
+			return;
+		}
+
+		// Intercept clicks on links within post content
+		document.addEventListener('click', function(e) {
+			// Find if the clicked element is a link or inside a link
+			let target = e.target;
+			while (target && target !== document) {
+				if (target.tagName === 'A' && target.href) {
+					// Check if this link is within post content
+					const postContent = target.closest('[component="post/content"]');
+					if (postContent) {
+						const href = target.href;
+						const currentOrigin = window.location.origin;
+						const currentHost = window.location.hostname;
+						
+						// Determine if this is an external link
+						let isExternal = false;
+						try {
+							const linkUrl = new URL(href);
+							const linkHost = linkUrl.hostname;
+							
+							// External if:
+							// 1. Different origin (protocol + host)
+							// 2. Or if it's not a relative link starting with /
+							isExternal = linkUrl.origin !== currentOrigin;
+						} catch (err) {
+							// If URL parsing fails, treat as internal/relative
+							isExternal = false;
+						}
+						
+						// If it's an external link, prevent default and send to parent
+						if (isExternal) {
+							e.preventDefault();
+							e.stopPropagation();
+							
+							// Send message to parent window to open the link
+							if (window.parent && window.parent !== window) {
+								window.parent.postMessage({
+									type: 'openExternalLink',
+									url: href
+								}, '*');
+								
+								console.log('External link clicked in post content:', href);
+							}
+							return false;
+						}
+						// For internal links (same domain), let them navigate within iframe normally
+					}
+					break;
+				}
+				target = target.parentElement;
+			}
+		}, false);
+	}
 });
