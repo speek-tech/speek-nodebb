@@ -310,9 +310,26 @@
     // MutationObserver disabled - was causing input lag
     // Relying on event-based detection (hooks + jQuery) instead
 
-    // Direct pagination click listener (backup)
+    // Check if we're on a topic/post page (not category listing)
+    function isOnTopicPage() {
+        // Check URL pattern for topic pages
+        if (window.location && window.location.pathname) {
+            if (window.location.pathname.includes('/topic/')) {
+                return true;
+            }
+        }
+        
+        // Check for topic-specific elements
+        var topicElement = document.querySelector('[component="topic"]');
+        var postsElement = document.querySelector('[component="topic/posts"]');
+        
+        return !!(topicElement || postsElement);
+    }
+
+    // Pagination click listener - different handling for topic vs category pages
     document.addEventListener('click', function(e) {
         var target = e.target;
+        
         // Check if clicked element or its parent is a pagination link
         while (target && target !== document) {
             if (target.classList && (
@@ -320,13 +337,20 @@
                 target.closest('.pagination') ||
                 target.closest('[component="pagination"]')
             )) {
-                // Schedule height updates after content loads with extended retries
-                // Important for pages with less content that need iframe to shrink
-                setTimeout(forceSendHeight, 300);
-                setTimeout(forceSendHeight, 600);
-                setTimeout(forceSendHeight, 1000);
-                setTimeout(forceSendHeight, 1500);
-                setTimeout(forceSendHeight, 2000);
+                if (isOnTopicPage()) {
+                    // Topic page (replies pagination): Aggressive height updates
+                    // Multiple checks to handle content shrinking/growing accurately
+                    setTimeout(forceSendHeight, 300);
+                    setTimeout(forceSendHeight, 600);
+                    setTimeout(forceSendHeight, 1000);
+                    setTimeout(forceSendHeight, 1500);
+                    setTimeout(forceSendHeight, 2000);
+                } else {
+                    // Category page (post listing pagination): Basic height updates
+                    // Fewer checks since posts are usually consistent size
+                    setTimeout(forceSendHeight, 400);
+                    setTimeout(forceSendHeight, 1000);
+                }
                 break;
             }
             target = target.parentElement;

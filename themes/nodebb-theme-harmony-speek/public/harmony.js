@@ -91,6 +91,57 @@ $(document).ready(function () {
 		hooks.on('action:topic.loaded', function (data) {
 			onTopicMount(data);
 		});
+
+		// Track when a new topic is created - send PostHog analytics
+		// Listen to socket event for new topic creation
+		if (typeof socket !== 'undefined') {
+			socket.on('event:new_topic', function (topicData) {
+				// Check if this topic belongs to the current user and we're viewing it
+				if (topicData && topicData.uid && app.user && app.user.uid && 
+					String(topicData.uid) === String(app.user.uid)) {
+					// Small delay to ensure we're on the topic page
+					setTimeout(function() {
+						if (ajaxify.data && ajaxify.data.tid && String(ajaxify.data.tid) === String(topicData.tid)) {
+							try {
+								window.parent.postMessage({
+									type: 'posthog_analytics',
+									action: 'write_post'
+								}, '*');
+							} catch (e) {
+								console.log('Could not send analytics write_post:', e);
+							}
+						}
+					}, 500);
+				}
+			});
+		}
+
+		// Also check on ajaxify.end if we just navigated to a newly created topic
+		// This handles the case where we create a topic and immediately navigate to it
+		let lastTopicCreateTime = null;
+		hooks.on('action:ajaxify.end', function () {
+			if (ajaxify.data && ajaxify.data.template && ajaxify.data.template.topic) {
+				// Check if we just created this topic (within last 5 seconds)
+				if (lastTopicCreateTime && (Date.now() - lastTopicCreateTime < 5000)) {
+					try {
+						window.parent.postMessage({
+							type: 'posthog_analytics',
+							action: 'write_post'
+						}, '*');
+						lastTopicCreateTime = null; // Reset after sending
+					} catch (e) {
+						console.log('Could not send analytics write_post:', e);
+					}
+				}
+			}
+		});
+
+		// Track when composer submits a new topic
+		hooks.on('action:composer.submit', function (data) {
+			if (data && !data.tid) { // New topic (no tid means it's a new topic, not a reply)
+				lastTopicCreateTime = Date.now();
+			}
+		});
 	});
 
 	function setupMobileMenu() {
@@ -1636,4 +1687,3 @@ $(document).ready(function () {
 		});
 	}
 });
-
