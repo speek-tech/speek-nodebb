@@ -130,7 +130,16 @@ Digest.send = async function (data) {
 					n.image = baseUrl + n.image;
 				}
 				if (n.path) {
-					n.notification_url = n.path.startsWith('http') ? n.path : baseUrl + n.path;
+					// Change to deep link to app instead of NodeBB direct
+					const appUrl = nconf.get('APP_URL') || nconf.get('url');
+					// Extract topic ID from path if it's a topic notification
+					const topicMatch = n.path.match(/\/topic\/(\d+)/);
+					if (topicMatch) {
+						n.notification_url = `${appUrl}/community?topic=${topicMatch[1]}`;
+					} else {
+						// For other paths, link to community home
+						n.notification_url = `${appUrl}/community`;
+					}
 				}
 			});
 
@@ -146,6 +155,7 @@ Digest.send = async function (data) {
 				popularTopics: topics.popular,
 				interval: data.interval,
 				showUnsubscribe: true,
+				app_url: `${nconf.get('APP_URL') || nconf.get('url')}/community`,
 			}).catch((err) => {
 				if (!errorLogged) {
 					winston.error(`[user/jobs] Could not send digest email\n[emailer.send] ${err.stack}`);
@@ -223,6 +233,10 @@ async function getTermTopics(term, uid) {
 
 	[...top, ...popular, ...recent].forEach((topicObj) => {
 		if (topicObj) {
+			// Add topic URL for deep linking to app
+			const appUrl = nconf.get('APP_URL') || nconf.get('url');
+			topicObj.url = `${appUrl}/community?topic=${topicObj.tid}`;
+
 			if (topicObj.teaser && topicObj.teaser.content && topicObj.teaser.content.length > 255) {
 				topicObj.teaser.content = `${topicObj.teaser.content.slice(0, 255)}...`;
 			}

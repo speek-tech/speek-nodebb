@@ -313,14 +313,34 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	const isReplyNotification = notification.type === 'new-reply' && notification.tid;
 
 	await async.eachLimit(uids, 3, async (uid) => {
+		// Generate deep link URL to app instead of direct NodeBB link
+		const appUrl = nconf.get('APP_URL') || nconf.get('url');
+		let notification_url;
+		
+		if (notification.path && notification.path.startsWith('http')) {
+			notification_url = notification.path;
+		} else if (notification.path) {
+			// Extract topic ID from path if it's a topic notification
+			const topicMatch = notification.path.match(/\/topic\/(\d+)/);
+			if (topicMatch) {
+				notification_url = `${appUrl}/community?topic=${topicMatch[1]}`;
+			} else {
+				// For other paths, link to community home
+				notification_url = `${appUrl}/community`;
+			}
+		} else {
+			notification_url = `${appUrl}/community`;
+		}
+		
 		const emailParams = {
 			path: notification.path,
-			notification_url: notification.path.startsWith('http') ? notification.path : nconf.get('url') + notification.path,
+			notification_url: notification_url,
 			subject: utils.stripHTMLTags(notification.subject || '[[notifications:new-notification]]'),
 			intro: utils.stripHTMLTags(notification.bodyShort),
 			body: body,
 			notification: notification,
 			showUnsubscribe: true,
+			app_url: `${appUrl}/community`, // Point "Open App" button to community tab
 		};
 
 		// Generate reply-specific unsubscribe options for reply notifications

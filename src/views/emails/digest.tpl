@@ -74,7 +74,7 @@
 									<tr>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{topTopics.title}</strong></p>
+											<p style="margin: 0; color: #333333;"><strong><a href="{topTopics.url}" style="color: #333333; text-decoration: none;">{topTopics.title}</a></strong></p>
 											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{topTopics.teaser.user.displayname}</p>
 										</td>
 									</tr>
@@ -104,7 +104,7 @@
 									<tr>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{popularTopics.title}</strong></p>
+											<p style="margin: 0; color: #333333;"><strong><a href="{popularTopics.url}" style="color: #333333; text-decoration: none;">{popularTopics.title}</a></strong></p>
 											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{popularTopics.teaser.user.displayname}</p>
 										</td>
 									</tr>
@@ -134,7 +134,7 @@
 									<tr>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{recent.title}</strong></p>
+											<p style="margin: 0; color: #333333;"><strong><a href="{recent.url}" style="color: #333333; text-decoration: none;">{recent.title}</a></strong></p>
 											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{recent.teaser.user.displayname}</p>
 										</td>
 									</tr>
