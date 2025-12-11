@@ -294,9 +294,11 @@ async function pushToUids(uids, notification) {
 
 /**
  * Replace NodeBB URLs in HTML content with app deep links
- * Converts: https://community.lets-speek.com/topic/123/slug -> https://app.lets-speek.com/community?topic=123
+ * Converts: 
+ * - https://community.lets-speek.com/topic/123/slug -> https://app.lets-speek.com/community?topic=123
+ * - https://community.lets-speek.com/post/456 -> https://app.lets-speek.com/community?topic={notification.tid}
  */
-function replaceNodeBBLinksWithAppLinks(htmlContent) {
+function replaceNodeBBLinksWithAppLinks(htmlContent, notification) {
 	const nodeBBUrl = nconf.get('url'); // NodeBB base URL
 	const appUrl = nconf.get('APP_URL') || nodeBBUrl;
 	
@@ -313,10 +315,25 @@ function replaceNodeBBLinksWithAppLinks(htmlContent) {
 		'gi'
 	);
 	
-	// Replace with app deep link
-	return htmlContent.replace(topicRegex, (match, prefix, topicId) => {
+	// Replace topic URLs with app deep link
+	htmlContent = htmlContent.replace(topicRegex, (match, prefix, topicId) => {
 		return `${prefix}${appUrl}/community?topic=${topicId}"`;
 	});
+	
+	// Match post URLs: /post/123
+	if (notification && notification.tid) {
+		const postRegex = new RegExp(
+			`(href=["'])${escapedNodeBBUrl}/post/(\\d+)["']`,
+			'gi'
+		);
+		
+		// Replace post URLs with topic deep link using notification's tid
+		htmlContent = htmlContent.replace(postRegex, (match, prefix, postId) => {
+			return `${prefix}${appUrl}/community?topic=${notification.tid}"`;
+		});
+	}
+	
+	return htmlContent;
 }
 
 async function sendEmail({ uids, notification }, mergeId, reason) {
@@ -336,7 +353,7 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	body = posts.relativeToAbsolute(body, posts.imgRegex);
 	
 	// Replace NodeBB URLs with app deep links
-	body = replaceNodeBBLinksWithAppLinks(body);
+	body = replaceNodeBBLinksWithAppLinks(body, notification);
 	
 	let errorLogged = false;
 
