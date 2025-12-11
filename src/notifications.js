@@ -292,6 +292,50 @@ async function pushToUids(uids, notification) {
 	});
 }
 
+/**
+ * Replace NodeBB URLs in HTML content with app deep links
+ * Converts: 
+ * - https://community.lets-speek.com/topic/123/slug -> https://app.lets-speek.com/community?topic=123
+ * - https://community.lets-speek.com/post/456 -> https://app.lets-speek.com/community?topic={notification.tid}
+ */
+function replaceNodeBBLinksWithAppLinks(htmlContent, notification) {
+	const nodeBBUrl = nconf.get('url'); // NodeBB base URL
+	const appUrl = nconf.get('APP_URL') || nodeBBUrl;
+	
+	if (!htmlContent || nodeBBUrl === appUrl) {
+		return htmlContent; // No replacement needed if same URL or empty
+	}
+	
+	// Escape special regex characters in the URL
+	const escapedNodeBBUrl = nodeBBUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	
+	// Match topic URLs: /topic/123 or /topic/123/slug
+	const topicRegex = new RegExp(
+		`(href=["'])${escapedNodeBBUrl}/topic/(\\d+)(?:/[^"']*)?["']`,
+		'gi'
+	);
+	
+	// Replace topic URLs with app deep link
+	htmlContent = htmlContent.replace(topicRegex, (match, prefix, topicId) => {
+		return `${prefix}${appUrl}/community?topic=${topicId}"`;
+	});
+	
+	// Match post URLs: /post/123
+	if (notification && notification.tid) {
+		const postRegex = new RegExp(
+			`(href=["'])${escapedNodeBBUrl}/post/(\\d+)["']`,
+			'gi'
+		);
+		
+		// Replace post URLs with topic deep link using notification's tid
+		htmlContent = htmlContent.replace(postRegex, (match, prefix) => {
+			return `${prefix}${appUrl}/community?topic=${notification.tid}"`;
+		});
+	}
+	
+	return htmlContent;
+}
+
 async function sendEmail({ uids, notification }, mergeId, reason) {
 	if ((reason && reason === 'set') || !uids.length) {
 		return;
@@ -307,20 +351,47 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	}
 	body = posts.relativeToAbsolute(body, posts.urlRegex);
 	body = posts.relativeToAbsolute(body, posts.imgRegex);
+	
+	// Replace NodeBB URLs with app deep links
+	body = replaceNodeBBLinksWithAppLinks(body, notification);
+	
 	let errorLogged = false;
 
 	// Check if this is a new-reply notification with topic ID for reply-specific unsubscribe options
 	const isReplyNotification = notification.type === 'new-reply' && notification.tid;
 
 	await async.eachLimit(uids, 3, async (uid) => {
+		// Generate deep link URL to app instead of direct NodeBB link
+		const appUrl = nconf.get('APP_URL') || nconf.get('url');
+		let notification_url;
+		
+		if (notification.path && notification.path.startsWith('http')) {
+			notification_url = notification.path;
+		} else if (notification.path) {
+			// Extract topic ID from path if it's a topic notification
+			const topicMatch = notification.path.match(/\/topic\/(\d+)/);
+			if (topicMatch) {
+				notification_url = `${appUrl}/community?topic=${topicMatch[1]}`;
+			} else if (notification.tid) {
+				// Use notification's tid directly (for /post/ paths and reply notifications)
+				notification_url = `${appUrl}/community?topic=${notification.tid}`;
+			} else {
+				// For other paths without tid, link to community home
+				notification_url = `${appUrl}/community`;
+			}
+		} else {
+			notification_url = `${appUrl}/community`;
+		}
+		
 		const emailParams = {
 			path: notification.path,
-			notification_url: notification.path.startsWith('http') ? notification.path : nconf.get('url') + notification.path,
+			notification_url: notification_url,
 			subject: utils.stripHTMLTags(notification.subject || '[[notifications:new-notification]]'),
 			intro: utils.stripHTMLTags(notification.bodyShort),
 			body: body,
 			notification: notification,
 			showUnsubscribe: true,
+			app_url: `${appUrl}/community`, // Point "Open App" button to community tab
 		};
 
 		// Generate reply-specific unsubscribe options for reply notifications

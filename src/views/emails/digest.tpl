@@ -63,36 +63,6 @@
 					</td>
 				</tr>
 				{{{ end }}}
-				{{{ if topTopics.length }}}
-				<tr>
-					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<h3 style="margin: 16px 0 16px 0; font-size: 15px; line-height: 20px; color: #666666; font-weight: normal;">[[email:digest.top-topics, {site_title}]]</h3>
-						<ul style="margin: 0; padding: 0;">
-							{{{ each topTopics }}}
-							<li style="text-decoration: none; list-style-type: none; padding-bottom: 0.5em;">
-								<table role="presentation" cellspacing="0" cellpadding="0" border="0" width="100%">
-									<tr>
-										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
-										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{topTopics.title}</strong></p>
-											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{topTopics.teaser.user.displayname}</p>
-										</td>
-									</tr>
-									<tr>
-										<td colspan="2" style="padding: 8px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">{topTopics.teaser.content}</p>
-										</td>
-									</tr>
-								</table>
-							</li>
-							{{{ if !@last }}}
-							<li style="text-decoration: none; list-style-type: none; margin: 0px 64px 16px 64px; border-bottom: 1px solid #dddddd"></li>
-							{{{ end }}}
-							{{{ end }}}
-						</ul>
-					</td>
-				</tr>
-				{{{ end }}}
 				{{{ if popularTopics.length }}}
 				<tr>
 					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
@@ -104,7 +74,7 @@
 									<tr>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{popularTopics.title}</strong></p>
+											<p style="margin: 0; color: #333333;"><strong><a href="{popularTopics.url}" style="color: #333333; text-decoration: none;">{popularTopics.title}</a></strong></p>
 											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{popularTopics.teaser.user.displayname}</p>
 										</td>
 									</tr>
@@ -134,7 +104,7 @@
 									<tr>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol; width: 32px; vertical-align: middle;">{function.renderDigestAvatar}</td>
 										<td style="padding: 6px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; line-height: 16px; color: #333333;">
-											<p style="margin: 0; color: #333333;"><strong>{recent.title}</strong></p>
+											<p style="margin: 0; color: #333333;"><strong><a href="{recent.url}" style="color: #333333; text-decoration: none;">{recent.title}</a></strong></p>
 											<p style="margin: 0; font-size: 12px; color: #666666; line-height: 16px;">{recent.teaser.user.displayname}</p>
 										</td>
 									</tr>

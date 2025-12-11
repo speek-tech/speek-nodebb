@@ -120,7 +120,7 @@ Digest.send = async function (data) {
 			const unreadNotifs = notifications.filter(Boolean);
 			// If there are no notifications and no new topics and no unread chats, don't bother sending a digest
 			if (!unreadNotifs.length &&
-				!topics.top.length && !topics.popular.length && !topics.recent.length &&
+				!topics.popular.length && !topics.recent.length &&
 				!publicRooms.length) {
 				return;
 			}
@@ -130,7 +130,16 @@ Digest.send = async function (data) {
 					n.image = baseUrl + n.image;
 				}
 				if (n.path) {
-					n.notification_url = n.path.startsWith('http') ? n.path : baseUrl + n.path;
+					// Change to deep link to app instead of NodeBB direct
+					const appUrl = nconf.get('APP_URL') || nconf.get('url');
+					// Extract topic ID from path if it's a topic notification
+					const topicMatch = n.path.match(/\/topic\/(\d+)/);
+					if (topicMatch) {
+						n.notification_url = `${appUrl}/community?topic=${topicMatch[1]}`;
+					} else {
+						// For other paths, link to community home
+						n.notification_url = `${appUrl}/community`;
+					}
 				}
 			});
 
@@ -142,10 +151,10 @@ Digest.send = async function (data) {
 				notifications: unreadNotifs,
 				publicRooms: publicRooms,
 				recent: topics.recent,
-				topTopics: topics.top,
 				popularTopics: topics.popular,
 				interval: data.interval,
 				showUnsubscribe: true,
+				app_url: `${nconf.get('APP_URL') || nconf.get('url')}/community`,
 			}).catch((err) => {
 				if (!errorLogged) {
 					winston.error(`[user/jobs] Could not send digest email\n[emailer.send] ${err.stack}`);
@@ -210,19 +219,17 @@ async function getTermTopics(term, uid) {
 		.slice(0, 3);
 	const popularTids = popular.map(t => t.tid);
 
-	const top = data.topics
-		.filter(t => t.votes > 0 && !popularTids.includes(t.tid))
-		.sort((a, b) => b.votes - a.votes)
-		.slice(0, 3);
-	const topTids = top.map(t => t.tid);
-
 	const recent = data.topics
-		.filter(t => !topTids.includes(t.tid) && !popularTids.includes(t.tid))
+		.filter(t => !popularTids.includes(t.tid))
 		.sort((a, b) => b.lastposttime - a.lastposttime)
 		.slice(0, 3);
 
-	[...top, ...popular, ...recent].forEach((topicObj) => {
+	[...popular, ...recent].forEach((topicObj) => {
 		if (topicObj) {
+			// Add topic URL for deep linking to app
+			const appUrl = nconf.get('APP_URL') || nconf.get('url');
+			topicObj.url = `${appUrl}/community?topic=${topicObj.tid}`;
+
 			if (topicObj.teaser && topicObj.teaser.content && topicObj.teaser.content.length > 255) {
 				topicObj.teaser.content = `${topicObj.teaser.content.slice(0, 255)}...`;
 			}
@@ -234,7 +241,7 @@ async function getTermTopics(term, uid) {
 			}
 		}
 	});
-	return { top, popular, recent };
+	return { popular, recent };
 }
 
 async function getUnreadPublicRooms(uid) {

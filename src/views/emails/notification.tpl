@@ -12,11 +12,13 @@
 						<h1 style="margin: 0; font-size: 20px; line-height: 24px; color: #000000; font-weight: normal;">Hello {firstname},</h1>
 					</td>
 				</tr>
-				<tr>
-					<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
-						<h2 style="margin: 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">{intro}</h2>
-					</td>
-				</tr>
+			<tr>
+				<td style="padding: 0px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
+					<h2 style="margin: 0; font-size: 16px; line-height: 20px; color: #666666; font-weight: normal;">
+						<a href="{notification_url}" style="color: #666666; text-decoration: none;">{intro}</a>
+					</h2>
+				</td>
+			</tr>
 				<tr class="notification-body">
 					<td style="padding: 20px 16px; font-family: -apple-system,BlinkMacSystemFont,Segoe UI,Helvetica,Arial,sans-serif; font-size: 14px; line-height: 20px; color: #666666;">
 						<p style="margin: 0; font-size: 13px; line-height: 20px; color: #666666;">

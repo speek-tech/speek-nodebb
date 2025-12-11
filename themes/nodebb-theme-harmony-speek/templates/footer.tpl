@@ -71,20 +71,20 @@
 							<div class="speek-form-group">
 								<label for="speek-new-post-content" class="speek-form-label">Post content<span class="speek-required-asterisk">*</span></label>
 								<div class="speek-textarea-wrapper">
-									<textarea 
-										id="speek-new-post-content" 
-										name="content" 
-										class="speek-textarea" 
-										placeholder="Enter your post content here..." 
-										rows="5"
-										maxlength="1000"
-									></textarea>
+							<textarea 
+								id="speek-new-post-content" 
+								name="content" 
+								class="speek-textarea" 
+								placeholder="Enter your post content here..." 
+								rows="5"
+								maxlength="4000"
+							></textarea>
 								</div>
-								<div class="speek-field-meta" aria-live="polite">
-									<div class="speek-char-count">
-										<span id="speek-char-current">0</span> / <span id="speek-char-max">1000</span>
-									</div>
+							<div class="speek-field-meta" aria-live="polite">
+								<div class="speek-char-count">
+									<span id="speek-char-current">0</span> / <span id="speek-char-max">4000</span>
 								</div>
+							</div>
 								<!-- Formatting Toolbar -->
 								<div class="speek-formatting-toolbar">
 									<button type="button" class="speek-format-btn" data-format="bold" title="Bold" aria-label="Bold">
