@@ -292,6 +292,33 @@ async function pushToUids(uids, notification) {
 	});
 }
 
+/**
+ * Replace NodeBB URLs in HTML content with app deep links
+ * Converts: https://community.lets-speek.com/topic/123/slug -> https://app.lets-speek.com/community?topic=123
+ */
+function replaceNodeBBLinksWithAppLinks(htmlContent) {
+	const nodeBBUrl = nconf.get('url'); // NodeBB base URL
+	const appUrl = nconf.get('APP_URL') || nodeBBUrl;
+	
+	if (!htmlContent || nodeBBUrl === appUrl) {
+		return htmlContent; // No replacement needed if same URL or empty
+	}
+	
+	// Escape special regex characters in the URL
+	const escapedNodeBBUrl = nodeBBUrl.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+	
+	// Match topic URLs: /topic/123 or /topic/123/slug
+	const topicRegex = new RegExp(
+		`(href=["'])${escapedNodeBBUrl}/topic/(\\d+)(?:/[^"']*)?["']`,
+		'gi'
+	);
+	
+	// Replace with app deep link
+	return htmlContent.replace(topicRegex, (match, prefix, topicId) => {
+		return `${prefix}${appUrl}/community?topic=${topicId}"`;
+	});
+}
+
 async function sendEmail({ uids, notification }, mergeId, reason) {
 	if ((reason && reason === 'set') || !uids.length) {
 		return;
@@ -307,6 +334,10 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 	}
 	body = posts.relativeToAbsolute(body, posts.urlRegex);
 	body = posts.relativeToAbsolute(body, posts.imgRegex);
+	
+	// Replace NodeBB URLs with app deep links
+	body = replaceNodeBBLinksWithAppLinks(body);
+	
 	let errorLogged = false;
 
 	// Check if this is a new-reply notification with topic ID for reply-specific unsubscribe options
