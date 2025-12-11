@@ -328,7 +328,7 @@ function replaceNodeBBLinksWithAppLinks(htmlContent, notification) {
 		);
 		
 		// Replace post URLs with topic deep link using notification's tid
-		htmlContent = htmlContent.replace(postRegex, (match, prefix, postId) => {
+		htmlContent = htmlContent.replace(postRegex, (match, prefix) => {
 			return `${prefix}${appUrl}/community?topic=${notification.tid}"`;
 		});
 	}
@@ -372,8 +372,11 @@ async function sendEmail({ uids, notification }, mergeId, reason) {
 			const topicMatch = notification.path.match(/\/topic\/(\d+)/);
 			if (topicMatch) {
 				notification_url = `${appUrl}/community?topic=${topicMatch[1]}`;
+			} else if (notification.tid) {
+				// Use notification's tid directly (for /post/ paths and reply notifications)
+				notification_url = `${appUrl}/community?topic=${notification.tid}`;
 			} else {
-				// For other paths, link to community home
+				// For other paths without tid, link to community home
 				notification_url = `${appUrl}/community`;
 			}
 		} else {
