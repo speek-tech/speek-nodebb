@@ -120,7 +120,7 @@ Digest.send = async function (data) {
 			const unreadNotifs = notifications.filter(Boolean);
 			// If there are no notifications and no new topics and no unread chats, don't bother sending a digest
 			if (!unreadNotifs.length &&
-				!topics.top.length && !topics.popular.length && !topics.recent.length &&
+				!topics.popular.length && !topics.recent.length &&
 				!publicRooms.length) {
 				return;
 			}
@@ -151,7 +151,6 @@ Digest.send = async function (data) {
 				notifications: unreadNotifs,
 				publicRooms: publicRooms,
 				recent: topics.recent,
-				topTopics: topics.top,
 				popularTopics: topics.popular,
 				interval: data.interval,
 				showUnsubscribe: true,
@@ -220,18 +219,12 @@ async function getTermTopics(term, uid) {
 		.slice(0, 3);
 	const popularTids = popular.map(t => t.tid);
 
-	const top = data.topics
-		.filter(t => t.votes > 0 && !popularTids.includes(t.tid))
-		.sort((a, b) => b.votes - a.votes)
-		.slice(0, 3);
-	const topTids = top.map(t => t.tid);
-
 	const recent = data.topics
-		.filter(t => !topTids.includes(t.tid) && !popularTids.includes(t.tid))
+		.filter(t => !popularTids.includes(t.tid))
 		.sort((a, b) => b.lastposttime - a.lastposttime)
 		.slice(0, 3);
 
-	[...top, ...popular, ...recent].forEach((topicObj) => {
+	[...popular, ...recent].forEach((topicObj) => {
 		if (topicObj) {
 			// Add topic URL for deep linking to app
 			const appUrl = nconf.get('APP_URL') || nconf.get('url');
@@ -248,7 +241,7 @@ async function getTermTopics(term, uid) {
 			}
 		}
 	});
-	return { top, popular, recent };
+	return { popular, recent };
 }
 
 async function getUnreadPublicRooms(uid) {
