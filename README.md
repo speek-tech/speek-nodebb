@@ -1,3 +1,25 @@
+# Speek NodeBB Community Forum
+
+This is the Speek community forum powered by NodeBB. It provides seamless integration with the Speek web application through session sharing (SSO), allowing users to access the community without separate login.
+
+## Documentation
+
+- **[Setup Guide](docs/SETUP.md)** - Complete setup and configuration instructions
+- **[Deployment Guide](docs/DEPLOYMENT.md)** - Deployment procedures and checklist
+- **[Documentation Index](docs/)** - Full documentation overview
+
+## Quick Start
+
+The Speek NodeBB instance is a customized NodeBB forum with:
+- Session sharing integration with Speek web app
+- Custom Speek branding and styling
+- Iframe embedding support
+- Multi-environment configuration (Local, Dev, Staging, Production)
+
+For setup and deployment instructions, see the [docs](docs/) folder.
+
+---
+
 # ![NodeBB](public/images/sm-card.png)
 
 [![Workflow](https://github.com/NodeBB/NodeBB/actions/workflows/test.yaml/badge.svg)](https://github.com/NodeBB/NodeBB/actions/workflows/test.yaml)
