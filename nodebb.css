@@ -376,3 +376,34 @@ nav[component="sidebar/right"],
 .bottombar-nav {
   display: none !important;
 }
+
+/* ===== Mobile App Specific Overrides ===== */
+/* Test: Change background color for mobile app to verify detection works */
+body.speek-mobile-app {
+  /* Override CSS variables for mobile app */
+  --speek-bg: #fdfdfc; /* Main background color (different from web's #efece1 for testing) */
+  --speek-nav-bg: #fdfdfc;
+}
+
+/* Apply mobile background to all elements when mobile app class is present */
+body.speek-mobile-app,
+body.speek-mobile-app html,
+body.speek-mobile-app body,
+body.speek-mobile-app .bg-body,
+body.speek-mobile-app .bg-body-tertiary,
+body.speek-mobile-app .bg-light,
+body.speek-mobile-app main,
+body.speek-mobile-app #main,
+body.speek-mobile-app #content,
+body.speek-mobile-app .content,
+body.speek-mobile-app .container,
+body.speek-mobile-app .container-fluid,
+body.speek-mobile-app #header,
+body.speek-mobile-app .navbar,
+body.speek-mobile-app #panel,
+body.speek-mobile-app #sidebar,
+body.speek-mobile-app .sidebar,
+body.speek-mobile-app .sidebar-right {
+  background: var(--speek-bg) !important;
+  background-color: var(--speek-bg) !important;
+}
