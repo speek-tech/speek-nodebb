@@ -213,47 +213,7 @@ If you operate SSO-only, password resets may be less important, but **admin aler
 
 ---
 
-## 8) Extend > Plugins
-
-**ACP → Extend → Plugins**
-
-### Required
-
-- Confirm required plugins are **installed and activated**, especially:
-  - **Session Sharing** (see below)
-
-### Recommended
-
-- After enabling/disabling plugins, restart NodeBB and re-test the SSO + iframe flow.
-
----
-
-## 9) Plugins > Session Sharing
-
-**ACP → Extend → Plugins → Session Sharing**
-
-### Required settings
-
-| Field | Value | Notes |
-|-------|-------|-------|
-| Base Name | `speek` | |
-| Cookie Name | `token` | Must match the web app cookie |
-| Cookie Domain | See env table in [Setup Guide](SETUP.md) | Leading dot required for cloud |
-| JWT Secret | `<from-env>` | Must match API secret exactly |
-| Host Whitelist | See [Setup Guide](SETUP.md) | Comma-separated domains |
-
-### Required checkboxes
-
-- ☐ Do not automatically create accounts **→ MUST BE UNCHECKED**
-- ☑ Automatically update profile information **→ CHECK**
-- ☑ Automatically join groups if present **→ CHECK**
-- ☑ Automatically leave groups if not present **→ CHECK**
-
-> Full environment-specific values and verification steps live in the [Setup Guide](SETUP.md).
-
----
-
-## 10) Settings > Advanced > Headers
+## 8) Settings > Advanced > Headers
 
 **ACP → Settings → Advanced → Headers**
 
@@ -275,7 +235,7 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-## 11) Appearance > Custom Content (HTML/JS/CSS)
+## 9) Appearance > Custom Content (HTML/JS/CSS)
 
 **ACP → Appearance → Custom Content (HTML/JS/CSS)**
 
@@ -287,6 +247,46 @@ In browser DevTools for a NodeBB page, verify:
   - Re-check after NodeBB/theme/plugin upgrades
 
 > For Speek styling, the canonical approach is **Custom CSS** via Appearance → Customise (above).
+
+---
+
+## 10) Extend > Plugins
+
+**ACP → Extend → Plugins**
+
+### Required
+
+- Confirm required plugins are **installed and activated**, especially:
+  - **Session Sharing** (see below)
+
+### Recommended
+
+- After enabling/disabling plugins, restart NodeBB and re-test the SSO + iframe flow.
+
+---
+
+## 11) Plugins > Session Sharing
+
+**ACP → Extend → Plugins → Session Sharing**
+
+### Required settings
+
+| Field | Value | Notes |
+|-------|-------|-------|
+| Base Name | `speek` | |
+| Cookie Name | `token` | Must match the web app cookie |
+| Cookie Domain | See env table in [Setup Guide](SETUP.md) | Leading dot required for cloud |
+| JWT Secret | `<from-env>` | Must match API secret exactly |
+| Host Whitelist | See [Setup Guide](SETUP.md) | Comma-separated domains |
+
+### Required checkboxes
+
+- ☐ Do not automatically create accounts **→ MUST BE UNCHECKED**
+- ☑ Automatically update profile information **→ CHECK**
+- ☑ Automatically join groups if present **→ CHECK**
+- ☑ Automatically leave groups if not present **→ CHECK**
+
+> Full environment-specific values and verification steps live in the [Setup Guide](SETUP.md).
 
 ---
 
