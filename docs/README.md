@@ -14,6 +14,15 @@ First-time setup and configuration:
 - Custom CSS
 - Troubleshooting
 
+### [ACP Essential Settings](ACP_ESSENTIAL_SETTINGS.md)
+
+What to configure in the NodeBB Admin Control Panel after install:
+- Security & admin accounts
+- Required SSO/session sharing settings
+- Required embedding/security headers
+- Appearance/custom CSS
+- Email, registration, moderation, and safety checks
+
 ### [Deployment Guide](DEPLOYMENT.md)
 
 Deployment procedures:
