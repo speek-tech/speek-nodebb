@@ -213,18 +213,37 @@ If you operate SSO-only, password resets may be less important, but **admin aler
 
 ---
 
-## 8) Settings > Advanced > Headers
+## 8) Settings > Advanced (Headers)
 
-**ACP → Settings → Advanced → Headers**
+**ACP → Settings → Advanced**
 
-### Required
+Use the **On this page** anchors or scroll; subsections appear in this order: **Maintenance Mode** → **Headers** → **Strict Transport Security** → **WebSocket Settings** → **Compression Settings** → **Traffic Management**. Speek’s iframe embedding requirements are configured under **Headers**.
 
-- **CSP `frame-ancestors`**: set per-environment (see [Setup Guide](SETUP.md))
-- **Permissions-Policy**: set per-environment (see [Setup Guide](SETUP.md))
-- **Cross-Origin settings**:
-  - Cross-Origin-Embedder-Policy: **ON**
-  - Cross-Origin-Opener-Policy: `unsafe-none`
-  - Cross-Origin-Resource-Policy: `cross-origin`
+![NodeBB ACP - Settings Advanced](images/nodebb-acp-settings-advanced.png)
+
+### Headers (required)
+
+Configure at least the following (per-environment values: [Setup Guide](SETUP.md)):
+
+| UI label | Speek requirement |
+|----------|-------------------|
+| **Set Content-Security-Policy frame-ancestors header to Place NodeBB in an iframe** | Set to the Speek web app origin for that environment (e.g. `https://test.lets-speek.com`). This drives CSP `frame-ancestors`. |
+| **Permissions-Policy** | Set per-environment as documented in [Setup Guide](SETUP.md). |
+| **Cross-Origin-Embedder-Policy** | **ON** |
+| **Cross-Origin-Opener-Policy** | `unsafe-none` |
+| **Cross-Origin-Resource-Policy** | `cross-origin` |
+
+Other fields in **Headers** (Powered By, Access-Control-* CORS lines) are optional unless your deployment explicitly needs them.
+
+### Other subsections (optional)
+
+- **Maintenance Mode** — keep **off** in normal operation; if enabled, exempt **administrators** (or equivalent) so the site can still be administered.
+- **Strict Transport Security (HSTS)** — follow your org’s HTTPS policy; NodeBB often ships HSTS enabled with a long max-age.
+- **WebSocket**, **Compression**, **Traffic Management** — defaults are usually fine unless you are tuning load.
+
+### Save
+
+- Click **Save changes** after editing.
 
 ### Required verification
 
