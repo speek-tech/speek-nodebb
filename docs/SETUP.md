@@ -61,9 +61,14 @@ Quick setup guide for Speek NodeBB integration.
 
 ### Permissions-Policy
 
-Format: `fullscreen=(self "PARENT_URL"), clipboard-write=(self "PARENT_URL"), clipboard-read=(self "PARENT_URL")`
+Paste the full string for your environment into **Settings → Advanced → Headers → Permissions-Policy**. Parent origins align with the [CSP Frame-Ancestors](#csp-frame-ancestors) table.
 
-Replace `PARENT_URL` with parent app URL from table above.
+| Environment | Value |
+|-------------|-------|
+| **Local** | `fullscreen=(self "http://localhost:3000"), clipboard-write=(self "http://localhost:3000"), clipboard-read=(self "http://localhost:3000")` |
+| **Dev** | `fullscreen=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com"), clipboard-write=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com"), clipboard-read=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com")` |
+| **Staging** | `fullscreen=(self "https://test.lets-speek.com"), clipboard-write=(self "https://test.lets-speek.com"), clipboard-read=(self "https://test.lets-speek.com")` |
+| **Production** | `fullscreen=(self "https://app.lets-speek.com"), clipboard-write=(self "https://app.lets-speek.com"), clipboard-read=(self "https://app.lets-speek.com")` |
 
 ### Cross-Origin Settings
 

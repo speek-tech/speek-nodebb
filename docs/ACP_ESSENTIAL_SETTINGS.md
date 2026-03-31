@@ -228,7 +228,7 @@ Configure at least the following (per-environment values: [Setup Guide](SETUP.md
 | UI label | Speek requirement |
 |----------|-------------------|
 | **Set Content-Security-Policy frame-ancestors header to Place NodeBB in an iframe** | Set to the Speek web app origin for that environment (e.g. `https://test.lets-speek.com`). This drives CSP `frame-ancestors`. |
-| **Permissions-Policy** | Set per-environment as documented in [Setup Guide](SETUP.md). |
+| **Permissions-Policy** | Use the full string for this environment from [Setup Guide — Permissions-Policy](SETUP.md#permissions-policy). |
 | **Cross-Origin-Embedder-Policy** | **ON** |
 | **Cross-Origin-Opener-Policy** | `unsafe-none` |
 | **Cross-Origin-Resource-Policy** | `cross-origin` |
