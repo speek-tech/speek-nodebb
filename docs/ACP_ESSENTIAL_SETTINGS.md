@@ -88,6 +88,28 @@ All settings in this document are mandatory and must be configured in every envi
 
 - Review defaults for new users so they’re not overly noisy (or overly silent) for your community.
 - If you rely on email notifications, ensure defaults make sense alongside your email configuration.
+- Configure the following values in **Default notification settings**:
+  - **Notification & Email**:
+    - When someone upvotes your comment
+    - When someone you follow posts a post
+    - When a post is posted with a tag you follow
+    - When a post is posted in a category you are watching
+    - When a new reply is posted in a post you are watching
+    - When a comment is edited in a post you are watching
+    - When someone starts following you
+    - When you receive a chat message
+    - When you receive a group chat message
+    - When you receive a group invite
+    - When a user leaves your group
+    - When someone requests to join a group you own
+    - When someone mentions you
+    - When someone gets added to registration queue
+    - When a new comment is queued
+    - When a comment is flagged
+    - When a user is flagged
+  - **None**:
+    - When you receive a public group chat message
+    - When you earn a new reward
 
 ---
 
