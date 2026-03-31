@@ -138,9 +138,22 @@ All settings in this document are mandatory and must be configured in every envi
 
 **ACP → Settings → Posts → Unread & Recent Settings**
 
+![NodeBB ACP - Posts → Unread & Recent Settings](images/nodebb-acp-settings-posts-unread-and-recent.png)
+
 ### Mandatory
 
 - Tune “unread” and “recent” behavior to match how you want activity to surface for members.
+- Configure the following values:
+  - **Unread cutoff days**: `2`
+  - **Minimum comments in post before tracking last read**: `5`
+  - **Maximum posts on /recent**: `10`
+  - **Disable filtering of posts in ignored categories on the /recent page**: `OFF`
+  - **Signature Settings**:
+    - Disable signatures: `OFF`
+    - Disable links in signatures: `OFF`
+    - Disable images in signatures: `OFF`
+    - Hide duplicate signatures in posts: `OFF`
+    - **Maximum Signature Length**: `255`
 
 ---
 
