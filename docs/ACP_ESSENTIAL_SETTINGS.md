@@ -278,10 +278,13 @@ In browser DevTools for a NodeBB page, verify:
 
 **ACP → Extend → Plugins**
 
+![NodeBB ACP - Extend Plugins](images/nodebb-acp-extend-plugins.png)
+
 ### Required
 
-- Confirm required plugins are **installed and activated**, especially:
-  - **Session Sharing** (see below)
+- Install and **activate** [**nodebb-plugin-session-sharing**](https://github.com/julianlam/nodebb-plugin-session-sharing) (“Session Sharing” in the list). It allows Speek’s login session to persist in NodeBB via JWT/cookie; without it, SSO will not work.
+  - From the Plugins page: find **nodebb-plugin-session-sharing**, install if missing, then use **Activate** until the plugin shows as active (e.g. **Deactivate** available).
+- Configure it in **11** (*Plugins > Session Sharing*) after activation.
 
 ### Recommended
 
