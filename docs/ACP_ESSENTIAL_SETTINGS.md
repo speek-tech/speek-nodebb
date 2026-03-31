@@ -219,7 +219,7 @@ If you operate SSO-only, password resets may be less important, but **admin aler
 
 Use the **On this page** anchors or scroll; subsections appear in this order: **Maintenance Mode** → **Headers** → **Strict Transport Security** → **WebSocket Settings** → **Compression Settings** → **Traffic Management**. Speek’s iframe embedding requirements are configured under **Headers**.
 
-![NodeBB ACP - Settings Advanced](images/nodebb-acp-settings-advanced.png)
+![NodeBB ACP - Settings Advanced](images/nodebb-acp-settings-advanced-headers.png)
 
 ### Headers (required)
 
