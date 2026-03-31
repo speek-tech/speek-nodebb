@@ -16,22 +16,6 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-<!-- ### Security & Accounts (not in checklist)
-
-### Required
-
-- **Change default admin credentials**
-  - Default: `admin` / `admin123`
-  - Do this immediately in staging/production.
-
-### Recommended
-
-- **Create a second admin** (named human account) and reduce reliance on the default `admin` user.
-- **Disable or tightly restrict new registrations** if your environment expects SSO-only access.
-
----
--->
-
 ## 1) Manage > Categories
 
 **ACP → Manage → Categories**
@@ -244,22 +228,6 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-<!-- ### Appearance (Speek Styling) (not in checklist)
-
-### Required
-
-**ACP → Appearance → Customise**
-
-1. Copy all contents from `speek-nodebb/nodebb.css`
-2. Paste into **Custom CSS**
-3. Enable **Use Custom CSS**
-4. Click **Save**
-
-**Must be applied separately in each environment.**
-
----
--->
-
 ## 11) Appearance > Custom Content (HTML/JS/CSS)
 
 **ACP → Appearance → Custom Content (HTML/JS/CSS)**
@@ -274,51 +242,6 @@ In browser DevTools for a NodeBB page, verify:
 > For Speek styling, the canonical approach is **Custom CSS** via Appearance → Customise (above).
 
 ---
-
-<!-- ### Registration, Moderation & Spam Controls (not in checklist)
-
-### Recommended (especially in production)
-
-- **ACP → Settings → User**
-  - Restrict registrations if you do not want public signups
-  - Ensure “require email verification” matches your intended flow
-
-- **ACP → Manage → Registration Queue / IP Blacklist / Banned** (as applicable)
-  - Monitor spikes in signups and ban/blacklist quickly
-
----
-
-### Groups & Privileges (not in checklist)
-
-### Required
-
-If Speek assigns roles via groups, ensure the groups exist and permissions are correct.
-
-- **ACP → Manage → Groups**
-  - Confirm expected groups are present (e.g., members/moderators)
-
-- **ACP → Manage → Privileges**
-  - Confirm non-admin users can access categories they should, and cannot access categories they shouldn’t
-
-### Recommended
-
-- Keep category creation and global moderation limited to trusted groups only.
-
----
-
-### Uploads & Performance Safety (not in checklist)
-
-### Recommended
-
-- **ACP → Settings → Posts**
-  - Review maximum post length and rate limits to reduce abuse
-
-- **ACP → Settings → Uploads**
-  - Set reasonable limits for file size and image uploads
-  - Prefer HTTPS-only external image proxying if enabled in your environment
-
----
--->
 
 ## Quick Audit Checklist (per environment)
 
