@@ -16,7 +16,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 1) Security & Accounts
+<!-- ### Security & Accounts (not in checklist)
 
 ### Required
 
@@ -30,8 +30,9 @@ All settings in this document are mandatory and must be configured in every envi
 - **Disable or tightly restrict new registrations** if your environment expects SSO-only access.
 
 ---
+-->
 
-## 2) Categories
+## 1) Manage > Categories
 
 **ACP → Manage → Categories**
 
@@ -43,7 +44,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 - `Introductions`
 - `Supporting my child`
-- `Navigating pubi systems`
+- `Navigating public systems`
 - `Looking after myself`
 
 ### Category edit screenshots
@@ -64,7 +65,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 3) General Settings
+## 2) Settings > General
 
 **ACP → Settings → General**
 
@@ -78,7 +79,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 4) Default Notification Settings
+## 3) Settings > Users > Default notifications settings
 
 **ACP → Settings → Users → Default notifications settings**
 
@@ -113,7 +114,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 5) Post Restrictions
+## 4) Settings > Posts > Post Restrictions
 
 **ACP → Settings → Posts → Post Restrictions**
 
@@ -134,7 +135,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 6) Unread & Recent Settings
+## 5) Settings > Posts > Unread & Recent Settings
 
 **ACP → Settings → Posts → Unread & Recent Settings**
 
@@ -157,7 +158,31 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 7) Plugins (Enablement & Health)
+## 6) Settings > Email
+
+### Recommended
+
+Configure outbound email so operational workflows don’t silently fail.
+
+- **ACP → Settings → Email**
+  - Ensure SMTP is configured for staging/production
+  - Send a test email after changes
+
+If you operate SSO-only, password resets may be less important, but **admin alerts still rely on email**.
+
+---
+
+## 7) Settings > Pagination
+
+**ACP → Settings → Pagination**
+
+### Recommended
+
+- Set topics/posts per page to balance usability and performance.
+
+---
+
+## 8) Extend > Plugins
 
 **ACP → Extend → Plugins**
 
@@ -172,7 +197,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 8) Speek SSO / Session Sharing (Plugin)
+## 9) Plugins > Session Sharing
 
 **ACP → Extend → Plugins → Session Sharing**
 
@@ -197,7 +222,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 9) Iframe + Security Headers (Embedding NodeBB in Speek)
+## 10) Settings > Advanced > Headers
 
 **ACP → Settings → Advanced → Headers**
 
@@ -219,7 +244,7 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-## 10) Appearance (Speek Styling)
+<!-- ### Appearance (Speek Styling) (not in checklist)
 
 ### Required
 
@@ -233,8 +258,9 @@ In browser DevTools for a NodeBB page, verify:
 **Must be applied separately in each environment.**
 
 ---
+-->
 
-## 11) Custom Content (HTML / JS / CSS)
+## 11) Appearance > Custom Content (HTML/JS/CSS)
 
 **ACP → Appearance → Custom Content (HTML/JS/CSS)**
 
@@ -249,31 +275,7 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-## 12) Pagination
-
-**ACP → Settings → Pagination**
-
-### Recommended
-
-- Set topics/posts per page to balance usability and performance.
-
----
-
-## 13) Email (Password resets, admin notifications)
-
-### Recommended
-
-Configure outbound email so operational workflows don’t silently fail.
-
-- **ACP → Settings → Email**
-  - Ensure SMTP is configured for staging/production
-  - Send a test email after changes
-
-If you operate SSO-only, password resets may be less important, but **admin alerts still rely on email**.
-
----
-
-## 14) Registration, Moderation, and Spam Controls
+<!-- ### Registration, Moderation & Spam Controls (not in checklist)
 
 ### Recommended (especially in production)
 
@@ -286,7 +288,7 @@ If you operate SSO-only, password resets may be less important, but **admin aler
 
 ---
 
-## 15) Groups & Privileges (minimum sanity checks)
+### Groups & Privileges (not in checklist)
 
 ### Required
 
@@ -304,7 +306,7 @@ If Speek assigns roles via groups, ensure the groups exist and permissions are c
 
 ---
 
-## 16) Uploads & Performance Safety
+### Uploads & Performance Safety (not in checklist)
 
 ### Recommended
 
@@ -316,21 +318,17 @@ If Speek assigns roles via groups, ensure the groups exist and permissions are c
   - Prefer HTTPS-only external image proxying if enabled in your environment
 
 ---
+-->
 
 ## Quick Audit Checklist (per environment)
 
-- [ ] Admin password changed, at least two admin accounts exist
 - [ ] Categories and category privileges reviewed
 - [ ] General settings (site title + site URL) verified
 - [ ] Required plugins enabled (incl. Session Sharing)
 - [ ] Session Sharing plugin configured and secrets match API
 - [ ] `frame-ancestors` set correctly; no `x-frame-options`
-- [ ] Custom CSS applied and enabled
 - [ ] Any Appearance → Custom Content reviewed (or empty)
 - [ ] Posts settings reviewed (restrictions + unread/recent)
 - [ ] Pagination reviewed
 - [ ] SMTP configured (staging/prod)
-- [ ] Registration and spam controls match intended access model
-- [ ] Groups/privileges reviewed for least privilege
-- [ ] Upload and rate limits reviewed
 
