@@ -91,7 +91,38 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 5) Plugins (Enablement & Health)
+## 5) Post Restrictions
+
+**ACP → Settings → Posts → Post Restrictions**
+
+![NodeBB ACP - Posts → Post Restrictions](images/nodebb-acp-settings-posts-post-restrictions.png)
+
+### Mandatory (especially in production)
+
+- Set reasonable anti-abuse limits (rate limits, minimum intervals, etc.) appropriate for your traffic profile.
+- Review any restrictions that could break legitimate usage (e.g., too strict limits impacting normal replies).
+- Configure the following values in **Posting Restrictions**:
+  - **Title Length**: Min `3`, Max `255`
+  - **Comment Length**: Min `2`, Max `32767`
+  - **Number of seconds between comments**: `0`
+  - **Seconds a comment remains editable** (set to `0` to disable): `0`
+  - **Seconds a comment remains deletable** (set to `0` to disable): `0`
+  - **# of replies after which users are disallowed to delete their own posts** (set to `0` to disable): `0`
+  - **Days until post is considered stale**: `60`
+
+---
+
+## 6) Unread & Recent Settings
+
+**ACP → Settings → Posts → Unread & Recent Settings**
+
+### Mandatory
+
+- Tune “unread” and “recent” behavior to match how you want activity to surface for members.
+
+---
+
+## 7) Plugins (Enablement & Health)
 
 **ACP → Extend → Plugins**
 
@@ -106,7 +137,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 6) Speek SSO / Session Sharing (Plugin)
+## 8) Speek SSO / Session Sharing (Plugin)
 
 **ACP → Extend → Plugins → Session Sharing**
 
@@ -131,7 +162,7 @@ All settings in this document are mandatory and must be configured in every envi
 
 ---
 
-## 7) Iframe + Security Headers (Embedding NodeBB in Speek)
+## 9) Iframe + Security Headers (Embedding NodeBB in Speek)
 
 **ACP → Settings → Advanced → Headers**
 
@@ -153,7 +184,7 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-## 8) Appearance (Speek Styling)
+## 10) Appearance (Speek Styling)
 
 ### Required
 
@@ -168,7 +199,7 @@ In browser DevTools for a NodeBB page, verify:
 
 ---
 
-## 9) Custom Content (HTML / JS / CSS)
+## 11) Custom Content (HTML / JS / CSS)
 
 **ACP → Appearance → Custom Content (HTML/JS/CSS)**
 
@@ -180,27 +211,6 @@ In browser DevTools for a NodeBB page, verify:
   - Re-check after NodeBB/theme/plugin upgrades
 
 > For Speek styling, the canonical approach is **Custom CSS** via Appearance → Customise (above).
-
----
-
-## 10) Post Restrictions
-
-**ACP → Settings → Posts → Post Restrictions**
-
-### Recommended (especially in production)
-
-- Set reasonable anti-abuse limits (rate limits, minimum intervals, etc.) appropriate for your traffic profile.
-- Review any restrictions that could break legitimate usage (e.g., too strict limits impacting normal replies).
-
----
-
-## 11) Unread & Recent Settings
-
-**ACP → Settings → Posts → Unread & Recent Settings**
-
-### Recommended
-
-- Tune “unread” and “recent” behavior to match how you want activity to surface for members.
 
 ---
 
