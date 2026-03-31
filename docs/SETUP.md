@@ -1,0 +1,172 @@
+# Setup Guide
+
+Quick setup guide for Speek NodeBB integration.
+
+## Environments
+
+| Environment | Admin URL | Cookie Domain |
+|-------------|-----------|---------------|
+| **Local** | `http://localhost:4567/admin` | *(empty)* |
+| **Dev** | `https://dev-community.lets-speek.com/admin` | `.lets-speek.com` |
+| **Staging** | `https://test-community.lets-speek.com/admin` | `.lets-speek.com` |
+| **Production** | `https://community.lets-speek.com/admin` | `.lets-speek.com` |
+
+**Default admin:** `admin` / `admin123` (change in production!)
+
+---
+
+## Session Sharing Setup
+
+**Admin Panel → Extend → Plugins → Session Sharing**
+
+### Required Settings
+
+Labels in the ACP may vary slightly by plugin version; match the columns below.
+
+| Field (typical UI label) | Value | Notes |
+|-------|-------|-------|
+| **Name of Store** / Base Name | `speek` | |
+| **Cookie Name** | `token` | Same name the Speek app uses when setting the session cookie |
+| **Cookie Domain** | See table above | Leading dot required for cloud |
+| **JWT Secret** | `<from-env>` | Must match API secret exactly |
+| **Host Name** (single URL) or **Host Whitelist** (comma-separated) | See below | Some builds show **Host Name** = NodeBB site URL; others list allowed hosts |
+
+**Host Whitelist by Environment** (use when the plugin has **Host Whitelist**; if it only has **Host Name**, set it to that environment’s NodeBB base URL, e.g. `https://test-community.lets-speek.com` for staging):
+
+- **Local:** `localhost,127.0.0.1`
+- **Dev:** `localhost,127.0.0.1,dev.lets-speek.com,dev-community.lets-speek.com`
+- **Staging:** `test.lets-speek.com,test-community.lets-speek.com`
+- **Production:** `lets-speek.com,app.lets-speek.com,community.lets-speek.com`
+
+### Checkboxes / session handling
+
+- ☑ **Automatically log in users with valid cookie** — ON
+- ☑ **Automatically create users that do not exist** — ON (or equivalent: *Do not automatically create accounts* **OFF**)
+- ☑ **Update users info if present in payload** — ON
+- ☑ **Automatically join groups if present** — ON *(when shown)*
+- ☑ **Automatically leave groups if not present** — ON *(when shown)*
+- ☐ Apply revalidation rules to administrators *(optional; often on in production)*
+- ☐ Allow banned users *(leave unchecked)*
+
+---
+
+## Security Headers
+
+**Admin Panel → Settings → Advanced → Headers**
+
+### CSP Frame-Ancestors
+
+| Environment | Value |
+|-------------|-------|
+| **Local** | `http://localhost:3000` |
+| **Dev** | `http://localhost:3000 http://127.0.0.1:3000 https://dev.lets-speek.com` |
+| **Staging** | `https://test.lets-speek.com` |
+| **Production** | `https://app.lets-speek.com` |
+
+### Permissions-Policy
+
+Paste the full string for your environment into **Settings → Advanced → Headers → Permissions-Policy**. Parent origins align with the [CSP Frame-Ancestors](#csp-frame-ancestors) table.
+
+| Environment | Value |
+|-------------|-------|
+| **Local** | `fullscreen=(self "http://localhost:3000"), clipboard-write=(self "http://localhost:3000"), clipboard-read=(self "http://localhost:3000")` |
+| **Dev** | `fullscreen=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com"), clipboard-write=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com"), clipboard-read=(self "http://localhost:3000" "http://127.0.0.1:3000" "https://dev.lets-speek.com")` |
+| **Staging** | `fullscreen=(self "https://test.lets-speek.com"), clipboard-write=(self "https://test.lets-speek.com"), clipboard-read=(self "https://test.lets-speek.com")` |
+| **Production** | `fullscreen=(self "https://app.lets-speek.com"), clipboard-write=(self "https://app.lets-speek.com"), clipboard-read=(self "https://app.lets-speek.com")` |
+
+### Cross-Origin Settings
+
+- **Cross-Origin-Embedder-Policy:** ON ✓
+- **Cross-Origin-Opener-Policy:** `unsafe-none`
+- **Cross-Origin-Resource-Policy:** `cross-origin`
+
+---
+
+## Custom CSS
+
+**Admin Panel → Appearance → Custom Content (HTML/JS/CSS)** → **Custom CSS/SASS** tab
+
+1. Copy all contents from [`nodebb.css`](../nodebb.css) (repo root)
+2. Paste into the **Custom CSS/SASS** editor
+3. Enable **Enable Custom CSS/SASS**
+4. Click **Save changes**
+
+**Must be done manually in each environment.**
+
+---
+
+## Verification
+
+### Test SSO
+
+1. Login to Speek web app
+2. Navigate to Community
+3. Should auto-login to NodeBB (no prompt)
+
+### Check Browser
+
+**DevTools → Application → Cookies**
+- Cookie `token` exists
+- Domain: `.lets-speek.com`
+- SameSite: `None`
+- Secure: ✓
+
+**Console should show:**
+```
+✅ Cookie set
+✅ Iframe loaded successfully
+```
+
+---
+
+## Troubleshooting
+
+### Cookie not being set
+- Verify HTTPS enabled
+- Check cookie domain matches (with leading dot)
+
+### User not logged in
+- Verify JWT secrets match exactly
+- Check `email` field in JWT payload
+- Ensure "Do not create accounts" is UNCHECKED
+
+### X-Frame-Options blocking
+```bash
+docker exec <container> node -e "
+const db=require('./src/database');
+const nconf=require('nconf');
+nconf.file({file:'config.json'});
+(async()=>{
+  await db.init(nconf.get('database'));
+  await db.deleteObjectField('config','frame-options');
+  await db.close();
+})()
+"
+```
+
+### Permissions violations
+- Check Permissions-Policy is configured
+- Restart NodeBB after changes
+
+---
+
+## Quick Reference
+
+**Environment Variables (NodeBB):**
+```yaml
+NODEBB_URL: <nodebb-url>
+NODE_ENV: <production|staging|development>
+NODEBB_SSO_SECRET: <secret>
+```
+
+**Environment Variables (API):**
+```yaml
+NODEBB_SESSION_SHARING_SECRET: <same-as-nodebb>
+```
+
+**Restart NodeBB:**
+```bash
+docker-compose restart nodebb
+# or
+./nodebb restart
+```
