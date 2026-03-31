@@ -21,28 +21,32 @@ Quick setup guide for Speek NodeBB integration.
 
 ### Required Settings
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| Base Name | `speek` | |
-| Cookie Name | `token` | |
-| Cookie Domain | See table above | Leading dot required for cloud |
-| JWT Secret | `<from-env>` | Must match API secret exactly |
-| Host Whitelist | See below | Comma-separated domains |
+Labels in the ACP may vary slightly by plugin version; match the columns below.
 
-**Host Whitelist by Environment:**
+| Field (typical UI label) | Value | Notes |
+|-------|-------|-------|
+| **Name of Store** / Base Name | `speek` | |
+| **Cookie Name** | `token` | Same name the Speek app uses when setting the session cookie |
+| **Cookie Domain** | See table above | Leading dot required for cloud |
+| **JWT Secret** | `<from-env>` | Must match API secret exactly |
+| **Host Name** (single URL) or **Host Whitelist** (comma-separated) | See below | Some builds show **Host Name** = NodeBB site URL; others list allowed hosts |
+
+**Host Whitelist by Environment** (use when the plugin has **Host Whitelist**; if it only has **Host Name**, set it to that environment’s NodeBB base URL, e.g. `https://test-community.lets-speek.com` for staging):
+
 - **Local:** `localhost,127.0.0.1`
 - **Dev:** `localhost,127.0.0.1,dev.lets-speek.com,dev-community.lets-speek.com`
 - **Staging:** `test.lets-speek.com,test-community.lets-speek.com`
 - **Production:** `lets-speek.com,app.lets-speek.com,community.lets-speek.com`
 
-### Checkboxes
+### Checkboxes / session handling
 
-- ☐ Apply revalidation rules to administrators *(check in production)*
-- ☐ Do not automatically create accounts **→ MUST BE UNCHECKED**
-- ☑ Automatically update profile information **→ CHECK**
+- ☑ **Automatically log in users with valid cookie** — ON
+- ☑ **Automatically create users that do not exist** — ON (or equivalent: *Do not automatically create accounts* **OFF**)
+- ☑ **Update users info if present in payload** — ON
+- ☑ **Automatically join groups if present** — ON *(when shown)*
+- ☑ **Automatically leave groups if not present** — ON *(when shown)*
+- ☐ Apply revalidation rules to administrators *(optional; often on in production)*
 - ☐ Allow banned users *(leave unchecked)*
-- ☑ Automatically join groups if present **→ CHECK**
-- ☑ Automatically leave groups if not present **→ CHECK**
 
 ---
 

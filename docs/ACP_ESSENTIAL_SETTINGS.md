@@ -296,24 +296,46 @@ In browser DevTools for a NodeBB page, verify:
 
 **ACP → Extend → Plugins → Session Sharing**
 
-### Required settings
+![NodeBB ACP - Session Sharing plugin](images/nodebb-acp-plugins-session-sharing.png)
 
-| Field | Value | Notes |
-|-------|-------|-------|
-| Base Name | `speek` | |
-| Cookie Name | `token` | Must match the web app cookie |
-| Cookie Domain | See env table in [Setup Guide](SETUP.md) | Leading dot required for cloud |
-| JWT Secret | `<from-env>` | Must match API secret exactly |
-| Host Whitelist | See [Setup Guide](SETUP.md) | Comma-separated domains |
+### General settings
 
-### Required checkboxes
+| UI field | Value | Notes |
+|----------|-------|--------|
+| **Name of Store** | `speek` | Identifies this store in the plugin. |
+| **Cookie Name** | `token` | Must match the cookie the Speek web app sets (`token=…`; see [Setup Guide](SETUP.md)). |
+| **Cookie Domain** | Per env | See cookie domain table in [Setup Guide](SETUP.md). Use a **leading dot** for shared subdomains (e.g. `.lets-speek.com`). |
+| **JWT Secret** | `<from-env>` | Must match `NODEBB_SESSION_SHARING_SECRET` / API — identical string in every place. |
+| **Host Name** or **Host Whitelist** | Per env | Depends on plugin version: **Host Name** is often the NodeBB site URL (e.g. `https://test-community.lets-speek.com`). Older UIs use **Host Whitelist** (comma-separated hosts) — see [Setup Guide](SETUP.md). |
 
-- ☐ Do not automatically create accounts **→ MUST BE UNCHECKED**
-- ☑ Automatically update profile information **→ CHECK**
-- ☑ Automatically join groups if present **→ CHECK**
-- ☑ Automatically leave groups if not present **→ CHECK**
+### Session handling
 
-> Full environment-specific values and verification steps live in the [Setup Guide](SETUP.md).
+- **Automatically log in users with valid cookie** — **ON**
+- **Automatically create users that do not exist** (or legacy: *Do not automatically create accounts* **OFF**) — **ON** so Speek users get a NodeBB account on first visit.
+- **Update users info if present in payload** — **ON**
+- **Group whitelist** — optional; only if you sync groups from the JWT (e.g. admin tooling). Leave empty unless required.
+
+### Payload keys
+
+Map JWT claims to NodeBB fields (defaults that match the Speek API payload):
+
+| Payload field | Typical mapping |
+|---------------|-----------------|
+| User ID | `id` |
+| Email | `email` |
+| Username | `username` (enable **Trust username** if shown) |
+| Full name | `fullname` |
+| First / last name | `firstName`, `lastName` (optional) |
+| Website, location, signature, occupation, picture, birthday | `website`, `location`, `signature`, `occupation`, `picture`, `birthday` |
+
+Adjust only if your JWT shape differs.
+
+### Other
+
+- **Reverse Token** — leave **off** unless you have a deliberate reverse-proxy setup that requires it.
+- **Redirect guest to login page** — usually empty when embedding in Speek (parent handles auth).
+
+> Full environment-specific values (domains, secrets, host lists) and verification live in the [Setup Guide](SETUP.md).
 
 ---
 
