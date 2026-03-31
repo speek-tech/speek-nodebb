@@ -144,15 +144,47 @@ All settings in this document are mandatory and must be configured in every envi
 
 ## 6) Settings > Email
 
-### Recommended
+**ACP → Settings → Email**
 
-Configure outbound email so operational workflows don’t silently fail.
+![NodeBB ACP - Settings → Email](images/nodebb-acp-settings-email.png)
 
-- **ACP → Settings → Email**
-  - Ensure SMTP is configured for staging/production
-  - Send a test email after changes
+### Mandatory
 
-If you operate SSO-only, password resets may be less important, but **admin alerts still rely on email**.
+Configure outbound email so operational workflows don’t silently fail. After changes, click **Save changes** and use **Send Test Email** where available.
+
+- **Email Settings**
+  - **Email Address**: `notify@lets-speek.com`
+  - **From Name**: `Speek Health`
+  - **Options** (as configured): require new users to specify an email address **ON**; send emails to banned users and remove images from notifications per your policy
+
+- **Confirmation**
+  - **Minutes before user can resend confirmation email**: `10`
+  - **Hours to keep confirmation link valid**: `24`
+  - **Send validation emails when an email is added or changed**: **ON**
+  - **Send emails to recipients who have not explicitly confirmed**: **OFF**
+  - **Prompt users to enter or confirm their email**: **ON**
+
+- **Email Digests**
+  - **Disable email digests** / **Enable watch-all notifications for administrators**: per your policy (screenshot: watch-all **ON**)
+  - **Digest frequency**: `Weekly`
+  - **Digest hour**: `17`
+
+- **SMTP Transport**
+  - **Enable SMTP Transport**: **ON**
+  - **Enable pooled connections** / **Allow self-signed certificates**: per your policy (typically **OFF** for SES)
+  - **Service**: `Custom Service`
+  - **SMTP Host**: `email-smtp.eu-west-2.amazonaws.com`
+  - **SMTP Port**: `587`
+  - **Connection security**: `StartTLS`
+  - **Username / Password**: from your mail provider (e.g. SES SMTP credentials); never commit secrets to the repo
+
+- **Email Testing**
+  - Pick a template (e.g. `banned`) and send a **test email** after SMTP changes
+
+- **Edit Email Template**
+  - Review templates as needed; use **Revert to Original** only when you intend to reset a template
+
+If you operate SSO-only, password resets may be less important, but **admin alerts and digests still rely on email** when enabled.
 
 ---
 
