@@ -192,9 +192,24 @@ If you operate SSO-only, password resets may be less important, but **admin aler
 
 **ACP → Settings → Pagination**
 
+![NodeBB ACP - Pagination Settings](images/nodebb-acp-settings-pagination.png)
+
+### What this controls
+
+- **Paginate posts and comments instead of using infinite scroll** — when **ON**, topic/post and comment lists use numbered pages instead of loading more content as you scroll. This is easier to predict for performance and accessibility; infinite scroll can feel smoother for casual browsing but loads more DOM on long threads.
+- **Comments per page** / **Maximum comments per page** — how many comments appear per page in a topic (and the cap users can choose if allowed).
+- **Posts per page** / **Maximum posts per page** — how many posts appear per page in a topic list (and the cap users can choose if allowed).
+- **Categories per page** — how many categories appear on the categories list.
+
 ### Recommended
 
-- Set topics/posts per page to balance usability and performance.
+- Turn **pagination ON** (not infinite scroll) if you want consistent load behaviour in embedded/iframe contexts or when monitoring server load.
+- Set **posts per page** and **comments per page** to balance usability and performance (e.g. `10` for posts/comments and matching max values, as in the screenshot).
+- Set **categories per page** high enough that the main category list does not need many clicks (e.g. `50` if you have many categories).
+
+### Save
+
+- Click **Save changes** after editing.
 
 ---
 
