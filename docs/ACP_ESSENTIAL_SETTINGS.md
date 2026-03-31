@@ -256,16 +256,21 @@ In browser DevTools for a NodeBB page, verify:
 
 ## 9) Appearance > Custom Content (HTML/JS/CSS)
 
-**ACP → Appearance → Custom Content (HTML/JS/CSS)**
+**ACP → Appearance → Custom Content (HTML/JS/CSS)** (page title **Customise**; open the **Custom CSS/SASS** tab)
+
+![NodeBB ACP - Custom CSS/SASS](images/nodebb-acp-appearance-custom-css.png)
+
+### Speek Custom CSS (required)
+
+- **Source file in this repo:** [`nodebb.css`](../nodebb.css) — Speek brand tokens (`:root` variables), Bootstrap/Harmony mappings, and theme overrides.
+- **In the ACP:** paste the **entire** contents of `nodebb.css` into **Custom CSS/SASS**, turn **Enable Custom CSS/SASS** **ON**, then **Save changes**. Step-by-step for each environment: [Setup Guide — Custom CSS](SETUP.md#custom-css).
 
 ### Recommended
 
-- If you inject any custom HTML/JS/CSS here, treat it like production code:
+- If you add anything beyond the copied `nodebb.css` (custom HTML/JS, or extra CSS), treat it like production code:
   - Keep it minimal
   - Validate it per environment
   - Re-check after NodeBB/theme/plugin upgrades
-
-> For Speek styling, the canonical approach is **Custom CSS** via Appearance → Customise (above).
 
 ---
 

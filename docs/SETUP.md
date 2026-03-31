@@ -80,12 +80,12 @@ Paste the full string for your environment into **Settings → Advanced → Head
 
 ## Custom CSS
 
-**Admin Panel → Appearance → Customise**
+**Admin Panel → Appearance → Custom Content (HTML/JS/CSS)** → **Custom CSS/SASS** tab
 
-1. Copy all contents from `speek-nodebb/nodebb.css`
-2. Paste into **Custom CSS** textarea
-3. Enable **"Use Custom CSS"** toggle
-4. Click **Save**
+1. Copy all contents from [`nodebb.css`](../nodebb.css) (repo root)
+2. Paste into the **Custom CSS/SASS** editor
+3. Enable **Enable Custom CSS/SASS**
+4. Click **Save changes**
 
 **Must be done manually in each environment.**
 
