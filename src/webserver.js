@@ -20,6 +20,7 @@ const useragent = require('express-useragent');
 const favicon = require('serve-favicon');
 const detector = require('@nodebb/spider-detector');
 const helmet = require('helmet');
+const jwt = require('jsonwebtoken');
 
 const Benchpress = require('benchpressjs');
 const db = require('./database');
@@ -185,6 +186,7 @@ function setupExpressApp(app) {
 	app.use(middleware.addHeaders);
 	app.use(middleware.processRender);
 	auth.initialize(app, middleware);
+	setupDirectAccessGate(app, relativePath);
 	const als = require('./als');
 	const apiHelpers = require('./api/helpers');
 	app.use((req, res, next) => {
@@ -197,6 +199,117 @@ function setupExpressApp(app) {
 	const toobusy = require('toobusy-js');
 	toobusy.maxLag(meta.config.eventLoopLagThreshold);
 	toobusy.interval(meta.config.eventLoopInterval);
+}
+
+function parseCsv(value) {
+	if (!value || typeof value !== 'string') {
+		return [];
+	}
+	return value.split(',').map(item => item.trim()).filter(Boolean);
+}
+
+function normalizePath(pathname) {
+	if (!pathname || typeof pathname !== 'string') {
+		return '/';
+	}
+	return pathname.startsWith('/') ? pathname : `/${pathname}`;
+}
+
+function expectsJsonResponse(req, pathname) {
+	const normalizedPath = normalizePath(pathname);
+	if (normalizedPath.startsWith('/api') || normalizedPath.startsWith('/socket.io')) {
+		return true;
+	}
+	const acceptHeader = String(req.headers?.accept || '').toLowerCase();
+	return acceptHeader.includes('application/json');
+}
+
+function hasValidSsoToken(req, tokenCookieName, jwtSecret) {
+	if (!tokenCookieName || !jwtSecret || !req.cookies) {
+		return false;
+	}
+
+	const rawToken = req.cookies[tokenCookieName];
+	if (!rawToken || typeof rawToken !== 'string') {
+		return false;
+	}
+
+	try {
+		jwt.verify(rawToken, jwtSecret, { algorithms: ['HS256'] });
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
+
+function setupDirectAccessGate(app, relativePath) {
+	const nodeEnv = process.env.NODE_ENV;
+	const defaultRedirectUrl = nodeEnv === 'production' ?
+		'https://app.lets-speek.com/community' :
+		'https://dev.lets-speek.com/community';
+	const jwtSecret = (process.env.NODEBB_SSO_SECRET || '').trim();
+	const tokenCookieName = (process.env.NODEBB_DIRECT_ACCESS_GATE_TOKEN_COOKIE_NAME || 'token').trim();
+	const gateEnabledEnv = process.env.NODEBB_DIRECT_ACCESS_GATE_ENABLED;
+	const isEnabled = gateEnabledEnv ? gateEnabledEnv === 'true' : true;
+	if (!isEnabled) {
+		return;
+	}
+
+	const redirectTo = (process.env.NODEBB_DIRECT_ACCESS_GATE_REDIRECT_URL || defaultRedirectUrl).trim();
+	const defaultBypassPaths = [
+		'/ping',
+		'/sping',
+		'/assets',
+		'/plugins',
+		'/socket.io',
+		'/api/session-sharing',
+	];
+	const bypassPaths = parseCsv(process.env.NODEBB_DIRECT_ACCESS_GATE_BYPASS_PATHS || '')
+		.concat(defaultBypassPaths)
+		.map(normalizePath);
+
+	const normalizedRelativePath = (relativePath && relativePath !== '/') ? relativePath : '';
+	const trimRelativePath = pathname => (
+		normalizedRelativePath && pathname.startsWith(normalizedRelativePath) ?
+			pathname.slice(normalizedRelativePath.length) || '/' :
+			pathname
+	);
+
+	app.use((req, res, next) => {
+		const pathname = normalizePath(trimRelativePath(req.path || '/'));
+		const bypassed = bypassPaths.some((prefix) => {
+			const normalizedPrefix = normalizePath(prefix);
+			return pathname === normalizedPrefix || pathname.startsWith(`${normalizedPrefix}/`);
+		});
+		if (bypassed) {
+			return next();
+		}
+
+		// Allow if a real NodeBB session already exists.
+		const currentUid = Number(req.uid || req.session?.uid || 0);
+		if (Number.isInteger(currentUid) && currentUid > 0) {
+			return next();
+		}
+
+		// Allow if a valid SSO token is present; this supports first request bootstrap
+		// before NodeBB upgrades it into an authenticated express session.
+		if (hasValidSsoToken(req, tokenCookieName, jwtSecret)) {
+			return next();
+		}
+
+		if (redirectTo) {
+			if (expectsJsonResponse(req, pathname)) {
+				return res.status(403).json({
+					status: { code: 'forbidden', message: 'Community access requires an authenticated app session.' },
+				});
+			}
+			return res.redirect(302, redirectTo);
+		}
+
+		return res.status(403).json({
+			status: { code: 'forbidden', message: 'Community access requires an authenticated app session.' },
+		});
+	});
 }
 
 function setupHelmet(app) {
