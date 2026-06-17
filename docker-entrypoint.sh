@@ -35,10 +35,6 @@ if [ -z "${NODEBB_DIRECT_ACCESS_GATE_REDIRECT_URL}" ]; then
   fi
 fi
 
-if [ -z "${NODEBB_DIRECT_ACCESS_GATE_COOKIE_NAMES}" ]; then
-  export NODEBB_DIRECT_ACCESS_GATE_COOKIE_NAMES="token,express.sid"
-fi
-
 echo "🔒 Direct access gate: ${NODEBB_DIRECT_ACCESS_GATE_ENABLED}"
 echo "↪️  Direct access redirect: ${NODEBB_DIRECT_ACCESS_GATE_REDIRECT_URL:-<disabled>}"
 

@@ -98,7 +98,6 @@ environment:
   # Community public-access gate (recommended)
   NODEBB_DIRECT_ACCESS_GATE_ENABLED: "true"
   NODEBB_DIRECT_ACCESS_GATE_REDIRECT_URL: "https://app.lets-speek.com/community"
-  NODEBB_DIRECT_ACCESS_GATE_COOKIE_NAMES: "token,express.sid"
   
   # Database (without NODEBB_ prefix)
   DB_HOST: postgres

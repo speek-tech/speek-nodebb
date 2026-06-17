@@ -20,6 +20,7 @@ const useragent = require('express-useragent');
 const favicon = require('serve-favicon');
 const detector = require('@nodebb/spider-detector');
 const helmet = require('helmet');
+const jwt = require('jsonwebtoken');
 
 const Benchpress = require('benchpressjs');
 const db = require('./database');
@@ -169,7 +170,6 @@ function setupExpressApp(app) {
 	configureBodyParser(app);
 
 	app.use(cookieParser(nconf.get('secret')));
-	setupDirectAccessGate(app, relativePath);
 	app.use(useragent.express());
 	app.use(detector.middleware());
 	app.use(session({
@@ -186,6 +186,7 @@ function setupExpressApp(app) {
 	app.use(middleware.addHeaders);
 	app.use(middleware.processRender);
 	auth.initialize(app, middleware);
+	setupDirectAccessGate(app, relativePath);
 	const als = require('./als');
 	const apiHelpers = require('./api/helpers');
 	app.use((req, res, next) => {
@@ -214,11 +215,31 @@ function normalizePath(pathname) {
 	return pathname.startsWith('/') ? pathname : `/${pathname}`;
 }
 
+function hasValidSsoToken(req, tokenCookieName, jwtSecret) {
+	if (!tokenCookieName || !jwtSecret || !req.cookies) {
+		return false;
+	}
+
+	const rawToken = req.cookies[tokenCookieName];
+	if (!rawToken || typeof rawToken !== 'string') {
+		return false;
+	}
+
+	try {
+		jwt.verify(rawToken, jwtSecret, { algorithms: ['HS256'] });
+		return true;
+	} catch (err) {
+		return false;
+	}
+}
+
 function setupDirectAccessGate(app, relativePath) {
 	const nodeEnv = process.env.NODE_ENV;
 	const defaultRedirectUrl = nodeEnv === 'production' ?
 		'https://app.lets-speek.com/community' :
 		'https://dev.lets-speek.com/community';
+	const jwtSecret = (process.env.NODEBB_SSO_SECRET || '').trim();
+	const tokenCookieName = (process.env.NODEBB_DIRECT_ACCESS_GATE_TOKEN_COOKIE_NAME || 'token').trim();
 	const gateEnabledEnv = process.env.NODEBB_DIRECT_ACCESS_GATE_ENABLED;
 	const isEnabled = gateEnabledEnv ? gateEnabledEnv === 'true' : true;
 	if (!isEnabled) {
@@ -226,7 +247,6 @@ function setupDirectAccessGate(app, relativePath) {
 	}
 
 	const redirectTo = (process.env.NODEBB_DIRECT_ACCESS_GATE_REDIRECT_URL || defaultRedirectUrl).trim();
-	const cookieNames = parseCsv(process.env.NODEBB_DIRECT_ACCESS_GATE_COOKIE_NAMES || 'token,express.sid');
 	const defaultBypassPaths = [
 		'/ping',
 		'/sping',
@@ -256,14 +276,15 @@ function setupDirectAccessGate(app, relativePath) {
 			return next();
 		}
 
-		const hasAllowedCookie = cookieNames.some((name) => {
-			if (!name) {
-				return false;
-			}
-			return Boolean(req.cookies && typeof req.cookies[name] !== 'undefined' && req.cookies[name] !== '');
-		});
+		// Allow if a real NodeBB session already exists.
+		const currentUid = Number(req.uid || req.session?.uid || 0);
+		if (Number.isInteger(currentUid) && currentUid > 0) {
+			return next();
+		}
 
-		if (hasAllowedCookie) {
+		// Allow if a valid SSO token is present; this supports first request bootstrap
+		// before NodeBB upgrades it into an authenticated express session.
+		if (hasValidSsoToken(req, tokenCookieName, jwtSecret)) {
 			return next();
 		}
 
