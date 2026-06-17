@@ -215,6 +215,15 @@ function normalizePath(pathname) {
 	return pathname.startsWith('/') ? pathname : `/${pathname}`;
 }
 
+function expectsJsonResponse(req, pathname) {
+	const normalizedPath = normalizePath(pathname);
+	if (normalizedPath.startsWith('/api') || normalizedPath.startsWith('/socket.io')) {
+		return true;
+	}
+	const acceptHeader = String(req.headers?.accept || '').toLowerCase();
+	return acceptHeader.includes('application/json');
+}
+
 function hasValidSsoToken(req, tokenCookieName, jwtSecret) {
 	if (!tokenCookieName || !jwtSecret || !req.cookies) {
 		return false;
@@ -289,6 +298,11 @@ function setupDirectAccessGate(app, relativePath) {
 		}
 
 		if (redirectTo) {
+			if (expectsJsonResponse(req, pathname)) {
+				return res.status(403).json({
+					status: { code: 'forbidden', message: 'Community access requires an authenticated app session.' },
+				});
+			}
 			return res.redirect(302, redirectTo);
 		}
 
