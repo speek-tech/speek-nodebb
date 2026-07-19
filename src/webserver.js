@@ -224,6 +224,11 @@ function expectsJsonResponse(req, pathname) {
 	return acceptHeader.includes('application/json');
 }
 
+function isEmbeddedMobileClient(req) {
+	const userAgent = String(req.headers?.['user-agent'] || '').toLowerCase();
+	return userAgent.includes('speekmobileapp');
+}
+
 function hasValidSsoToken(req, tokenCookieName, jwtSecret) {
 	if (!tokenCookieName || !jwtSecret || !req.cookies) {
 		return false;
@@ -298,6 +303,13 @@ function setupDirectAccessGate(app, relativePath) {
 		}
 
 		if (redirectTo) {
+			// Keep browser behavior unchanged, but avoid cross-domain redirects for
+			// embedded mobile WebViews to prevent redirect/flicker loops.
+			if (isEmbeddedMobileClient(req)) {
+				return res.status(403).json({
+					status: { code: 'forbidden', message: 'Community access requires an authenticated app session.' },
+				});
+			}
 			if (expectsJsonResponse(req, pathname)) {
 				return res.status(403).json({
 					status: { code: 'forbidden', message: 'Community access requires an authenticated app session.' },
